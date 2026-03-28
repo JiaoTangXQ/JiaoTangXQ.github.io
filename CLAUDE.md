@@ -53,6 +53,28 @@ npm run build:data   # 重新生成 cosmos.json + search-index.json
 npm run build        # 完整生产构建（数据 + Vite）
 ```
 
+## 发布流程
+
+代码改动后发布到 https://jiaotangxq.github.io 只需要 push 到 master：
+
+```bash
+git add <改动的文件>
+git commit -m "描述改动"
+git push origin master
+```
+
+Push 之后 GitHub Actions 会自动执行：
+1. `npm ci` 安装依赖
+2. `npm run build`（生成 cosmos.json + search-index.json → Vite 构建 → 输出 dist/）
+3. 部署 `dist/` 到 GitHub Pages
+
+通常 1-2 分钟后页面生效。可以在仓库 Actions tab 查看构建状态。
+
+**注意事项：**
+- GitHub Pages Source 必须设为 **"GitHub Actions"**（Settings → Pages → Source），不能选 "Deploy from a branch"，否则会直接发布源码而不是构建产物
+- 如果新增了文章（`content/articles/*.md`），构建时会自动重新计算布局和搜索索引
+- 本地验证：先 `npm run build && npx vite preview` 确认没问题再 push
+
 ## 当前进度（v0.1）
 
 已完成：
