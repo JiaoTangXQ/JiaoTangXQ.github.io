@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.superpowers/
+.worktrees/
+public/data/
+*.local
+.DS_Store

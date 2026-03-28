@@ -1,0 +1,585 @@
+/* ============================================================
+   Article page — reading surface
+   ============================================================ */
+
+/* ---- Cover hero ---- */
+.article-cover {
+  position: relative;
+  width: 100%;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem 2rem 2.5rem;
+  overflow: hidden;
+}
+
+/* Gradient layers are rendered as real DOM elements in the component
+   to allow dynamic cluster-based coloring via inline styles. */
+
+.article-cover__inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.article-cover__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Back button ---- */
+.article-back {
+  position: fixed;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast),
+    background var(--duration-fast),
+    border-color var(--duration-fast);
+  text-decoration: none;
+}
+
+.article-back:hover {
+  color: var(--text-primary);
+  background: rgba(10, 18, 32, 0.9);
+  border-color: var(--border-medium);
+}
+
+.article-back__arrow {
+  display: inline-block;
+  transition: transform var(--duration-fast) var(--ease-out-expo);
+}
+
+.article-back:hover .article-back__arrow {
+  transform: translateX(-2px);
+}
+
+/* ---- Article meta ---- */
+.article-meta {
+  max-width: var(--content-max-width);
+  margin: 2rem auto 0;
+  padding: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.article-meta__date {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.article-meta__sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.article-meta__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.article-meta__topic {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  background: var(--space-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+  transition:
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+}
+
+.article-meta__topic:hover {
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+/* ---- Article body (prose) ---- */
+.article-body {
+  max-width: var(--content-max-width);
+  margin: 2.5rem auto 0;
+  padding: 0 2rem 4rem;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: var(--line-height-body);
+  color: var(--text-primary);
+}
+
+/* --- Headings --- */
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  margin: 2.25rem 0 0.75rem;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  color: var(--text-secondary);
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* --- Paragraphs --- */
+.article-body p {
+  margin: 0 0 1.25rem;
+}
+
+.article-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Strong & emphasis --- */
+.article-body strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.article-body em {
+  font-style: italic;
+}
+
+/* --- Links --- */
+.article-body a {
+  color: var(--article-accent, #7dd8ff);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+}
+
+.article-body a:hover {
+  border-bottom-color: var(--article-accent, #7dd8ff);
+}
+
+/* --- Lists --- */
+.article-body ul,
+.article-body ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article-body ul {
+  list-style: none;
+}
+
+.article-body ul li {
+  position: relative;
+  padding-left: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.article-body ul li::before {
+  content: "";
+  position: absolute;
+  left: -1.1rem;
+  top: 0.65em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--article-accent, #7dd8ff);
+  opacity: 0.6;
+}
+
+.article-body ol li {
+  margin-bottom: 0.4rem;
+  padding-left: 0.25rem;
+}
+
+.article-body ol li::marker {
+  color: var(--text-muted);
+}
+
+/* --- Blockquotes --- */
+.article-body blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 3px solid var(--article-accent, #7dd8ff);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0 6px 6px 0;
+}
+
+.article-body blockquote p {
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.article-body blockquote p + p {
+  margin-top: 0.75rem;
+}
+
+/* --- Inline code --- */
+.article-body code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  background: var(--space-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+/* --- Code blocks --- */
+.article-body pre {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--space-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-body pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre;
+}
+
+.article-body pre::-webkit-scrollbar {
+  height: 4px;
+}
+
+.article-body pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.article-body pre::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* --- Horizontal rule --- */
+.article-body hr {
+  border: none;
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 2.5rem 0;
+}
+
+/* --- Images --- */
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+/* --- Tables --- */
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article-body th,
+.article-body td {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+.article-body th {
+  font-weight: 600;
+  background: var(--space-elevated);
+  color: var(--text-secondary);
+}
+
+.article-body td {
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   Nearby Planets section
+   ============================================================ */
+.nearby-planets {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.nearby-planets__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.nearby-planets__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.nearby-planet-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--space-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background var(--duration-fast),
+    border-color var(--duration-fast),
+    transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.nearby-planet-card:hover {
+  background: var(--space-elevated);
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+}
+
+.nearby-planet-card__orb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px var(--card-glow, rgba(92, 200, 255, 0.3));
+}
+
+.nearby-planet-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nearby-planet-card__summary {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Loading & error states
+   ============================================================ */
+.article-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.article-loading__dot {
+  display: inline-block;
+  animation: article-pulse 1.4s ease-in-out infinite;
+}
+
+.article-loading__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.article-loading__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes article-pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+.article-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.article-not-found__code {
+  font-family: var(--font-mono);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.article-not-found__message {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.article-not-found__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--space-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  text-decoration: none;
+  transition:
+    color var(--duration-fast),
+    border-color var(--duration-fast);
+}
+
+.article-not-found__link:hover {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 640px) {
+  .article-cover {
+    min-height: 32vh;
+    padding: 2rem 1.25rem 2rem;
+  }
+
+  .article-cover__title {
+    font-size: 1.5rem;
+  }
+
+  .article-meta {
+    padding: 0 1.25rem;
+  }
+
+  .article-body {
+    padding: 0 1.25rem 3rem;
+    font-size: 16px;
+  }
+
+  .article-body h2 {
+    font-size: 1.3rem;
+  }
+
+  .article-body h3 {
+    font-size: 1.1rem;
+  }
+
+  .article-body pre {
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 1rem 1.25rem;
+  }
+
+  .nearby-planets {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  .nearby-planets__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .article-back {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================================
+   Fade-in entrance animation
+   ============================================================ */
+.article-enter {
+  animation: article-fade-in var(--duration-slow) var(--ease-out-expo) both;
+}
+
+@keyframes article-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,182 @@
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useLocation, Link } from "react-router-dom";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
+import type { CosmosData, CosmosNode } from "@/lib/content/types";
+import { ArticleLayout } from "@/features/articles/ArticleLayout";
+import { NearbyPlanets } from "@/features/articles/NearbyPlanets";
+import "@/styles/article.css";
+
+type ArticleData = {
+  node: CosmosNode;
+  bodyHtml: string;
+};
+
+/** Strip YAML front-matter (between opening and closing ---) from markdown. */
+function stripFrontmatter(md: string): string {
+  const trimmed = md.trimStart();
+  if (!trimmed.startsWith("---")) return md;
+  const end = trimmed.indexOf("---", 3);
+  if (end === -1) return md;
+  return trimmed.slice(end + 3).trimStart();
+}
+
+/** Render markdown body to HTML using remark + rehype. */
+async function renderMarkdown(md: string): Promise<string> {
+  const result = await unified()
+    .use(remarkParse)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeStringify, { allowDangerousHtml: true })
+    .process(md);
+  return String(result);
+}
+
+export function ArticlePage() {
+  const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
+
+  const [cosmos, setCosmos] = useState<CosmosData | null>(null);
+  const [article, setArticle] = useState<ArticleData | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "not-found">(
+    "loading",
+  );
+
+  // Compute back URL: return to cosmos root, preserving camera hash from URL
+  const backUrl = `/${location.hash}`;
+
+  const loadArticle = useCallback(
+    async (cosmosData: CosmosData, targetSlug: string) => {
+      const node = cosmosData.nodes.find((n) => n.slug === targetSlug);
+      if (!node) {
+        setStatus("not-found");
+        return;
+      }
+
+      // Strategy 1: Try fetching a prebuilt article JSON
+      try {
+        const res = await fetch(`/data/articles/${targetSlug}.json`);
+        if (res.ok) {
+          const data = await res.json();
+          setArticle({ node, bodyHtml: data.bodyHtml ?? data.body ?? "" });
+          setStatus("ready");
+          return;
+        }
+      } catch {
+        // Fall through to next strategy
+      }
+
+      // Strategy 2: Fetch the raw markdown and render client-side
+      try {
+        const res = await fetch(`/articles/${targetSlug}.md`);
+        if (res.ok) {
+          const rawMd = await res.text();
+          const body = stripFrontmatter(rawMd);
+          const html = await renderMarkdown(body);
+          setArticle({ node, bodyHtml: html });
+          setStatus("ready");
+          return;
+        }
+      } catch {
+        // Fall through to fallback
+      }
+
+      // Strategy 3: Fallback to summary as body
+      const fallbackHtml = `<p>${node.summary}</p>`;
+      setArticle({ node, bodyHtml: fallbackHtml });
+      setStatus("ready");
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!slug) {
+      setStatus("not-found");
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      setStatus("loading");
+
+      // Fetch cosmos data
+      let cosmosData = cosmos;
+      if (!cosmosData) {
+        try {
+          const res = await fetch("/data/cosmos.json");
+          cosmosData = (await res.json()) as CosmosData;
+          if (!cancelled) setCosmos(cosmosData);
+        } catch {
+          if (!cancelled) setStatus("not-found");
+          return;
+        }
+      }
+
+      if (!cancelled) {
+        await loadArticle(cosmosData, slug);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, cosmos, loadArticle]);
+
+  // Scroll to top on slug change
+  useEffect(() => {
+    const scrollEl = document.querySelector(".article-scroll");
+    if (scrollEl) scrollEl.scrollTop = 0;
+    else window.scrollTo(0, 0);
+  }, [slug]);
+
+  // ---- Loading state ----
+  if (status === "loading") {
+    return (
+      <div className="article-loading">
+        <span>
+          正在加载
+          <span className="article-loading__dot">.</span>
+          <span className="article-loading__dot">.</span>
+          <span className="article-loading__dot">.</span>
+        </span>
+      </div>
+    );
+  }
+
+  // ---- 404 state ----
+  if (status === "not-found" || !article) {
+    return (
+      <div className="article-not-found">
+        <div className="article-not-found__code">404</div>
+        <p className="article-not-found__message">
+          这颗星球似乎还未被发现
+        </p>
+        <Link to="/" className="article-not-found__link">
+          <span>&larr;</span>
+          <span>返回星图</span>
+        </Link>
+      </div>
+    );
+  }
+
+  // ---- Article ready ----
+  const { node, bodyHtml } = article;
+
+  return (
+    <ArticleLayout
+      title={node.title}
+      date={node.date}
+      topics={node.topics}
+      cluster={node.cluster}
+      cover={node.cover}
+      bodyHtml={bodyHtml}
+      backUrl={backUrl}
+    >
+      {cosmos && (
+        <NearbyPlanets currentSlug={node.slug} nodes={cosmos.nodes} />
+      )}
+    </ArticleLayout>
+  );
+}
