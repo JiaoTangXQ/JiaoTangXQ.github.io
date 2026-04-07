@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { getPalette } from "@/lib/content/types";
+import { getPalette, buildCoverGradient } from "@/lib/content/types";
 import type { CoverConfig } from "@/lib/content/types";
 
 type Props = {
@@ -44,11 +44,21 @@ export function ArticleLayout({
   const palette = getPalette(cluster);
   const accent = cover.accent ?? palette.accent;
 
-  // Build cover gradient
-  const coverGradient =
+  // Build cover background
+  const coverBg =
     cover.style === "image" && cover.imageUrl
       ? `url(${cover.imageUrl})`
-      : `linear-gradient(135deg, ${palette.core[0]} 0%, ${palette.core[1]} 50%, var(--space-deep) 100%)`;
+      : buildCoverGradient(cover, cluster);
+
+  // Title positioning
+  const titleJustify =
+    cover.titlePosition === "top"
+      ? "flex-start"
+      : cover.titlePosition === "center"
+        ? "center"
+        : "flex-end";
+  const titleTextAlign = cover.titleAlign ?? "left";
+  const overlayOpacity = cover.overlayOpacity ?? 0.85;
 
   return (
     <div
@@ -65,16 +75,18 @@ export function ArticleLayout({
       <header
         className="article-cover"
         style={{
-          "--cover-bg": coverGradient,
-        } as React.CSSProperties}
+          justifyContent: titleJustify,
+        }}
       >
         <div
           style={{
             position: "absolute",
             inset: 0,
             zIndex: 0,
-            background: coverGradient,
-            opacity: 0.85,
+            background: coverBg,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: overlayOpacity,
           }}
         />
         {/* Gradient fade to deep space at bottom */}
@@ -86,13 +98,18 @@ export function ArticleLayout({
             background: `linear-gradient(
               to bottom,
               transparent 0%,
-              rgba(6, 13, 24, 0.4) 50%,
+              rgba(5, 16, 26, 0.4) 50%,
               var(--space-deep) 100%
             )`,
           }}
         />
         <div className="article-cover__inner">
-          <h1 className="article-cover__title">{title}</h1>
+          <h1
+            className="article-cover__title"
+            style={{ textAlign: titleTextAlign }}
+          >
+            {title}
+          </h1>
         </div>
       </header>
 

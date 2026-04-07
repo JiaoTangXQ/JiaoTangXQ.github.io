@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { CosmosNode } from "@/lib/content/types";
-import { getPalette } from "@/lib/content/types";
+import { getPalette, buildCoverGradient } from "@/lib/content/types";
 import "@/styles/cosmos-ui.css";
 
 type Camera = {
@@ -96,18 +96,29 @@ export function NodeLabels({
             }}
           >
             {lodMode === "near" ? (
-              /* Near mode: mini preview card */
+              /* Near mode: mini preview card with cover strip */
               <div className="node-labels__card">
-                <div className="node-labels__card-title">{node.title}</div>
-                <div className="node-labels__card-cluster">
-                  <span
-                    className="node-labels__card-dot"
-                    style={{ background: palette.core[0] }}
-                  />
-                  {node.cluster}
-                </div>
-                <div className="node-labels__card-summary">
-                  {node.summary}
+                <div
+                  className="node-labels__card-cover"
+                  style={{
+                    background:
+                      node.cover.style === "image" && node.cover.imageUrl
+                        ? `url(${node.cover.imageUrl}) center/cover no-repeat`
+                        : buildCoverGradient(node.cover, node.cluster),
+                  }}
+                />
+                <div className="node-labels__card-body">
+                  <div className="node-labels__card-title">{node.title}</div>
+                  <div className="node-labels__card-cluster">
+                    <span
+                      className="node-labels__card-dot"
+                      style={{ background: palette.core[0] }}
+                    />
+                    {node.cluster}
+                  </div>
+                  <div className="node-labels__card-summary">
+                    {node.summary}
+                  </div>
                 </div>
               </div>
             ) : (

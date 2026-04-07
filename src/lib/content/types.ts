@@ -2,6 +2,11 @@ export type CoverConfig = {
   style?: "gradient" | "image";
   accent?: string;
   imageUrl?: string;
+  gradientAngle?: number;
+  gradientColors?: string[];
+  titleAlign?: "left" | "center" | "right";
+  titlePosition?: "bottom" | "center" | "top";
+  overlayOpacity?: number;
 };
 
 export type CosmosNode = {
@@ -92,4 +97,19 @@ export const CLUSTER_PALETTES: Record<
 
 export function getPalette(cluster: string) {
   return CLUSTER_PALETTES[cluster] ?? CLUSTER_PALETTES._fallback;
+}
+
+/** Build a CSS gradient string from cover config + cluster palette. */
+export function buildCoverGradient(
+  cover: CoverConfig,
+  cluster: string,
+): string {
+  const palette = getPalette(cluster);
+  const angle = cover.gradientAngle ?? 135;
+  const colors = cover.gradientColors ?? [
+    palette.core[0],
+    palette.core[1],
+    "var(--space-deep)",
+  ];
+  return `linear-gradient(${angle}deg, ${colors.join(", ")})`;
 }

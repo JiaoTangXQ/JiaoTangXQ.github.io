@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import type { CosmosNode } from "@/lib/content/types";
-import { getPalette } from "@/lib/content/types";
+import { getPalette, buildCoverGradient } from "@/lib/content/types";
 import "@/styles/cosmos-ui.css";
 
 type Props = {
@@ -47,7 +47,7 @@ export function SummaryCard({ node, onClose, cameraHash }: Props) {
     }
   }
 
-  const coverGradient = `linear-gradient(135deg, ${palette.core[0]} 0%, ${palette.core[1]} 100%)`;
+  const coverGradient = buildCoverGradient(node.cover, node.cluster);
   const ctaGradient = `linear-gradient(135deg, ${palette.core[0]}, ${palette.core[1]})`;
 
   // Use current camera hash for return navigation
