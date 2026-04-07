@@ -6,7 +6,6 @@ import { starFieldVertex, starFieldFragment } from "../shaders/starField";
 const STAR_COUNT = 4000;
 const SPREAD_X = 2000;
 const SPREAD_Y = 1500;
-const PARALLAX_FACTOR = 0.7;
 
 /**
  * Star field rendered as Three.js Points with per-star twinkle animation.
@@ -14,7 +13,6 @@ const PARALLAX_FACTOR = 0.7;
  */
 export function StarFieldLayer() {
   const materialRef = useRef<THREE.ShaderMaterial>(null!);
-  const pointsRef = useRef<THREE.Points>(null!);
   const { camera } = useThree();
 
   const { geometry, uniforms } = useMemo(() => {
@@ -54,6 +52,7 @@ export function StarFieldLayer() {
     const u = {
       uTime: { value: 0 },
       uZoom: { value: 1.0 },
+      uCameraPos: { value: new THREE.Vector2(0, 0) },
     };
 
     return { geometry: geo, uniforms: u };
@@ -61,19 +60,15 @@ export function StarFieldLayer() {
 
   useFrame(({ clock }) => {
     const mat = materialRef.current;
-    const pts = pointsRef.current;
-    if (!mat || !pts) return;
+    if (!mat) return;
 
     mat.uniforms.uTime.value = clock.getElapsedTime();
     mat.uniforms.uZoom.value = (camera as THREE.OrthographicCamera).zoom ?? 1.0;
-
-    // Parallax: offset star layer position to track camera at reduced rate
-    pts.position.x = camera.position.x * (1 - PARALLAX_FACTOR);
-    pts.position.y = camera.position.y * (1 - PARALLAX_FACTOR);
+    mat.uniforms.uCameraPos.value.set(camera.position.x, camera.position.y);
   });
 
   return (
-    <points ref={pointsRef} geometry={geometry} renderOrder={-50} frustumCulled={false}>
+    <points geometry={geometry} renderOrder={-50} frustumCulled={false}>
       <shaderMaterial
         ref={materialRef}
         vertexShader={starFieldVertex}

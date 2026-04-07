@@ -1,6 +1,7 @@
 export const starFieldVertex = /* glsl */ `
 uniform float uTime;
 uniform float uZoom;
+uniform vec2 uCameraPos;
 
 attribute float aSize;
 attribute float aPhase;
@@ -11,22 +12,30 @@ varying float vBrightness;
 varying float vColor;
 
 void main() {
+  // Parallax: stars drift at 70% of camera speed
+  vec2 viewOffset = position.xy - uCameraPos * 0.7;
+
+  // Wrap within spread area so stars tile infinitely
+  float spreadX = 2000.0;
+  float spreadY = 1500.0;
+  viewOffset.x = mod(viewOffset.x + spreadX, spreadX * 2.0) - spreadX;
+  viewOffset.y = mod(viewOffset.y + spreadY, spreadY * 2.0) - spreadY;
+
+  // World position = wrapped offset + camera position
+  vec3 worldPos = vec3(viewOffset + uCameraPos, position.z);
+
   // Per-star twinkle: gentle sin oscillation — reduced intensity for calmer feel
-  float twinkleSpeed = 0.5 + aPhase * 0.4; // slower, gentler variation
+  float twinkleSpeed = 0.5 + aPhase * 0.4;
   float twinkle = sin(uTime * twinkleSpeed + aPhase * 6.2831) * 0.5 + 0.5;
-  // Reduced twinkle amount — brighter stars barely flicker
   float twinkleAmount = 0.18 * (1.0 - aBrightness * 0.5);
   vBrightness = aBrightness * (1.0 - twinkleAmount + twinkleAmount * twinkle);
 
   vColor = aColor;
 
-  vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+  vec4 mvPosition = modelViewMatrix * vec4(worldPos, 1.0);
 
-  // Point size scales with aSize and inversely with camera distance,
-  // and scales with zoom so stars remain visible when zoomed out
   float baseSize = aSize * (0.6 + uZoom * 0.4);
   gl_PointSize = baseSize * (300.0 / -mvPosition.z);
-  // Clamp to prevent invisibly small or absurdly large
   gl_PointSize = clamp(gl_PointSize, 0.5, 6.0);
 
   gl_Position = projectionMatrix * mvPosition;
