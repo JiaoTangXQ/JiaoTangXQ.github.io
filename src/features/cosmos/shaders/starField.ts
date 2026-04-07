@@ -15,9 +15,9 @@ void main() {
   // Parallax: stars drift at 70% of camera speed
   vec2 viewOffset = position.xy - uCameraPos * 0.7;
 
-  // Wrap within spread area so stars tile infinitely
-  float spreadX = 2000.0;
-  float spreadY = 1500.0;
+  // Fixed tile size — must be larger than max viewport at min zoom
+  float spreadX = 4000.0;
+  float spreadY = 3000.0;
   viewOffset.x = mod(viewOffset.x + spreadX, spreadX * 2.0) - spreadX;
   viewOffset.y = mod(viewOffset.y + spreadY, spreadY * 2.0) - spreadY;
 

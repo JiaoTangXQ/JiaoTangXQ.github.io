@@ -3,9 +3,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { starFieldVertex, starFieldFragment } from "../shaders/starField";
 
-const STAR_COUNT = 4000;
-const SPREAD_X = 2000;
-const SPREAD_Y = 1500;
+const STAR_COUNT = 12000;
+const SPREAD_X = 4000;
+const SPREAD_Y = 3000;
 
 /**
  * Star field rendered as Three.js Points with per-star twinkle animation.
