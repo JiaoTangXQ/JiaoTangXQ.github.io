@@ -31,8 +31,8 @@ export function CameraController({ stateRef }: Props) {
     const cam = threeCamera as OrthographicCamera;
     const cur = currentRef.current;
 
-    // Exponential smoothing — speed constant ~8 gives responsive feel
-    const speed = 8;
+    // Exponential smoothing — speed 10 for snappier response
+    const speed = 10;
     // Clamp delta to avoid huge jumps on tab re-focus
     const dt = Math.min(delta, 0.1);
     const factor = 1 - Math.exp(-speed * dt);

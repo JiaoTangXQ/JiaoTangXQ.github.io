@@ -57,26 +57,26 @@ function buildCosmosData(): CosmosData {
   type SimNode = { index: number; x: number; y: number; vx: number; vy: number };
   const simNodes: SimNode[] = articles.map((_, i) => ({
     index: i,
-    x: (Math.random() - 0.5) * 600,
-    y: (Math.random() - 0.5) * 400,
+    x: (Math.random() - 0.5) * 800,
+    y: (Math.random() - 0.5) * 600,
     vx: 0,
     vy: 0,
   }));
 
   const links = buildLinks(articles);
 
-  // Run force simulation — spread nodes across ~600 world units
+  // Run force simulation — spread nodes across ~800 world units
   const simulation = forceSimulation(simNodes)
     .force(
       "link",
       forceLink(links)
         .id((_d, i) => i)
-        .distance(200)
+        .distance(250)
         .strength((d: any) => d.strength),
     )
-    .force("charge", forceManyBody().strength(-800))
-    .force("center", forceCenter(0, 0).strength(0.03))
-    .force("collide", forceCollide(100))
+    .force("charge", forceManyBody().strength(-1200))
+    .force("center", forceCenter(0, 0).strength(0.02))
+    .force("collide", forceCollide(130))
     .stop();
 
   // Run 300 ticks

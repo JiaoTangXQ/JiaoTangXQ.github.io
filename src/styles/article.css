@@ -128,6 +128,12 @@
   color: var(--text-primary);
 }
 
+/* Re-enable text selection for reading surface */
+.article-scroll {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* ---- Article body (prose) ---- */
 .article-body {
   max-width: var(--content-max-width);

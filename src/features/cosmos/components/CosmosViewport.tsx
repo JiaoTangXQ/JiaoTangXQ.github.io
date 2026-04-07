@@ -110,7 +110,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       setSearchOpen(false);
       cruise.interrupt();
       cam.flyTo(node.x, node.y, 1.8);
-      setTimeout(() => setActiveNode(node), 800);
+      setTimeout(() => setActiveNode(node), 500);
     },
     [cam, cruise],
   );

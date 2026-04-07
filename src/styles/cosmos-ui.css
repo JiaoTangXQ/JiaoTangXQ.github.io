@@ -670,3 +670,105 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ============================================================
+   Mobile responsive — cosmos overlay
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Chrome: compact brand + actions */
+  .cosmos-chrome__brand {
+    top: 16px;
+    left: 16px;
+  }
+
+  .cosmos-chrome__eyebrow {
+    font-size: 0.5rem;
+    margin-bottom: 4px;
+  }
+
+  .cosmos-chrome__title {
+    font-size: 1.25rem;
+  }
+
+  .cosmos-chrome__descriptor {
+    display: none;
+  }
+
+  .cosmos-chrome__actions {
+    top: 16px;
+    right: 16px;
+    gap: 6px;
+  }
+
+  .cosmos-chrome__btn {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+
+  .cosmos-chrome__btn-icon {
+    display: none;
+  }
+
+  /* ThemeLens: smaller pills, wrap better */
+  .theme-lens {
+    bottom: 16px;
+    left: 16px;
+    right: 80px;
+    gap: 6px;
+  }
+
+  .theme-lens__pill {
+    padding: 5px 12px;
+    font-size: 0.68rem;
+  }
+
+  /* GalaxyCompass */
+  .galaxy-compass {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .galaxy-compass__label {
+    font-size: 0.65rem;
+  }
+
+  /* Summary card: full-width on small screens */
+  .summary-card {
+    width: 96vw;
+    max-width: none;
+    border-radius: 14px;
+  }
+
+  .summary-card__cover {
+    padding: 32px 20px 24px;
+    min-height: 120px;
+  }
+
+  .summary-card__cover-title {
+    font-size: 1.3rem;
+  }
+
+  .summary-card__body {
+    padding: 18px 20px 22px;
+  }
+
+  /* Search palette: wider, closer to top */
+  .search-palette-overlay {
+    padding-top: min(10vh, 80px);
+  }
+
+  .search-palette {
+    width: 96vw;
+    max-height: 70vh;
+  }
+
+  /* Node labels: larger touch targets */
+  .node-labels__card {
+    min-width: 140px;
+    padding: 14px 16px;
+  }
+
+  .node-labels__title {
+    font-size: 0.78rem;
+  }
+}

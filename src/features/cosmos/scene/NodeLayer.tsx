@@ -99,8 +99,8 @@ function PlanetMesh({
     // Compute target emphasis
     const level = getEmphasis(node, hoveredSlug, activeSlug, activeTheme, hoveredCluster);
     const target = emphasisToFloat(level);
-    // Smooth interpolation toward target (avoid jarring pops)
-    emphasisRef.current += (target - emphasisRef.current) * 0.12;
+    // Smooth interpolation toward target — 0.18 for snappier response
+    emphasisRef.current += (target - emphasisRef.current) * 0.18;
     mat.uniforms.uEmphasis.value = emphasisRef.current;
   });
 
@@ -129,8 +129,8 @@ function PlanetMesh({
   );
 
   // Billboard plane scale: node.size (1.0-1.7) → world-space diameter
-  // Multiply by 30 so nodes are visible in the ~800-unit frustum
-  const scale = node.size * 30;
+  // Multiply by 36 for better visual presence in the ~800-unit frustum
+  const scale = node.size * 36;
 
   return (
     <mesh
