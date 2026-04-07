@@ -11,7 +11,10 @@ export function CosmosChrome({ onSearchOpen, onReset }: Props) {
       {/* Brand */}
       <div className="cosmos-chrome__brand">
         <div className="cosmos-chrome__eyebrow">JiaoTang Planet</div>
-        <div className="cosmos-chrome__title">焦糖星球</div>
+        <div className="cosmos-chrome__title-wrap">
+          <div className="cosmos-chrome__title">焦糖星球</div>
+          <div className="cosmos-chrome__descriptor">living thought cosmos</div>
+        </div>
       </div>
 
       {/* Actions */}

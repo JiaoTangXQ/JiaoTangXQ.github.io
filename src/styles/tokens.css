@@ -1,9 +1,9 @@
 :root {
-  /* Space palette */
-  --space-deep: #060d18;
-  --space-mid: #0a1628;
-  --space-surface: #0f1d32;
-  --space-elevated: #162440;
+  /* Space palette — C1 teal-black atmosphere */
+  --space-deep: #05101a;
+  --space-mid: #091a26;
+  --space-surface: #0d2233;
+  --space-elevated: #142d3e;
 
   /* Text */
   --text-primary: rgba(245, 239, 231, 0.92);
@@ -20,7 +20,7 @@
   --glass-blur: 16px;
 
   /* Typography */
-  --font-display: "Songti SC", "Noto Serif SC", Georgia, serif;
+  --font-display: "Long Cang", "Songti SC", "Noto Serif SC", Georgia, serif;
   --font-body: "PingFang SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont,
     sans-serif;
   --font-mono: "SF Mono", "Fira Code", "Consolas", monospace;

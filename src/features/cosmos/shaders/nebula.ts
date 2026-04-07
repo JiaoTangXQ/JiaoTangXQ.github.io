@@ -122,21 +122,21 @@ void main() {
   // Layer 3: fine wispy detail
   float n3 = snoise(vec3(nCoord * 3.0 + 7.1, t * 0.8));
 
-  // Combine layers — the large structure dominates, details add texture
-  float cloud = n1 * 0.6 + n2 * 0.3 + n3 * 0.1;
-  // Remap from [-1,1] to [0,1] and shape the falloff
-  cloud = smoothstep(-0.1, 0.6, cloud);
+  // Combine layers — the large structure dominates, soft atmospheric feel
+  float cloud = n1 * 0.65 + n2 * 0.25 + n3 * 0.1;
+  // Wider smoothstep for broader, softer cloud shapes
+  cloud = smoothstep(-0.15, 0.7, cloud);
 
-  // Soft radial falloff from center of the plane
+  // Soft radial falloff — wider and more gradual for atmospheric fog feel
   vec2 center = uv - 0.5;
-  float radial = 1.0 - smoothstep(0.0, 0.5, length(center));
-  radial = radial * radial; // squared for softer edge
+  float radial = 1.0 - smoothstep(0.0, 0.55, length(center));
+  radial = radial * radial * radial; // cubed for very soft edge
 
-  // Final alpha
+  // Final alpha — keep subtle
   float alpha = cloud * radial * uOpacity;
 
-  // Color: use the cluster color with slight brightness variation from noise
-  vec3 color = uColor * (0.8 + 0.2 * n1);
+  // Color: use the cluster color with gentle luminous variation
+  vec3 color = uColor * (0.85 + 0.15 * n1);
 
   gl_FragColor = vec4(color, alpha);
 }

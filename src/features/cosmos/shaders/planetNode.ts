@@ -62,28 +62,29 @@ void main() {
   float baseOpacity = mix(0.15, 1.0, smoothstep(0.0, 0.5, uEmphasis));
 
   // === Sphere core ===
-  // Radial gradient from inner to outer color
-  float sphereRadius = 0.48; // slightly inside the UV boundary
+  // Radial gradient from inner to outer color — stronger center definition
+  float sphereRadius = 0.45; // tighter core
   float coreT = smoothstep(0.0, sphereRadius, dist);
   vec3 coreColor = mix(uColorInner, uColorOuter, coreT * coreT);
 
   // Inner light variation: subtle noise-driven brightness
   float noiseVal = fbmNoise(center * 8.0 + uTime * 0.15);
-  coreColor *= 0.85 + 0.15 * noiseVal;
+  coreColor *= 0.88 + 0.12 * noiseVal;
 
-  // Sphere alpha: hard-ish edge with a bit of softness
-  float coreAlpha = 1.0 - smoothstep(sphereRadius - 0.06, sphereRadius + 0.02, dist);
+  // Sphere alpha: slightly sharper core edge for cleaner definition
+  float coreAlpha = 1.0 - smoothstep(sphereRadius - 0.04, sphereRadius + 0.01, dist);
 
-  // Highlight — top-left specular-like shine
-  float highlight = 1.0 - smoothstep(0.0, 0.3, length(center - vec2(-0.08, 0.08)));
-  coreColor += vec3(0.15) * highlight * highlight;
+  // Highlight — refined specular shine, less intense
+  float highlight = 1.0 - smoothstep(0.0, 0.25, length(center - vec2(-0.08, 0.08)));
+  coreColor += vec3(0.12) * highlight * highlight;
 
   // === Outer glow ===
-  float glowRadius = 0.75;
+  // Less game-like bloom — tighter and more refined
+  float glowRadius = 0.68;
   float glowFalloff = 1.0 - smoothstep(sphereRadius, glowRadius, dist);
-  glowFalloff = glowFalloff * glowFalloff; // squared for softer fall
+  glowFalloff = glowFalloff * glowFalloff * glowFalloff; // cubed for tighter falloff
   vec3 glowColor = mix(uColorOuter, uColorInner, 0.3);
-  float glowAlpha = glowFalloff * 0.45;
+  float glowAlpha = glowFalloff * 0.35;
 
   // === Active ring pulse ===
   // Only visible when emphasis approaches 1.0

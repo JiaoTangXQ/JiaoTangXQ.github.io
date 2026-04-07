@@ -11,11 +11,11 @@ varying float vBrightness;
 varying float vColor;
 
 void main() {
-  // Per-star twinkle: smooth sin-based oscillation with individual phase offset
-  float twinkleSpeed = 0.8 + aPhase * 0.6; // slightly different speed per star
+  // Per-star twinkle: gentle sin oscillation — reduced intensity for calmer feel
+  float twinkleSpeed = 0.5 + aPhase * 0.4; // slower, gentler variation
   float twinkle = sin(uTime * twinkleSpeed + aPhase * 6.2831) * 0.5 + 0.5;
-  // Mix base brightness with twinkle — brighter stars twinkle more subtly
-  float twinkleAmount = 0.3 * (1.0 - aBrightness * 0.5);
+  // Reduced twinkle amount — brighter stars barely flicker
+  float twinkleAmount = 0.18 * (1.0 - aBrightness * 0.5);
   vBrightness = aBrightness * (1.0 - twinkleAmount + twinkleAmount * twinkle);
 
   vColor = aColor;
@@ -51,13 +51,13 @@ void main() {
 
   if (alpha < 0.01) discard;
 
-  // Star color palette based on aColor attribute:
-  // 0.0 = warm white (slightly yellow)
+  // Star color palette — warm amber to cool mint, matching C1 atmosphere
+  // 0.0 = warm amber-white
   // 0.5 = cool white (neutral)
-  // 1.0 = faint blue
-  vec3 warmWhite = vec3(1.0, 0.95, 0.85);
-  vec3 coolWhite = vec3(0.92, 0.95, 1.0);
-  vec3 faintBlue = vec3(0.75, 0.85, 1.0);
+  // 1.0 = faint mint-teal
+  vec3 warmWhite = vec3(1.0, 0.93, 0.82);
+  vec3 coolWhite = vec3(0.92, 0.96, 0.97);
+  vec3 faintBlue = vec3(0.72, 0.92, 0.95);
 
   vec3 color;
   if (vColor < 0.5) {
