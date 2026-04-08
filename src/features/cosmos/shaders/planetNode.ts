@@ -1,12 +1,32 @@
+/**
+ * 行星节点 shader — 支持 InstancedMesh
+ *
+ * 所有 per-node 数据通过 instance attributes 传入：
+ * - aColorInner / aColorOuter: 内外颜色
+ * - aEmphasis: 强调程度 (0-1)
+ * - aNodeSize: 节点大小系数
+ */
 export const planetNodeVertex = /* glsl */ `
-uniform float uSize;
+uniform float uTime;
+
+attribute vec3 aColorInner;
+attribute vec3 aColorOuter;
+attribute float aEmphasis;
+attribute float aNodeSize;
 
 varying vec2 vUv;
+varying vec3 vColorInner;
+varying vec3 vColorOuter;
+varying float vEmphasis;
+varying float vNodeSize;
 
 void main() {
   vUv = uv;
-  // Billboard plane — already positioned by the mesh transform, uSize is
-  // applied from the JS side via mesh scale. Vertex shader just passes through.
+  vColorInner = aColorInner;
+  vColorOuter = aColorOuter;
+  vEmphasis = aEmphasis;
+  vNodeSize = aNodeSize;
+
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 `;
@@ -14,13 +34,13 @@ void main() {
 export const planetNodeFragment = /* glsl */ `
 precision highp float;
 
-uniform vec3 uColorInner;
-uniform vec3 uColorOuter;
 uniform float uTime;
-uniform float uEmphasis;
-uniform float uSize;
 
 varying vec2 vUv;
+varying vec3 vColorInner;
+varying vec3 vColorOuter;
+varying float vEmphasis;
+varying float vNodeSize;
 
 // Compact hash-based noise for inner light variation
 float hash(vec2 p) {
@@ -58,48 +78,44 @@ void main() {
   float dist = length(center) * 2.0; // 0 at center, 1 at edge of UV quad
 
   // Emphasis controls overall visibility
-  // 0.0 = muted (15% opacity), 0.5 = default, 0.8 = related, 1.0 = active
-  float baseOpacity = mix(0.15, 1.0, smoothstep(0.0, 0.5, uEmphasis));
+  // 0.0 = muted (15% opacity), 0.5 = default, 1.0 = active
+  float baseOpacity = mix(0.15, 1.0, smoothstep(0.0, 0.5, vEmphasis));
 
   // === Sphere core ===
-  // Radial gradient from inner to outer color — stronger center definition
-  float sphereRadius = 0.45; // tighter core
+  float sphereRadius = 0.45;
   float coreT = smoothstep(0.0, sphereRadius, dist);
-  vec3 coreColor = mix(uColorInner, uColorOuter, coreT * coreT);
+  vec3 coreColor = mix(vColorInner, vColorOuter, coreT * coreT);
 
-  // Inner light variation: subtle noise-driven brightness
+  // Inner light variation
   float noiseVal = fbmNoise(center * 8.0 + uTime * 0.15);
   coreColor *= 0.88 + 0.12 * noiseVal;
 
-  // Sphere alpha: slightly sharper core edge for cleaner definition
+  // Sphere alpha
   float coreAlpha = 1.0 - smoothstep(sphereRadius - 0.04, sphereRadius + 0.01, dist);
 
-  // Highlight — refined specular shine, less intense
+  // Highlight
   float highlight = 1.0 - smoothstep(0.0, 0.25, length(center - vec2(-0.08, 0.08)));
   coreColor += vec3(0.12) * highlight * highlight;
 
   // === Outer glow ===
-  // Less game-like bloom — tighter and more refined
   float glowRadius = 0.68;
   float glowFalloff = 1.0 - smoothstep(sphereRadius, glowRadius, dist);
-  glowFalloff = glowFalloff * glowFalloff * glowFalloff; // cubed for tighter falloff
-  vec3 glowColor = mix(uColorOuter, uColorInner, 0.3);
+  glowFalloff = glowFalloff * glowFalloff * glowFalloff;
+  vec3 glowColor = mix(vColorOuter, vColorInner, 0.3);
   float glowAlpha = glowFalloff * 0.35;
 
   // === Active ring pulse ===
-  // Only visible when emphasis approaches 1.0
-  float ringActive = smoothstep(0.85, 1.0, uEmphasis);
+  float ringActive = smoothstep(0.85, 1.0, vEmphasis);
   float ringDist = abs(dist - 0.55 - 0.03 * sin(uTime * 2.5));
   float ring = (1.0 - smoothstep(0.0, 0.06, ringDist)) * ringActive;
-  vec3 ringColor = uColorInner * 1.3;
+  vec3 ringColor = vColorInner * 1.3;
 
   // === Related brightness boost ===
-  float relatedBoost = smoothstep(0.6, 0.85, uEmphasis);
+  float relatedBoost = smoothstep(0.6, 0.85, vEmphasis);
   coreColor *= 1.0 + relatedBoost * 0.25;
   glowAlpha *= 1.0 + relatedBoost * 0.4;
 
   // === Composite ===
-  // Core on top of glow (premultiplied-style blend)
   vec3 color = coreColor * coreAlpha + glowColor * glowAlpha * (1.0 - coreAlpha);
   color += ringColor * ring;
   float alpha = coreAlpha + glowAlpha * (1.0 - coreAlpha) + ring * 0.6;

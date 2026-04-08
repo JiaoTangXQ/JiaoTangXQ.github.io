@@ -1,13 +1,17 @@
 /**
  * SEO 构建脚本
  * 在 vite build 之后运行，生成：
- * - 每篇文章的独立 HTML（含 OG/Twitter Card 标签）
+ * - 每篇文章的预渲染 HTML（含 OG/Twitter Card + 正文内容供爬虫索引）
  * - 站点级 OG 标签注入
  * - robots.txt
  * - sitemap.xml
  */
 import fs from "fs";
 import path from "path";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
 import { readArticles } from "./readArticles.mjs";
 
 const SITE_URL = "https://jiaotangxq.github.io";
@@ -39,46 +43,88 @@ function normalizeDate(dateStr: string): string {
   return d.toISOString().split("T")[0];
 }
 
+/** 将 Markdown 正文渲染为 HTML（构建时预渲染供爬虫索引） */
+async function renderMarkdown(md: string): Promise<string> {
+  const result = await unified()
+    .use(remarkParse)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeStringify, { allowDangerousHtml: true })
+    .process(md);
+  return String(result);
+}
+
+/** 剥离 YAML front-matter */
+function stripFrontmatter(md: string): string {
+  const trimmed = md.trimStart();
+  if (!trimmed.startsWith("---")) return md;
+  const end = trimmed.indexOf("---", 3);
+  if (end === -1) return md;
+  return trimmed.slice(end + 3).trimStart();
+}
+
 // --- 读取 Vite 构建产物作为模板 ---
 const template = fs.readFileSync(path.join(DIST, "index.html"), "utf-8");
 const articles = readArticles();
 
-// --- A1: 为每篇文章生成独立 HTML ---
+// --- 为每篇文章生成预渲染 HTML ---
 let count = 0;
-for (const a of articles) {
-  const dir = path.join(DIST, "article", a.slug);
-  fs.mkdirSync(dir, { recursive: true });
 
-  const title = `${escapeHtml(a.title)} — ${SITE_NAME}`;
-  const desc = escapeHtml(a.summary);
-  const url = `${SITE_URL}/article/${a.slug}`;
+async function buildArticlePages() {
+  for (const a of articles) {
+    const dir = path.join(DIST, "article", a.slug);
+    fs.mkdirSync(dir, { recursive: true });
 
-  const ogBlock = [
-    `<meta property="og:title" content="${escapeHtml(a.title)}" />`,
-    `<meta property="og:description" content="${desc}" />`,
-    `<meta property="og:type" content="article" />`,
-    `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:site_name" content="${SITE_NAME}" />`,
-    `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:title" content="${escapeHtml(a.title)}" />`,
-    `<meta name="twitter:description" content="${desc}" />`,
-  ].join("\n    ");
+    const title = `${escapeHtml(a.title)} — ${SITE_NAME}`;
+    const desc = escapeHtml(a.summary);
+    const url = `${SITE_URL}/article/${a.slug}`;
+    const dateStr = normalizeDate(a.date);
 
-  let html = template;
-  // 替换 title
-  html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
-  // 替换 description
-  html = html.replace(
-    /<meta name="description"[^>]*\/>/,
-    `<meta name="description" content="${desc}" />`,
-  );
-  // 在 </head> 前插入 OG 标签
-  html = html.replace("</head>", `    ${ogBlock}\n  </head>`);
+    const ogBlock = [
+      `<meta property="og:title" content="${escapeHtml(a.title)}" />`,
+      `<meta property="og:description" content="${desc}" />`,
+      `<meta property="og:type" content="article" />`,
+      `<meta property="og:url" content="${url}" />`,
+      `<meta property="og:site_name" content="${SITE_NAME}" />`,
+      `<meta name="twitter:card" content="summary_large_image" />`,
+      `<meta name="twitter:title" content="${escapeHtml(a.title)}" />`,
+      `<meta name="twitter:description" content="${desc}" />`,
+    ].join("\n    ");
 
-  fs.writeFileSync(path.join(dir, "index.html"), html);
-  count++;
+    // 预渲染文章正文
+    const bodyMd = stripFrontmatter(a.body);
+    const bodyHtml = await renderMarkdown(bodyMd);
+
+    // 预渲染内容块（noscript 内，供爬虫索引；SPA hydrate 后由 React 接管）
+    const prerenderedBlock = `
+    <noscript>
+      <article style="max-width:680px;margin:0 auto;padding:2rem;color:#ccc;font-family:sans-serif">
+        <h1>${escapeHtml(a.title)}</h1>
+        <time datetime="${dateStr}">${dateStr}</time>
+        <p>${desc}</p>
+        ${bodyHtml}
+      </article>
+    </noscript>`;
+
+    let html = template;
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
+    html = html.replace(
+      /<meta name="description"[^>]*\/>/,
+      `<meta name="description" content="${desc}" />`,
+    );
+    html = html.replace("</head>", `    ${ogBlock}\n  </head>`);
+    // 在 <div id="root"></div> 后插入预渲染内容
+    html = html.replace(
+      '<div id="root"></div>',
+      `<div id="root"></div>${prerenderedBlock}`,
+    );
+
+    fs.writeFileSync(path.join(dir, "index.html"), html);
+    count++;
+  }
+  console.log(`✓ SEO: ${count} 篇文章页面已预渲染`);
 }
-console.log(`✓ SEO: ${count} 篇文章页面已生成`);
+
+await buildArticlePages();
 
 // --- A1: 站点级 OG 标签 ---
 const siteOg = [

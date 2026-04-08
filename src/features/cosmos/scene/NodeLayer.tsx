@@ -1,4 +1,10 @@
-import { useRef, useMemo, useCallback } from "react";
+/**
+ * Instanced 节点渲染层
+ *
+ * 使用 InstancedMesh 批量渲染所有行星节点，支持 200+ 节点不掉帧。
+ * 每个节点的颜色、大小、强调状态通过 instance attributes 传递到 shader。
+ */
+import { useRef, useMemo, useCallback, useEffect } from "react";
 import { useFrame, ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import type { CosmosNode } from "@/lib/content/types";
@@ -15,11 +21,9 @@ type Props = {
   onNodeClick: (slug: string) => void;
 };
 
-/**
- * Renders all cosmos nodes as billboard planes with the planetNode shader.
- * Each node's shader uniforms are driven by its data and the current
- * interaction state (hovered, active, theme filter).
- */
+const DUMMY = new THREE.Object3D();
+const LERP_SPEED = 0.18;
+
 export function NodeLayer({
   nodes,
   hoveredSlug,
@@ -28,88 +32,125 @@ export function NodeLayer({
   onNodeHover,
   onNodeClick,
 }: Props) {
-  // Find the cluster of the currently hovered node for "related" emphasis
+  const meshRef = useRef<THREE.InstancedMesh>(null!);
+  const materialRef = useRef<THREE.ShaderMaterial>(null!);
+
+  // 当前 emphasis 值（用于平滑插值）
+  const emphasisCurrent = useRef<Float32Array>(
+    new Float32Array(nodes.length).fill(0.5),
+  );
+
+  // 找到 hovered 节点的 cluster
   const hoveredCluster = useMemo(() => {
     if (!hoveredSlug) return null;
     const node = nodes.find((n) => n.slug === hoveredSlug);
     return node?.cluster ?? null;
   }, [hoveredSlug, nodes]);
 
-  return (
-    <group renderOrder={10}>
-      {nodes.map((node) => (
-        <PlanetMesh
-          key={node.slug}
-          node={node}
-          hoveredSlug={hoveredSlug}
-          activeSlug={activeSlug}
-          activeTheme={activeTheme}
-          hoveredCluster={hoveredCluster}
-          onNodeHover={onNodeHover}
-          onNodeClick={onNodeClick}
-        />
-      ))}
-    </group>
-  );
-}
+  // Instance attributes: 颜色、emphasis、大小
+  const { colorInner, colorOuter, emphasis, nodeSize, geometry } =
+    useMemo(() => {
+      const count = nodes.length;
+      const ci = new Float32Array(count * 3);
+      const co = new Float32Array(count * 3);
+      const em = new Float32Array(count).fill(0.5);
+      const ns = new Float32Array(count);
 
-type PlanetProps = {
-  node: CosmosNode;
-  hoveredSlug: string | null;
-  activeSlug: string | null;
-  activeTheme: string | null;
-  hoveredCluster: string | null;
-  onNodeHover: (slug: string | null) => void;
-  onNodeClick: (slug: string) => void;
-};
+      for (let i = 0; i < count; i++) {
+        const palette = getPalette(nodes[i].cluster);
+        const inner = new THREE.Color(palette.core[0]);
+        const outer = new THREE.Color(palette.core[1]);
+        ci[i * 3 + 0] = inner.r;
+        ci[i * 3 + 1] = inner.g;
+        ci[i * 3 + 2] = inner.b;
+        co[i * 3 + 0] = outer.r;
+        co[i * 3 + 1] = outer.g;
+        co[i * 3 + 2] = outer.b;
+        ns[i] = nodes[i].size;
+      }
 
-function PlanetMesh({
-  node,
-  hoveredSlug,
-  activeSlug,
-  activeTheme,
-  hoveredCluster,
-  onNodeHover,
-  onNodeClick,
-}: PlanetProps) {
-  const materialRef = useRef<THREE.ShaderMaterial>(null!);
+      const geo = new THREE.PlaneGeometry(1, 1);
+      geo.setAttribute(
+        "aColorInner",
+        new THREE.InstancedBufferAttribute(ci, 3),
+      );
+      geo.setAttribute(
+        "aColorOuter",
+        new THREE.InstancedBufferAttribute(co, 3),
+      );
+      geo.setAttribute("aEmphasis", new THREE.InstancedBufferAttribute(em, 1));
+      geo.setAttribute("aNodeSize", new THREE.InstancedBufferAttribute(ns, 1));
 
-  const palette = useMemo(() => getPalette(node.cluster), [node.cluster]);
+      return { colorInner: ci, colorOuter: co, emphasis: em, nodeSize: ns, geometry: geo };
+    }, [nodes]);
 
+  // Shader uniforms（只有 uTime 是全局 uniform）
   const uniforms = useMemo(
     () => ({
-      uColorInner: { value: new THREE.Color(palette.core[0]) },
-      uColorOuter: { value: new THREE.Color(palette.core[1]) },
       uTime: { value: 0 },
-      uEmphasis: { value: 0.5 },
-      uSize: { value: node.size },
     }),
-    [palette, node.size],
+    [],
   );
 
-  // Compute target emphasis each frame and smoothly interpolate
-  const emphasisRef = useRef(0.5);
+  // 设置 instance transforms（位置 + 缩放）
+  useEffect(() => {
+    const mesh = meshRef.current;
+    if (!mesh) return;
 
+    for (let i = 0; i < nodes.length; i++) {
+      const scale = nodes[i].size * 36;
+      DUMMY.position.set(nodes[i].x, nodes[i].y, 0);
+      DUMMY.scale.set(scale, scale, 1);
+      DUMMY.updateMatrix();
+      mesh.setMatrixAt(i, DUMMY.matrix);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+  }, [nodes]);
+
+  // 每帧更新 uTime 和 emphasis 插值
   useFrame(({ clock }) => {
     const mat = materialRef.current;
     if (!mat) return;
-
     mat.uniforms.uTime.value = clock.getElapsedTime();
 
-    // Compute target emphasis
-    const level = getEmphasis(node, hoveredSlug, activeSlug, activeTheme, hoveredCluster);
-    const target = emphasisToFloat(level);
-    // Smooth interpolation toward target — 0.18 for snappier response
-    emphasisRef.current += (target - emphasisRef.current) * 0.18;
-    mat.uniforms.uEmphasis.value = emphasisRef.current;
+    const empAttr = geometry.getAttribute("aEmphasis") as THREE.InstancedBufferAttribute;
+    const cur = emphasisCurrent.current;
+    let needsUpdate = false;
+
+    for (let i = 0; i < nodes.length; i++) {
+      const level = getEmphasis(
+        nodes[i],
+        hoveredSlug,
+        activeSlug,
+        activeTheme,
+        hoveredCluster,
+      );
+      const target = emphasisToFloat(level);
+      const prev = cur[i];
+      const next = prev + (target - prev) * LERP_SPEED;
+
+      if (Math.abs(next - prev) > 0.001) {
+        cur[i] = next;
+        empAttr.array[i] = next;
+        needsUpdate = true;
+      }
+    }
+
+    if (needsUpdate) {
+      empAttr.needsUpdate = true;
+    }
   });
 
-  const handlePointerEnter = useCallback(
+  // 通过 instanceId 识别被点击/hover 的节点
+  const handlePointerMove = useCallback(
     (e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
-      onNodeHover(node.slug);
+      const id = e.instanceId;
+      if (id !== undefined && id < nodes.length) {
+        onNodeHover(nodes[id].slug);
+      }
     },
-    [node.slug, onNodeHover],
+    [nodes, onNodeHover],
   );
 
   const handlePointerLeave = useCallback(
@@ -123,24 +164,23 @@ function PlanetMesh({
   const handleClick = useCallback(
     (e: ThreeEvent<MouseEvent>) => {
       e.stopPropagation();
-      onNodeClick(node.slug);
+      const id = e.instanceId;
+      if (id !== undefined && id < nodes.length) {
+        onNodeClick(nodes[id].slug);
+      }
     },
-    [node.slug, onNodeClick],
+    [nodes, onNodeClick],
   );
 
-  // Billboard plane scale: node.size (1.0-1.7) → world-space diameter
-  // Multiply by 36 for better visual presence in the ~800-unit frustum
-  const scale = node.size * 36;
-
   return (
-    <mesh
-      position={[node.x, node.y, 0]}
-      scale={[scale, scale, 1]}
-      onPointerEnter={handlePointerEnter}
+    <instancedMesh
+      ref={meshRef}
+      args={[geometry, undefined, nodes.length]}
+      renderOrder={10}
+      onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
     >
-      <planeGeometry args={[1, 1]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={planetNodeVertex}
@@ -150,6 +190,6 @@ function PlanetMesh({
         depthWrite={false}
         side={THREE.DoubleSide}
       />
-    </mesh>
+    </instancedMesh>
   );
 }
