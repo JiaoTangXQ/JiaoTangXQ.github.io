@@ -38,7 +38,7 @@ export function FpsMonitor() {
 
 /** 将 FPS 值桥接到 DOM */
 function FpsBridge({ fps }: { fps: number }) {
-  const divRef = useRef<HTMLDivElement | null>(null);
+  const divRef = useRef<HTMLElement | null>(null);
 
   // 惰性创建 DOM 元素
   if (!divRef.current && typeof document !== "undefined") {

@@ -47,7 +47,7 @@ export function ArticlePage() {
   // 淡入/淡出动画状态
   const [fadeIn, setFadeIn] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
-  const fadeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // 页面加载完成后淡入
   useEffect(() => {

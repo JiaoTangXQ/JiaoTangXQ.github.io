@@ -26,7 +26,7 @@ export function useZoomTransition(cam: UseCameraReturn) {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<TransitionPhase>("idle");
   const [overlayOpacity, setOverlayOpacity] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // 清理定时器
   useEffect(() => {

@@ -24,6 +24,11 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
     return () => cancelAnimationFrame(frame);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setVisible(false);
+    setTimeout(onClose, 350);
+  }, [onClose]);
+
   // Close on Escape
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -33,13 +38,7 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
     }
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  });
-
-  const handleClose = useCallback(() => {
-    setVisible(false);
-    // Wait for exit animation before unmounting
-    setTimeout(onClose, 350);
-  }, [onClose]);
+  }, [handleClose]);
 
   // Close on overlay click
   function handleOverlayClick(e: React.MouseEvent) {

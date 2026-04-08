@@ -5,6 +5,7 @@ import type {
   SearchIndexEntry,
 } from "@/lib/content/types";
 import { CosmosScene } from "../scene/CosmosScene";
+import { CosmosErrorBoundary } from "./ErrorBoundary";
 import { useCamera } from "../camera/useCamera";
 import { useAutoCruise } from "../camera/useAutoCruise";
 import { useGestures } from "../camera/useGestures";
@@ -207,6 +208,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       }}
     >
       {/* Three.js canvas */}
+      <CosmosErrorBoundary>
       <CosmosScene
         data={dataset}
         cameraRef={cam._stateRef}
@@ -216,6 +218,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         onNodeHover={handleNodeHover}
         onNodeClick={handleNodeClick}
       />
+      </CosmosErrorBoundary>
 
       {/* DOM overlay: node labels */}
       <NodeLabels
