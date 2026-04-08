@@ -27,7 +27,8 @@ void main() {
   vEmphasis = aEmphasis;
   vNodeSize = aNodeSize;
 
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  // instanceMatrix 包含每个节点的位置和缩放
+  gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
 }
 `;
 
