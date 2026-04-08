@@ -114,12 +114,30 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     setHoveredSlug(slug);
   }, []);
 
+  /** 搜索飞行效果：先微缩 → 飞向目标 → 推近 → 展开卡片 */
   const handleSearchSelect = useCallback(
     (node: CosmosNode) => {
       setSearchOpen(false);
       cruise.interrupt();
-      cam.flyTo(node.x, node.y, 1.8);
-      setTimeout(() => setActiveNode(node), 500);
+
+      const current = cam._stateRef.current;
+      const dx = node.x - current.x;
+      const dy = node.y - current.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 200) {
+        // 近距离：直接飞过去
+        cam.flyTo(node.x, node.y, 1.8);
+        setTimeout(() => setActiveNode(node), 500);
+      } else {
+        // 远距离：先微缩出 → 飞行 → 推近
+        const zoomOut = Math.max(0.6, current.zoom - 0.3);
+        cam.flyTo(current.x, current.y, zoomOut);
+        setTimeout(() => {
+          cam.flyTo(node.x, node.y, 1.8);
+          setTimeout(() => setActiveNode(node), 600);
+        }, 300);
+      }
     },
     [cam, cruise],
   );

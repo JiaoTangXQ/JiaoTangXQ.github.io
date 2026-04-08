@@ -10,7 +10,8 @@
     "build:articles": "mkdir -p public/articles && cp content/articles/*.md public/articles/",
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ai:suggest": "tsx scripts/content/aiSuggest.mts"
   },
   "dependencies": {
     "@react-three/fiber": "^9.1.2",

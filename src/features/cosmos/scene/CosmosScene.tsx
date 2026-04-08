@@ -6,6 +6,7 @@ import { DeepSpaceLayer } from "./DeepSpaceLayer";
 import { StarFieldLayer } from "./StarFieldLayer";
 import { NebulaLayer } from "./NebulaLayer";
 import { MeteorLayer } from "./MeteorLayer";
+import { GravityFieldLayer } from "./GravityFieldLayer";
 import { NodeLayer } from "./NodeLayer";
 import { FpsMonitor } from "./FpsMonitor";
 
@@ -29,9 +30,10 @@ const DEV = import.meta.env.DEV;
  * 渲染顺序（从后到前）：
  * 1. DeepSpace — fragment shader 深空渐变
  * 2. StarField — 12000 粒子星空
- * 3. Nebula   — 多层 FBM 星云（每个集群一片）
- * 4. Meteor   — 流星 + 星尘粒子
- * 5. Nodes    — 行星节点（InstancedMesh）
+ * 3. Nebula        — 多层 FBM 星云（每个集群一片）
+ * 4. Meteor        — 流星 + 星尘粒子
+ * 5. GravityField  — 引力场暗示连线
+ * 6. Nodes         — 行星节点（InstancedMesh）
  */
 export function CosmosScene({
   data,
@@ -75,6 +77,7 @@ export function CosmosScene({
       <StarFieldLayer />
       <NebulaLayer clusters={data.clusters} />
       <MeteorLayer />
+      <GravityFieldLayer nodes={data.nodes} />
       <NodeLayer
         nodes={data.nodes}
         hoveredSlug={hoveredSlug}
