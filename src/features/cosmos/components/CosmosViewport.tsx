@@ -8,11 +8,13 @@ import { CosmosScene } from "../scene/CosmosScene";
 import { useCamera } from "../camera/useCamera";
 import { useAutoCruise } from "../camera/useAutoCruise";
 import { useGestures } from "../camera/useGestures";
+import { useZoomTransition } from "../camera/useZoomTransition";
 import { loadCameraFromHash } from "../camera/urlState";
 import { getLodMode } from "../nodes/nodeLod";
 import { CosmosChrome } from "./CosmosChrome";
 import { SummaryCard } from "./SummaryCard";
 import { SearchPalette } from "./SearchPalette";
+import { TransitionOverlay } from "./TransitionOverlay";
 import { ThemeLens } from "./ThemeLens";
 import { GalaxyCompass } from "./GalaxyCompass";
 import { NodeLabels } from "./NodeLabels";
@@ -29,6 +31,13 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
   const cam = useCamera(initialCamera ?? undefined);
   const cruise = useAutoCruise(cam);
   const { containerRef, handlers } = useGestures(cam, cruise);
+  const transition = useZoomTransition(cam);
+
+  // 从文章页返回时触发缩回动画
+  useEffect(() => {
+    transition.handleReturn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // --- UI state ---
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
@@ -113,6 +122,16 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       setTimeout(() => setActiveNode(node), 500);
     },
     [cam, cruise],
+  );
+
+  /** 从 SummaryCard 点击"阅读全文"：触发缩放过渡 */
+  const handleNavigateToArticle = useCallback(
+    (node: CosmosNode) => {
+      setActiveNode(null);
+      cruise.interrupt();
+      transition.enterArticle(node);
+    },
+    [cruise, transition],
   );
 
   const handleThemeChange = useCallback(
@@ -226,11 +245,19 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         </div>
       </div>
 
+      {/* 缩放过渡遮罩 */}
+      <TransitionOverlay
+        opacity={transition.overlayOpacity}
+        duration={transition.fadeDuration}
+        visible={transition.isTransitioning}
+      />
+
       {/* Summary card */}
-      {activeNode && (
+      {activeNode && !transition.isTransitioning && (
         <SummaryCard
           node={activeNode}
           onClose={() => setActiveNode(null)}
+          onNavigate={handleNavigateToArticle}
           cameraHash={`x=${Math.round(domCamera.x)}&y=${Math.round(domCamera.y)}&z=${domCamera.zoom.toFixed(2)}`}
         />
       )}

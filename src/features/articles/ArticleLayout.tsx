@@ -10,6 +10,8 @@ type Props = {
   cover: CoverConfig;
   bodyHtml: string;
   backUrl: string;
+  /** 自定义返回处理（用于过渡动画），若提供则替代默认 Link 行为 */
+  onBack?: (e: React.MouseEvent) => void;
 };
 
 /**
@@ -39,6 +41,7 @@ export function ArticleLayout({
   cover,
   bodyHtml,
   backUrl,
+  onBack,
   children,
 }: Props & { children?: React.ReactNode }) {
   const palette = getPalette(cluster);
@@ -66,7 +69,7 @@ export function ArticleLayout({
       style={{ "--article-accent": accent } as React.CSSProperties}
     >
       {/* Back button */}
-      <Link to={backUrl} className="article-back">
+      <Link to={backUrl} className="article-back" onClick={onBack}>
         <span className="article-back__arrow">&larr;</span>
         <span>返回星图</span>
       </Link>

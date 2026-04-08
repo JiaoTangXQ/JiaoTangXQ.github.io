@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import MiniSearch from "minisearch";
 import type { CosmosNode, SearchIndexEntry } from "@/lib/content/types";
 import { getPalette } from "@/lib/content/types";
 import "@/styles/cosmos-ui.css";
@@ -37,69 +38,59 @@ export function SearchPalette({
   const resultsRef = useRef<HTMLDivElement>(null);
   const paletteRef = useRef<HTMLDivElement>(null);
 
-  // Build a lookup map from slug -> SearchIndexEntry
-  const indexMap = useMemo(() => {
-    const map = new Map<string, SearchIndexEntry>();
-    for (const entry of searchIndex) {
-      map.set(entry.slug, entry);
+  // slug → CosmosNode 映射
+  const nodeMap = useMemo(() => {
+    const map = new Map<string, CosmosNode>();
+    for (const node of items) {
+      map.set(node.slug, node);
     }
     return map;
+  }, [items]);
+
+  // 构建 MiniSearch 索引（模糊搜索 + 前缀匹配 + 字段权重）
+  const miniSearch = useMemo(() => {
+    const ms = new MiniSearch<{ id: string; title: string; summary: string; topics_text: string; body: string }>({
+      fields: ["title", "summary", "topics_text", "body"],
+      storeFields: ["id"],
+      searchOptions: {
+        boost: { title: 5, summary: 2, topics_text: 3, body: 1 },
+        fuzzy: 0.2,
+        prefix: true,
+      },
+    });
+
+    ms.addAll(
+      searchIndex.map((entry) => ({
+        id: entry.slug,
+        title: entry.title,
+        summary: entry.summary,
+        topics_text: entry.topics.join(" "),
+        body: entry.body,
+      })),
+    );
+
+    return ms;
   }, [searchIndex]);
 
-  // Score and filter results
+  // 搜索结果
   const results: ScoredResult[] = useMemo(() => {
     if (!deferredQuery.trim()) {
-      // When no query, show all items sorted by date (newest first)
       return items
         .map((node) => ({ node, score: 0 }))
         .sort(
           (a, b) =>
-            new Date(b.node.date).getTime() - new Date(a.node.date).getTime()
+            new Date(b.node.date).getTime() - new Date(a.node.date).getTime(),
         );
     }
 
-    const q = deferredQuery.toLowerCase();
-    const scored: ScoredResult[] = [];
-
-    for (const node of items) {
-      let score = 0;
-      const entry = indexMap.get(node.slug);
-
-      // Title match: +5
-      if (node.title.toLowerCase().includes(q)) {
-        score += 5;
-      }
-
-      // Topics match: +3
-      if (node.topics.some((t) => t.toLowerCase().includes(q))) {
-        score += 3;
-      }
-
-      // Summary match: +2
-      if (node.summary.toLowerCase().includes(q)) {
-        score += 2;
-      }
-
-      // Body match: +1
-      if (entry?.body.toLowerCase().includes(q)) {
-        score += 1;
-      }
-
-      if (score > 0) {
-        scored.push({ node, score });
-      }
-    }
-
-    // Sort by score desc, then date desc
-    scored.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return (
-        new Date(b.node.date).getTime() - new Date(a.node.date).getTime()
-      );
-    });
-
-    return scored;
-  }, [deferredQuery, items, indexMap]);
+    return miniSearch
+      .search(deferredQuery)
+      .map((result) => {
+        const node = nodeMap.get(result.id as string);
+        return node ? { node, score: result.score } : null;
+      })
+      .filter((r): r is ScoredResult => r !== null);
+  }, [deferredQuery, items, miniSearch, nodeMap]);
 
   // Reset active index when results change
   useEffect(() => {

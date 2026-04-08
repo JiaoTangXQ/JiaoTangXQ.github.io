@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Link } from "react-router-dom";
 import type { CosmosNode } from "@/lib/content/types";
 import { getPalette, buildCoverGradient } from "@/lib/content/types";
 import "@/styles/cosmos-ui.css";
@@ -7,11 +6,13 @@ import "@/styles/cosmos-ui.css";
 type Props = {
   node: CosmosNode;
   onClose: () => void;
+  /** 点击"阅读全文"时触发缩放过渡，替代直接路由跳转 */
+  onNavigate?: (node: CosmosNode) => void;
   /** Current camera hash (e.g. "x=120&y=-80&z=1.5") for return navigation */
   cameraHash?: string;
 };
 
-export function SummaryCard({ node, onClose, cameraHash }: Props) {
+export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
   const [visible, setVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -50,11 +51,13 @@ export function SummaryCard({ node, onClose, cameraHash }: Props) {
   const coverGradient = buildCoverGradient(node.cover, node.cluster);
   const ctaGradient = `linear-gradient(135deg, ${palette.core[0]}, ${palette.core[1]})`;
 
-  // Use current camera hash for return navigation
-  const articlePath = `/article/${node.slug}`;
-  const articleHash = cameraHash ? `#${cameraHash}` : "";
-
   const formattedDate = formatDate(node.date);
+
+  const handleReadMore = useCallback(() => {
+    if (onNavigate) {
+      onNavigate(node);
+    }
+  }, [node, onNavigate]);
 
   return (
     <div
@@ -103,16 +106,16 @@ export function SummaryCard({ node, onClose, cameraHash }: Props) {
 
           <p className="summary-card__summary">{node.summary}</p>
 
-          <Link
+          <button
             className="summary-card__cta"
-            to={`${articlePath}${articleHash}`}
+            onClick={handleReadMore}
             style={{ background: ctaGradient }}
           >
             阅读全文
             <span className="summary-card__cta-arrow" aria-hidden="true">
               →
             </span>
-          </Link>
+          </button>
         </div>
       </div>
     </div>

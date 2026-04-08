@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -36,11 +36,42 @@ async function renderMarkdown(md: string): Promise<string> {
 export function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [cosmos, setCosmos] = useState<CosmosData | null>(null);
   const [article, setArticle] = useState<ArticleData | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "not-found">(
     "loading",
+  );
+
+  // 淡入/淡出动画状态
+  const [fadeIn, setFadeIn] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // 页面加载完成后淡入
+  useEffect(() => {
+    const timer = setTimeout(() => setFadeIn(false), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    };
+  }, []);
+
+  /** 返回宇宙：先淡出再导航 */
+  const handleBack = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setFadeOut(true);
+      fadeTimerRef.current = setTimeout(() => {
+        navigate(`/${location.hash}`);
+      }, 450);
+    },
+    [navigate, location.hash],
   );
 
   // Compute back URL: return to cosmos root, preserving camera hash from URL
@@ -165,18 +196,35 @@ export function ArticlePage() {
   const { node, bodyHtml } = article;
 
   return (
-    <ArticleLayout
-      title={node.title}
-      date={node.date}
-      topics={node.topics}
-      cluster={node.cluster}
-      cover={node.cover}
-      bodyHtml={bodyHtml}
-      backUrl={backUrl}
-    >
-      {cosmos && (
-        <NearbyPlanets currentSlug={node.slug} nodes={cosmos.nodes} />
-      )}
-    </ArticleLayout>
+    <>
+      {/* 过渡遮罩 */}
+      <div
+        className="article-transition-overlay"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1000,
+          backgroundColor: "var(--space-deep, #060a14)",
+          opacity: fadeIn || fadeOut ? 1 : 0,
+          transition: "opacity 450ms ease-in-out",
+          pointerEvents: fadeIn || fadeOut ? "all" : "none",
+        }}
+        aria-hidden="true"
+      />
+      <ArticleLayout
+        title={node.title}
+        date={node.date}
+        topics={node.topics}
+        cluster={node.cluster}
+        cover={node.cover}
+        bodyHtml={bodyHtml}
+        backUrl={backUrl}
+        onBack={handleBack}
+      >
+        {cosmos && (
+          <NearbyPlanets currentSlug={node.slug} nodes={cosmos.nodes} />
+        )}
+      </ArticleLayout>
+    </>
   );
 }

@@ -7,6 +7,10 @@ summary: "记录焦糖星球的技术选型与实现过程——如何用 Three.
 cover:
   style: gradient
   accent: "#5cc8ff"
+  gradientAngle: 160
+  gradientColors: ["#0a2a3a", "#1a6080", "#5cc8ff"]
+  titleAlign: left
+  titlePosition: bottom
 importance: 1.4
 ---
 
