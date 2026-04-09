@@ -1,12 +1,5 @@
 import fs from "fs";
 import path from "path";
-import {
-  forceSimulation,
-  forceLink,
-  forceManyBody,
-  forceCenter,
-  forceCollide,
-} from "d3-force";
 import { readArticles } from "./readArticles.mjs";
 import type { CosmosData, CosmosNode, ClusterInfo } from "../../src/lib/content/types.js";
 
@@ -18,30 +11,39 @@ const CLUSTER_COLORS: Record<string, string> = {
   健身: "#d8ff57",
 };
 
-function buildLinks(articles: ReturnType<typeof readArticles>) {
-  const links: Array<{ source: number; target: number; strength: number }> = [];
+/**
+ * 宇宙布局算法
+ *
+ * 抛弃 d3-force 的均匀布局，改用：
+ * 1. 每个主题星系有一个随机的"母星"坐标，星系间距离很远
+ * 2. 同星系的节点散落在母星周围，距离随机且差异大
+ * 3. 整体空间非常大（~6000x4000），给用户"遨游发现"的感觉
+ * 4. 仅保证节点不重叠
+ */
 
-  for (let i = 0; i < articles.length; i++) {
-    for (let j = i + 1; j < articles.length; j++) {
-      const shared = articles[i].topics.filter((t) =>
-        articles[j].topics.includes(t),
-      );
-      if (shared.length > 0) {
-        links.push({
-          source: i,
-          target: j,
-          strength: shared.length * 0.3,
-        });
-      }
-    }
-  }
+/** 确定性随机（基于 seed），让每次构建布局稳定 */
+function seededRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
 
-  return links;
+const rand = seededRandom(42);
+
+/** 在范围内生成随机数 */
+function randRange(min: number, max: number): number {
+  return min + rand() * (max - min);
+}
+
+/** 高斯近似：多个均匀随机求和，产生中间密两端疏的分布 */
+function gaussRand(scale: number): number {
+  return (rand() + rand() + rand() - 1.5) * scale;
 }
 
 function computeSize(article: ReturnType<typeof readArticles>[number]): number {
   const base = article.importance ?? 1.0;
-  // Boost recent articles slightly
   const daysSincePublish = Math.max(
     0,
     (Date.now() - new Date(article.date).getTime()) / (1000 * 60 * 60 * 24),
@@ -50,39 +52,62 @@ function computeSize(article: ReturnType<typeof readArticles>[number]): number {
   return Math.round((base + recencyBoost) * 100) / 100;
 }
 
+/** 检查与已有节点的最小距离 */
+function tooClose(x: number, y: number, placed: Array<{ x: number; y: number }>, minDist: number): boolean {
+  for (const p of placed) {
+    const dx = x - p.x;
+    const dy = y - p.y;
+    if (dx * dx + dy * dy < minDist * minDist) return true;
+  }
+  return false;
+}
+
 function buildCosmosData(): CosmosData {
   const articles = readArticles();
 
-  // Create simulation nodes
-  type SimNode = { index: number; x: number; y: number; vx: number; vy: number };
-  const simNodes: SimNode[] = articles.map((_, i) => ({
-    index: i,
-    x: (Math.random() - 0.5) * 800,
-    y: (Math.random() - 0.5) * 600,
-    vx: 0,
-    vy: 0,
-  }));
+  // 收集所有主题
+  const clusterNames = Array.from(new Set(articles.map((a) => a.topics[0] ?? "其他")));
 
-  const links = buildLinks(articles);
+  // 为每个星系分配一个随机的母星位置，星系间保持大距离
+  const clusterCenters = new Map<string, { cx: number; cy: number }>();
+  const galaxySpread = 1800; // 星系母星之间的散布范围
+  const placedCenters: Array<{ x: number; y: number }> = [];
 
-  // Run force simulation — 随机散布，同主题松散聚集但不等距
-  const simulation = forceSimulation(simNodes)
-    .force(
-      "link",
-      forceLink(links)
-        .id((_d, i) => i)
-        .distance(300)
-        .strength((d: any) => d.strength * 0.5),
-    )
-    .force("charge", forceManyBody().strength(-800))
-    .force("center", forceCenter(0, 0).strength(0.01))
-    // 仅防止完全重叠，不强制均匀间距
-    .force("collide", forceCollide(60))
-    .stop();
+  for (const name of clusterNames) {
+    let cx: number, cy: number;
+    let tries = 0;
+    do {
+      cx = gaussRand(galaxySpread);
+      cy = gaussRand(galaxySpread * 0.7);
+      tries++;
+    } while (tooClose(cx, cy, placedCenters, 800) && tries < 100);
+    clusterCenters.set(name, { cx, cy });
+    placedCenters.push({ x: cx, y: cy });
+  }
 
-  // 少跑几轮让布局不过度收敛，保留随机感
-  for (let i = 0; i < 150; i++) {
-    simulation.tick();
+  // 放置每个节点：围绕母星随机散布，距离差异很大
+  const placed: Array<{ x: number; y: number }> = [];
+  const nodePositions: Array<{ x: number; y: number }> = [];
+
+  for (const article of articles) {
+    const cluster = article.topics[0] ?? "其他";
+    const center = clusterCenters.get(cluster)!;
+
+    let x: number, y: number;
+    let tries = 0;
+    const minNodeDist = 80; // 仅防止完全重叠
+
+    do {
+      // 距母星的距离：有的很近有的很远，不均匀
+      const angle = rand() * Math.PI * 2;
+      const distance = 100 + Math.pow(rand(), 0.6) * 700; // 100-800，偏向远处
+      x = center.cx + Math.cos(angle) * distance + gaussRand(150);
+      y = center.cy + Math.sin(angle) * distance + gaussRand(120);
+      tries++;
+    } while (tooClose(x, y, placed, minNodeDist) && tries < 200);
+
+    placed.push({ x, y });
+    nodePositions.push({ x: Math.round(x), y: Math.round(y) });
   }
 
   // Build nodes
@@ -92,14 +117,14 @@ function buildCosmosData(): CosmosData {
     summary: article.summary,
     topics: article.topics,
     date: article.date,
-    x: Math.round(simNodes[i].x),
-    y: Math.round(simNodes[i].y),
+    x: nodePositions[i].x,
+    y: nodePositions[i].y,
     size: computeSize(article),
     cluster: article.topics[0] ?? "其他",
     cover: article.cover ?? { style: "gradient" },
   }));
 
-  // Compute cluster centers
+  // Cluster centers 用实际节点的平均位置
   const clusterMap = new Map<string, { xs: number[]; ys: number[] }>();
   for (const node of nodes) {
     const entry = clusterMap.get(node.cluster) ?? { xs: [], ys: [] };
