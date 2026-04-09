@@ -11,7 +11,7 @@ cover:
   gradientColors: ["#0a2a3a", "#1a6080", "#5cc8ff"]
   titleAlign: left
   titlePosition: bottom
-importance: 1.4
+importance: 1.5
 ---
 
 ## 为什么不用传统博客框架

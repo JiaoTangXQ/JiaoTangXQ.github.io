@@ -1,0 +1,27 @@
+---
+title: "compact boundary 不是删除线，而是新的历史接缝"
+slug: "10-05-01-compact-boundary"
+date: 2026-04-09
+topics: [上下文管理]
+summary: "这一页重点看“compact-boundary-不是删除线，而是新的历史接缝”。对应源码主要是 `src/services/compact/compact.ts`。 这一章真正落在 `compact...."
+importance: 1
+---
+
+# compact boundary 不是删除线，而是新的历史接缝
+
+## 实现链
+
+这一页重点看“compact-boundary-不是删除线，而是新的历史接缝”。对应源码主要是 `src/services/compact/compact.ts`。
+这一章真正落在 `compact.ts` 的边界消息和压缩后重组逻辑上。Claude Code 压缩完不是简单把旧历史扔掉，而是会留下 compact boundary，并把附件、计划、技能等仍然有用的线索重新带回压缩后的世界。
+
+## 普通做法
+
+更普通的做法，是生成一段总结替换旧历史，其余内容能丢就丢，压缩后的会话从摘要重新开始。
+
+## 为什么不用
+
+Claude Code 没这么干，因为压缩并不等于清空。要是边界和关键线索都没了，系统表面上减重了，实际上却把后续继续工作的抓手一起删掉了。
+
+## 代价
+
+这样更利于延续工作，但代价是压缩后重组远比“删掉旧消息”复杂，系统还要维护哪些东西值得被带回来的预算和规则。

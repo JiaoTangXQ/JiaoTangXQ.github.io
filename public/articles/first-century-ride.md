@@ -9,7 +9,7 @@ cover:
   accent: "#47d98f"
   gradientAngle: 180
   gradientColors: ["#0a2a1a", "#1a5038", "#47d98f"]
-importance: 1.2
+importance: 1.3
 ---
 
 ## 起点

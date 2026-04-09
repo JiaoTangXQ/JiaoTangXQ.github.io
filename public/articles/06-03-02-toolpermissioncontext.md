@@ -1,0 +1,27 @@
+---
+title: "ToolPermissionContext为什么像一份随身携带的制度快照"
+slug: "06-03-02-toolpermissioncontext"
+date: 2026-04-09
+topics: [治理与权限]
+summary: "这一页重点看“ToolPermissionContext为什么像一份随身携带的制度快照”。对应源码主要是 `src/utils/permissions/permissions.ts`、`src/uti..."
+importance: 1
+---
+
+# ToolPermissionContext为什么像一份随身携带的制度快照
+
+## 实现链
+
+这一页重点看“ToolPermissionContext为什么像一份随身携带的制度快照”。对应源码主要是 `src/utils/permissions/permissions.ts`、`src/utils/permissions/permissionSetup.ts`、`src/utils/settings/applySettingsChange.ts`。
+这一章真正落在 `permissionsLoader.ts`、`permissions.ts`、`permissionSetup.ts` 和 settings 汇总逻辑上。Claude Code 不让每个模块自己去磁盘或设置树里找规则，而是先把多来源规则汇成一份 `ToolPermissionContext`，然后把这份制度快照随调用链携带。
+
+## 普通做法
+
+更普通的做法，是让需要权限的地方临时读取用户设置、项目设置和会话内放权，现场拼出答案。这样少一个上下文对象，也更省前期设计。
+
+## 为什么不用
+
+Claude Code 没这么做，因为多来源规则一旦分散读取，最容易出现的就是同一轮里不同模块看到不同制度版本。它宁愿先做快照，也不想让工具装配、运行时审批和设置变更各自读到不一样的规则现实。
+
+## 代价
+
+快照式上下文让系统更一致，也更容易跨多轮携带。代价是上下文对象会变厚，刷新时机也要非常谨慎，否则就会出现“快照已经过期”的另一类复杂度。

@@ -4,11 +4,27 @@ import { readArticles } from "./readArticles.mjs";
 import type { CosmosData, CosmosNode, ClusterInfo } from "../../src/lib/content/types.js";
 
 const CLUSTER_COLORS: Record<string, string> = {
+  // 原主题
   技术: "#5cc8ff",
   AI: "#b87aff",
   思考: "#ff8a66",
   骑行: "#47d98f",
   健身: "#d8ff57",
+  // Claude Code Book 主题
+  工作台架构: "#5cc8ff",
+  启动: "#3a9fff",
+  输入与路由: "#47c8a0",
+  主循环: "#6daaff",
+  任务与分派: "#b87aff",
+  治理与权限: "#ff6b8a",
+  扩展系统: "#47d98f",
+  远端与边界: "#ff8a66",
+  多Agent协作: "#d8a0ff",
+  上下文管理: "#ffb347",
+  终端界面: "#5ceaff",
+  外延执行: "#ff6b6b",
+  工程美学: "#ffd700",
+  参考: "#8899aa",
 };
 
 /**
@@ -65,7 +81,8 @@ function buildCosmosData(): CosmosData {
 
   // 为每个星系分配一个随机的母星位置，星系间保持大距离
   const clusterCenters = new Map<string, { cx: number; cy: number }>();
-  const galaxySpread = 1800; // 星系母星之间的散布范围
+  // 710+ 节点需要更大的宇宙
+  const galaxySpread = 5000;
   const placedCenters: Array<{ x: number; y: number }> = [];
 
   for (const name of clusterNames) {
@@ -75,7 +92,7 @@ function buildCosmosData(): CosmosData {
       cx = gaussRand(galaxySpread);
       cy = gaussRand(galaxySpread * 0.7);
       tries++;
-    } while (tooClose(cx, cy, placedCenters, 800) && tries < 100);
+    } while (tooClose(cx, cy, placedCenters, 2000) && tries < 100);
     clusterCenters.set(name, { cx, cy });
     placedCenters.push({ x: cx, y: cy });
   }
@@ -95,7 +112,7 @@ function buildCosmosData(): CosmosData {
     do {
       // 距母星的距离：有的很近有的很远，不均匀
       const angle = rand() * Math.PI * 2;
-      const distance = 100 + Math.pow(rand(), 0.6) * 700; // 100-800，偏向远处
+      const distance = 150 + Math.pow(rand(), 0.6) * 1500; // 150-1650，偏向远处
       x = center.cx + Math.cos(angle) * distance + gaussRand(150);
       y = center.cy + Math.sin(angle) * distance + gaussRand(120);
       tries++;

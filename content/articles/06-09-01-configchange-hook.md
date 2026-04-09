@@ -1,0 +1,27 @@
+---
+title: "ConfigChange hook让改规则先过程序"
+slug: "06-09-01-configchange-hook"
+date: 2026-04-09
+topics: [治理与权限]
+summary: "这一页重点看“ConfigChange hook 让改规则先过程序”。对应源码主要是 `src/utils/settings/changeDetector.ts`、`src/utils/setting..."
+importance: 1
+---
+
+# ConfigChange hook让改规则先过程序
+
+## 实现链
+
+这一页重点看“ConfigChange hook 让改规则先过程序”。对应源码主要是 `src/utils/settings/changeDetector.ts`、`src/utils/settings/applySettingsChange.ts`。
+这一章真正落在 `changeDetector.ts`、`applySettingsChange.ts`、`pluginOnlyPolicy.ts`、`hooksConfigSnapshot.ts` 这些“规则修改规则本身”的实现上。Claude Code 连 ConfigChange 也先走程序，而且不同来源的自定义能力在制度层拥有不同等级。
+
+## 普通做法
+
+更普通的做法，是让所有自定义来源一视同仁：谁能写设置谁就能立刻生效，改规则的动作本身不再受额外约束。
+
+## 为什么不用
+
+Claude Code 没这么做，因为“修改制度”本身就是高风险动作。要是所有来源都平权，系统最脆弱的地方反而会变成规则边界自己。它宁愿让制度层出现等级差，也不愿让规则修改变成没有程序保护的直接写入。
+
+## 代价
+
+这种做法的好处是制度边界更不容易被自定义能力从内部掏空。代价是来源不平等会让扩展生态显得不那么自由，也会增加解释成本。

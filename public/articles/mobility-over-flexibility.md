@@ -10,7 +10,7 @@ cover:
   gradientColors: ["#1a1a08", "#3a4a00", "#d8ff57"]
   titleAlign: center
   titlePosition: center
-importance: 1.0
+importance: 0.9
 ---
 
 ## 一个常见的误解

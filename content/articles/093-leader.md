@@ -1,0 +1,36 @@
+---
+title: "第十三卷回收索引：团队世界里的 leader 收口与规则优先"
+slug: "093-leader"
+date: 2026-04-09
+topics: [参考]
+summary: "这页具体回收的判断是“团队世界—leader收口与规则优先”。 这页真正回收的是 `utils/swarm/reconnection.ts`、`utils/swarm/permissionSync.t..."
+importance: 0.9
+---
+
+# 第十三卷回收索引：团队世界里的 leader 收口与规则优先
+
+## 实现链
+
+这页具体回收的判断是“团队世界—leader收口与规则优先”。
+这页真正回收的是 `utils/swarm/reconnection.ts`、`utils/swarm/permissionSync.ts`、`context/mailbox.tsx`、`utils/inProcessTeammateHelpers.ts`、`cli/print.ts` 这些团队协作代码。Claude Code 把团队世界写成“身份 + 秩序 + 可恢复通信面”，而不是“多几个执行体”。leader、teammate、mailbox、team context、权限同步和 UI 识别都在告诉你：这里首先是组织问题，然后才是并发问题。
+
+## 普通做法
+
+更容易想到的团队实现，是让多个 worker 共享内存、共享状态树，或者直接互发进程内事件，把团队协作理解成更强一点的并发调度。这样跑起来更直接，团队似乎也更“实时”。
+
+## 为什么不用
+
+Claude Code 没这么做，因为共享内存式协作最怕两件事：人插不进去，以及状态恢复不了。它保留 mailbox、leader 裁决、team context 和显式权限同步，是为了让人能看懂协作秩序、让断线和恢复仍有落点、让团队身份不被实现细节淹没。
+
+## 代价
+
+这种组织层设计更适合真实协作，因为它把“谁在做、谁能批、谁来接手”写进了系统。代价是团队层明显比纯并发框架更重，消息同步、权限转发和身份管理都会增加代码厚度。
+
+## 继续下钻
+
+- leader UI 为什么是把混乱收口，不是收走权力
+- 新增的为什么是制度层，不是更多线程
+### leader UI 是把混乱收口，不是收走权力
+- [151-第十三卷回收索引-团队世界-leader UI 是把混乱收口，不是收走权力.md](/Users/xxx/tmp/cc/docs/claude-code-book/appendices/151-第十三卷回收索引-团队世界-leader UI 是把混乱收口，不是收走权力.md)
+### 新增的是制度层，不是更多线程
+- [152-第十三卷回收索引-团队世界-新增的是制度层不是更多线程.md](/Users/xxx/tmp/cc/docs/claude-code-book/appendices/152-第十三卷回收索引-团队世界-新增的是制度层不是更多线程.md)

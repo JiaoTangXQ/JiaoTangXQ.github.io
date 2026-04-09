@@ -9,7 +9,7 @@ cover:
   accent: "#ff8a66"
   gradientAngle: 90
   gradientColors: ["#2a1520", "#6a2040", "#ff4fb8"]
-importance: 1.2
+importance: 1.3
 ---
 
 ## "我没有设计天赋"

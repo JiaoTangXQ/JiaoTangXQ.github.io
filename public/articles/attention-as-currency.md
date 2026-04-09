@@ -9,7 +9,7 @@ cover:
   accent: "#ff4fb8"
   gradientAngle: 315
   gradientColors: ["#1a0a20", "#4a1a50", "#ff4fb8"]
-importance: 1.1
+importance: 1.4
 ---
 
 ## 时间管理的谎言

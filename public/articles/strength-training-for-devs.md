@@ -9,7 +9,7 @@ cover:
   accent: "#d8ff57"
   gradientAngle: 120
   gradientColors: ["#1a1a0a", "#4a5a10", "#a8e600"]
-importance: 1.1
+importance: 1.2
 ---
 
 ## 久坐的代价

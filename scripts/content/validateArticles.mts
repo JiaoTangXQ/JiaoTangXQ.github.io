@@ -7,7 +7,13 @@ import path from "path";
 import matter from "gray-matter";
 
 const ARTICLES_DIR = path.resolve("content/articles");
-const KNOWN_TOPICS = ["技术", "AI", "思考", "骑行", "健身"];
+const KNOWN_TOPICS = [
+  "技术", "AI", "思考", "骑行", "健身",
+  "工作台架构", "启动", "输入与路由", "主循环",
+  "任务与分派", "治理与权限", "扩展系统", "远端与边界",
+  "多Agent协作", "上下文管理", "终端界面", "外延执行",
+  "工程美学", "参考",
+];
 const SLUG_RE = /^[a-z0-9-]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const REQUIRED_FIELDS = ["title", "slug", "date", "topics", "summary"] as const;
