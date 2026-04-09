@@ -42,14 +42,9 @@ function gaussRand(scale: number): number {
   return (rand() + rand() + rand() - 1.5) * scale;
 }
 
+/** 构建时大小 = 纯 importance 权重（时间衰减和点击热度由运行时动态计算） */
 function computeSize(article: ReturnType<typeof readArticles>[number]): number {
-  const base = article.importance ?? 1.0;
-  const daysSincePublish = Math.max(
-    0,
-    (Date.now() - new Date(article.date).getTime()) / (1000 * 60 * 60 * 24),
-  );
-  const recencyBoost = Math.max(0, 1 - daysSincePublish / 365) * 0.3;
-  return Math.round((base + recencyBoost) * 100) / 100;
+  return article.importance ?? 1.0;
 }
 
 /** 检查与已有节点的最小距离 */

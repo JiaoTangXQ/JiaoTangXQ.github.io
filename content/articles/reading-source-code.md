@@ -7,7 +7,7 @@ summary: "教程教你 API，文档教你概念，但只有源码教你决策。
 cover:
   style: gradient
   accent: "#7dd8ff"
-importance: 1.0
+importance: 1.1
 ---
 
 ## 教程的局限
