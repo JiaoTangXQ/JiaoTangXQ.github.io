@@ -76,47 +76,22 @@ function tooClose(x: number, y: number, placed: Array<{ x: number; y: number }>,
 function buildCosmosData(): CosmosData {
   const articles = readArticles();
 
-  // 收集所有主题
-  const clusterNames = Array.from(new Set(articles.map((a) => a.topics[0] ?? "其他")));
-
-  // 为每个星系分配一个随机的母星位置，星系间保持大距离
-  const clusterCenters = new Map<string, { cx: number; cy: number }>();
-  // 710+ 节点需要更大的宇宙
-  const galaxySpread = 5000;
-  const placedCenters: Array<{ x: number; y: number }> = [];
-
-  for (const name of clusterNames) {
-    let cx: number, cy: number;
-    let tries = 0;
-    do {
-      cx = gaussRand(galaxySpread);
-      cy = gaussRand(galaxySpread * 0.7);
-      tries++;
-    } while (tooClose(cx, cy, placedCenters, 2000) && tries < 100);
-    clusterCenters.set(name, { cx, cy });
-    placedCenters.push({ x: cx, y: cy });
-  }
-
-  // 放置每个节点：围绕母星随机散布，距离差异很大
+  // 所有星球完全随机散布在整个宇宙中，不按主题聚集
+  const UNIVERSE_W = 12000;
+  const UNIVERSE_H = 8000;
   const placed: Array<{ x: number; y: number }> = [];
   const nodePositions: Array<{ x: number; y: number }> = [];
+  const minNodeDist = 70;
 
-  for (const article of articles) {
-    const cluster = article.topics[0] ?? "其他";
-    const center = clusterCenters.get(cluster)!;
-
+  for (const _article of articles) {
     let x: number, y: number;
     let tries = 0;
-    const minNodeDist = 80; // 仅防止完全重叠
 
     do {
-      // 距母星的距离：有的很近有的很远，不均匀
-      const angle = rand() * Math.PI * 2;
-      const distance = 150 + Math.pow(rand(), 0.6) * 1500; // 150-1650，偏向远处
-      x = center.cx + Math.cos(angle) * distance + gaussRand(150);
-      y = center.cy + Math.sin(angle) * distance + gaussRand(120);
+      x = (rand() - 0.5) * UNIVERSE_W;
+      y = (rand() - 0.5) * UNIVERSE_H;
       tries++;
-    } while (tooClose(x, y, placed, minNodeDist) && tries < 200);
+    } while (tooClose(x, y, placed, minNodeDist) && tries < 300);
 
     placed.push({ x, y });
     nodePositions.push({ x: Math.round(x), y: Math.round(y) });
