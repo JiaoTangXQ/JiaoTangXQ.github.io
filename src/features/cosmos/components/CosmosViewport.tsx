@@ -113,12 +113,49 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       incrementClick(slug);
       cruise.interrupt();
 
-      // 始终飞向星球并放大到标题可见
       const targetZoom = Math.max(cam._stateRef.current.zoom, 1.5);
       cam.flyTo(node.x, node.y, targetZoom);
       setTimeout(() => setActiveNode(node), 500);
     },
     [dataset, cam, cruise, incrementClick],
+  );
+
+  /** 点击画布空白区域时，检查是否点中了某颗星球（DOM 层兜底） */
+  const handleCanvasClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!dataset || activeNode || transition.isTransitioning) return;
+
+      // 将屏幕坐标转为世界坐标
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const { x: cx, y: cy, zoom } = cam._stateRef.current;
+      const frustumW = 1600;
+      const frustumH = 1200;
+      const scaleX = (rect.width / frustumW) * zoom;
+      const scaleY = (rect.height / frustumH) * zoom;
+      const worldX = cx + (e.clientX - rect.left - rect.width / 2) / scaleX;
+      const worldY = cy - (e.clientY - rect.top - rect.height / 2) / scaleY;
+
+      // 找最近的星球（在点击半径内）
+      const hitRadius = 40 / zoom; // 屏幕上 40px 的点击容差
+      let closest: CosmosNode | null = null;
+      let closestDist = Infinity;
+
+      for (const node of dataset.nodes) {
+        const dx = node.x - worldX;
+        const dy = node.y - worldY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < hitRadius && dist < closestDist) {
+          closest = node;
+          closestDist = dist;
+        }
+      }
+
+      if (closest) {
+        handleNodeClick(closest.slug);
+      }
+    },
+    [dataset, activeNode, cam, transition.isTransitioning, handleNodeClick],
   );
 
   const handleNodeHover = useCallback((slug: string | null) => {
@@ -208,6 +245,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     <div
       ref={containerRef}
       {...handlers}
+      onClick={handleCanvasClick}
       style={{
         position: "fixed",
         inset: 0,
