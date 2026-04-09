@@ -106,9 +106,19 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     (slug: string) => {
       if (!dataset) return;
       const node = dataset.nodes.find((n) => n.slug === slug);
-      if (node) setActiveNode(node);
+      if (!node) return;
+
+      const currentZoom = cam._stateRef.current.zoom;
+      if (currentZoom < 1.3) {
+        // zoom 不够看到标题 → 先飞过去放大，再弹卡片
+        cruise.interrupt();
+        cam.flyTo(node.x, node.y, 1.5);
+        setTimeout(() => setActiveNode(node), 500);
+      } else {
+        setActiveNode(node);
+      }
     },
-    [dataset],
+    [dataset, cam, cruise],
   );
 
   const handleNodeHover = useCallback((slug: string | null) => {
