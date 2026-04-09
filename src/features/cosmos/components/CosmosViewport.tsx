@@ -120,10 +120,24 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     [dataset, cam, cruise, incrementClick],
   );
 
-  /** 点击画布空白区域时，检查是否点中了某颗星球（DOM 层兜底） */
+  // 记录 mousedown 位置，区分拖拽和点击
+  const pointerDownRef = useRef<{ x: number; y: number } | null>(null);
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    pointerDownRef.current = { x: e.clientX, y: e.clientY };
+  }, []);
+
+  /** 点击画布时，检查是否点中了某颗星球（排除拖拽） */
   const handleCanvasClick = useCallback(
     (e: React.MouseEvent) => {
       if (!dataset || activeNode || transition.isTransitioning) return;
+
+      // 拖拽超过 5px 不算点击
+      const down = pointerDownRef.current;
+      if (down) {
+        const dx = e.clientX - down.x;
+        const dy = e.clientY - down.y;
+        if (dx * dx + dy * dy > 25) return;
+      }
 
       // 将屏幕坐标转为世界坐标
       const rect = containerRef.current?.getBoundingClientRect();
@@ -245,6 +259,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     <div
       ref={containerRef}
       {...handlers}
+      onPointerDown={handlePointerDown}
       onClick={handleCanvasClick}
       style={{
         position: "fixed",
