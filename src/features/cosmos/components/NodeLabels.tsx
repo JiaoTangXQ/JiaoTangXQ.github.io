@@ -1,3 +1,10 @@
+/**
+ * 博物馆风格节点标注
+ *
+ * 每个标签通过一条折线（leader line）连接到星球，
+ * 文字颜色与星球主色一致。
+ * 仅在 zoom 足够大时显示，避免低 zoom 时文字堆叠。
+ */
 import { useMemo } from "react";
 import type { CosmosNode } from "@/lib/content/types";
 import { getPalette, buildCoverGradient } from "@/lib/content/types";
@@ -22,9 +29,25 @@ type VisibleNode = {
   node: CosmosNode;
   screenX: number;
   screenY: number;
+  /** 标签偏移方向 */
+  offsetX: number;
+  offsetY: number;
 };
 
-const MARGIN = 200; // px beyond viewport edges to still render labels
+const MARGIN = 200;
+
+/** 预设偏移方向，交替分配避免重叠 */
+const OFFSET_PRESETS = [
+  { dx: 60, dy: 40 },   // 右下
+  { dx: 65, dy: -35 },  // 右上
+  { dx: -60, dy: 40 },  // 左下
+  { dx: -65, dy: -35 }, // 左上
+  { dx: 75, dy: 10 },   // 右
+  { dx: -75, dy: 10 },  // 左
+];
+
+/** 折线的垂直段长度 */
+const STEM_LENGTH = 20;
 
 export function NodeLabels({
   nodes,
@@ -34,55 +57,103 @@ export function NodeLabels({
   lodMode,
   onNodeClick,
 }: Props) {
-  // Only render at mid or near zoom
   const shouldRender = lodMode === "mid" || lodMode === "near";
 
-  // Project nodes to screen coordinates and filter visible ones
   const visibleNodes: VisibleNode[] = useMemo(() => {
     if (!shouldRender) return [];
 
     const halfW = viewportWidth / 2;
     const halfH = viewportHeight / 2;
-    const result: VisibleNode[] = [];
-
-    // Frustum size must match CosmosScene orthographic camera bounds
-    const frustumW = 1600; // left=-800, right=800
-    const frustumH = 1200; // bottom=-600, top=600
+    const frustumW = 1600;
+    const frustumH = 1200;
     const scaleX = (viewportWidth / frustumW) * camera.zoom;
     const scaleY = (viewportHeight / frustumH) * camera.zoom;
+    const result: VisibleNode[] = [];
 
-    for (const node of nodes) {
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
       const screenX = halfW + (node.x - camera.x) * scaleX;
-      // Y inverted: world Y-up → screen Y-down
       const screenY = halfH - (node.y - camera.y) * scaleY;
 
-      // Check if within padded viewport
       if (
         screenX >= -MARGIN &&
         screenX <= viewportWidth + MARGIN &&
         screenY >= -MARGIN &&
         screenY <= viewportHeight + MARGIN
       ) {
-        result.push({ node, screenX, screenY });
+        const preset = OFFSET_PRESETS[i % OFFSET_PRESETS.length];
+        result.push({
+          node,
+          screenX,
+          screenY,
+          offsetX: preset.dx,
+          offsetY: preset.dy,
+        });
       }
     }
 
     return result;
-  }, [nodes, camera.x, camera.y, camera.zoom, viewportWidth, viewportHeight, shouldRender]);
+  }, [
+    nodes,
+    camera.x,
+    camera.y,
+    camera.zoom,
+    viewportWidth,
+    viewportHeight,
+    shouldRender,
+  ]);
 
   if (!shouldRender) return null;
 
   return (
     <div className="node-labels" aria-label="文章标签">
-      {visibleNodes.map(({ node, screenX, screenY }) => {
+      {/* 折线 SVG 层 */}
+      <svg className="node-labels__lines">
+        {visibleNodes.map(({ node, screenX, screenY, offsetX, offsetY }) => {
+          const palette = getPalette(node.cluster);
+          const lineColor = palette.core[0];
+
+          // 折线路径：星球边缘 → 垂直段 → 水平段到标签
+          const stemDir = offsetY > 0 ? 1 : -1;
+          const stemEndY = screenY + stemDir * STEM_LENGTH;
+          const labelX = screenX + offsetX;
+          const labelY = stemEndY + (offsetY - stemDir * STEM_LENGTH);
+
+          const points = `${screenX},${screenY} ${screenX},${stemEndY} ${labelX},${labelY}`;
+
+          return (
+            <polyline
+              key={node.slug}
+              points={points}
+              fill="none"
+              stroke={lineColor}
+              strokeWidth={1}
+              strokeOpacity={0.35}
+              className="node-labels__leader"
+            />
+          );
+        })}
+      </svg>
+
+      {/* 标签文字层 */}
+      {visibleNodes.map(({ node, screenX, screenY, offsetX, offsetY }) => {
         const palette = getPalette(node.cluster);
+        const textColor = palette.core[0];
+        const stemDir = offsetY > 0 ? 1 : -1;
+        const stemEndY = screenY + stemDir * STEM_LENGTH;
+        const labelX = screenX + offsetX;
+        const labelY = stemEndY + (offsetY - stemDir * STEM_LENGTH);
+
+        const isLeft = offsetX < 0;
+
         return (
           <div
             key={node.slug}
-            className={`node-labels__item${shouldRender ? " node-labels__item--visible" : ""}`}
+            className="node-labels__item node-labels__item--visible"
             style={{
-              left: `${screenX}px`,
-              top: `${screenY}px`,
+              left: `${labelX}px`,
+              top: `${labelY}px`,
+              transform: isLeft ? "translate(-100%, -50%)" : "translate(0, -50%)",
             }}
             onClick={() => onNodeClick(node.slug)}
             role="button"
@@ -96,7 +167,6 @@ export function NodeLabels({
             }}
           >
             {lodMode === "near" ? (
-              /* Near mode: mini preview card with cover strip */
               <div className="node-labels__card">
                 <div
                   className="node-labels__card-cover"
@@ -122,8 +192,12 @@ export function NodeLabels({
                 </div>
               </div>
             ) : (
-              /* Mid mode: simple title label */
-              <span className="node-labels__title">{node.title}</span>
+              <span
+                className="node-labels__title"
+                style={{ color: textColor }}
+              >
+                {node.title}
+              </span>
             )}
           </div>
         );

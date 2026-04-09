@@ -575,35 +575,44 @@
   overflow: hidden;
 }
 
+/* 折线 SVG 层 */
+.node-labels__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.node-labels__leader {
+  transition: stroke-opacity 0.4s ease;
+}
+
 .node-labels__item {
   position: absolute;
-  transform: translate(-50%, -50%) scale(0.92);
   pointer-events: auto;
   cursor: pointer;
   opacity: 0;
   transition:
-    opacity var(--duration-normal) var(--ease-out-expo),
-    transform var(--duration-normal) var(--ease-out-expo);
+    opacity var(--duration-normal) var(--ease-out-expo);
 }
 
 .node-labels__item--visible {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
 }
 
 .node-labels__title {
   font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 400;
   white-space: nowrap;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4);
-  letter-spacing: 0.03em;
-  transition: color var(--duration-fast) var(--ease-out-expo);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7), 0 0 24px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.04em;
+  transition: opacity var(--duration-fast) var(--ease-out-expo);
 }
 
 .node-labels__item:hover .node-labels__title {
-  color: var(--text-primary);
+  opacity: 0.85;
 }
 
 /* Near-mode preview card */
