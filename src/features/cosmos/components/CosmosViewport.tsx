@@ -110,17 +110,13 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       const node = dataset.nodes.find((n) => n.slug === slug);
       if (!node) return;
 
-      // 记录点击（影响星球大小）
       incrementClick(slug);
+      cruise.interrupt();
 
-      const currentZoom = cam._stateRef.current.zoom;
-      if (currentZoom < 1.3) {
-        cruise.interrupt();
-        cam.flyTo(node.x, node.y, 1.5);
-        setTimeout(() => setActiveNode(node), 500);
-      } else {
-        setActiveNode(node);
-      }
+      // 始终飞向星球并放大到标题可见
+      const targetZoom = Math.max(cam._stateRef.current.zoom, 1.5);
+      cam.flyTo(node.x, node.y, targetZoom);
+      setTimeout(() => setActiveNode(node), 500);
     },
     [dataset, cam, cruise, incrementClick],
   );
