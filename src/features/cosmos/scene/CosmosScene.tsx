@@ -6,7 +6,6 @@ import { DeepSpaceLayer } from "./DeepSpaceLayer";
 import { StarFieldLayer } from "./StarFieldLayer";
 import { NebulaLayer } from "./NebulaLayer";
 import { MeteorLayer } from "./MeteorLayer";
-import { GravityFieldLayer } from "./GravityFieldLayer";
 import { NodeLayer } from "./NodeLayer";
 import { FpsMonitor } from "./FpsMonitor";
 
@@ -77,7 +76,6 @@ export function CosmosScene({
       <StarFieldLayer />
       <NebulaLayer clusters={data.clusters} />
       <MeteorLayer />
-      <GravityFieldLayer nodes={data.nodes} />
       <NodeLayer
         nodes={data.nodes}
         hoveredSlug={hoveredSlug}

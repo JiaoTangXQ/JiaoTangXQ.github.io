@@ -65,22 +65,23 @@ function buildCosmosData(): CosmosData {
 
   const links = buildLinks(articles);
 
-  // Run force simulation — spread nodes across ~800 world units
+  // Run force simulation — 随机散布，同主题松散聚集但不等距
   const simulation = forceSimulation(simNodes)
     .force(
       "link",
       forceLink(links)
         .id((_d, i) => i)
-        .distance(250)
-        .strength((d: any) => d.strength),
+        .distance(300)
+        .strength((d: any) => d.strength * 0.5),
     )
-    .force("charge", forceManyBody().strength(-1200))
-    .force("center", forceCenter(0, 0).strength(0.02))
-    .force("collide", forceCollide(130))
+    .force("charge", forceManyBody().strength(-800))
+    .force("center", forceCenter(0, 0).strength(0.01))
+    // 仅防止完全重叠，不强制均匀间距
+    .force("collide", forceCollide(60))
     .stop();
 
-  // Run 300 ticks
-  for (let i = 0; i < 300; i++) {
+  // 少跑几轮让布局不过度收敛，保留随机感
+  for (let i = 0; i < 150; i++) {
     simulation.tick();
   }
 
