@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import type { CosmosData } from "@/lib/content/types";
+import type { ClickMap } from "@/lib/usePlanetClicks";
 import type { CameraState } from "../camera/useCamera";
 import { CameraController } from "../camera/CameraController";
 import { DeepSpaceLayer } from "./DeepSpaceLayer";
@@ -11,6 +12,7 @@ import { FpsMonitor } from "./FpsMonitor";
 
 type Props = {
   data: CosmosData;
+  clicks: ClickMap;
   cameraRef: React.RefObject<CameraState>;
   hoveredSlug: string | null;
   activeSlug: string | null;
@@ -36,6 +38,7 @@ const DEV = import.meta.env.DEV;
  */
 export function CosmosScene({
   data,
+  clicks,
   cameraRef,
   hoveredSlug,
   activeSlug,
@@ -78,6 +81,7 @@ export function CosmosScene({
       <MeteorLayer />
       <NodeLayer
         nodes={data.nodes}
+        clicks={clicks}
         hoveredSlug={hoveredSlug}
         activeSlug={activeSlug}
         activeTheme={activeTheme}

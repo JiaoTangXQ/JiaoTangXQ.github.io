@@ -9,11 +9,34 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import type { CosmosNode } from "@/lib/content/types";
 import { getPalette } from "@/lib/content/types";
+import type { ClickMap } from "@/lib/usePlanetClicks";
 import { planetNodeVertex, planetNodeFragment } from "../shaders/planetNode";
 import { getEmphasis, emphasisToFloat } from "../nodes/nodeEmphasis";
 
+/**
+ * 动态星球大小：时间衰减 + 点击热度
+ *
+ * - 新文章（<1 周）size 最大 ~1.6
+ * - 每周衰减，8 周后稳定在底线 0.7
+ * - 每次点击 +0.05，上限 +0.8
+ */
+function dynamicSize(node: CosmosNode, clickCount: number): number {
+  const base = node.size; // 构建时的 importance-based size (0.7-1.4)
+
+  // 时间衰减：按周计算
+  const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+  const weeks = Math.max(0, (Date.now() - new Date(node.date).getTime()) / msPerWeek);
+  const timeFactor = 0.5 + 0.5 * Math.exp(-weeks / 4); // 1.0→0.5 over ~8 weeks
+
+  // 点击热度加成
+  const clickBoost = Math.min(0.8, clickCount * 0.05);
+
+  return Math.max(0.5, base * timeFactor + clickBoost);
+}
+
 type Props = {
   nodes: CosmosNode[];
+  clicks: ClickMap;
   hoveredSlug: string | null;
   activeSlug: string | null;
   activeTheme: string | null;
@@ -26,6 +49,7 @@ const LERP_SPEED = 0.18;
 
 export function NodeLayer({
   nodes,
+  clicks,
   hoveredSlug,
   activeSlug,
   activeTheme,
@@ -92,20 +116,21 @@ export function NodeLayer({
     [],
   );
 
-  // 设置 instance transforms（位置 + 缩放）
+  // 设置 instance transforms（位置 + 动态缩放）
   useEffect(() => {
     const mesh = meshRef.current;
     if (!mesh) return;
 
     for (let i = 0; i < nodes.length; i++) {
-      const scale = nodes[i].size * 36;
+      const size = dynamicSize(nodes[i], clicks[nodes[i].slug] ?? 0);
+      const scale = size * 36;
       DUMMY.position.set(nodes[i].x, nodes[i].y, 0);
       DUMMY.scale.set(scale, scale, 1);
       DUMMY.updateMatrix();
       mesh.setMatrixAt(i, DUMMY.matrix);
     }
     mesh.instanceMatrix.needsUpdate = true;
-  }, [nodes]);
+  }, [nodes, clicks]);
 
   // 每帧更新 uTime 和 emphasis 插值
   useFrame(({ clock }) => {

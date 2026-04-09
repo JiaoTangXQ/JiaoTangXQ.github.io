@@ -11,6 +11,7 @@ import { useAutoCruise } from "../camera/useAutoCruise";
 import { useGestures } from "../camera/useGestures";
 import { useZoomTransition } from "../camera/useZoomTransition";
 import { loadCameraFromHash } from "../camera/urlState";
+import { usePlanetClicks } from "@/lib/usePlanetClicks";
 import { getLodMode } from "../nodes/nodeLod";
 import { CosmosChrome } from "./CosmosChrome";
 import { SummaryCard } from "./SummaryCard";
@@ -33,6 +34,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
   const cruise = useAutoCruise(cam);
   const { containerRef, handlers } = useGestures(cam, cruise);
   const transition = useZoomTransition(cam);
+  const { clicks, increment: incrementClick } = usePlanetClicks();
 
   // 从文章页返回时触发缩回动画
   useEffect(() => {
@@ -108,9 +110,11 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       const node = dataset.nodes.find((n) => n.slug === slug);
       if (!node) return;
 
+      // 记录点击（影响星球大小）
+      incrementClick(slug);
+
       const currentZoom = cam._stateRef.current.zoom;
       if (currentZoom < 1.3) {
-        // zoom 不够看到标题 → 先飞过去放大，再弹卡片
         cruise.interrupt();
         cam.flyTo(node.x, node.y, 1.5);
         setTimeout(() => setActiveNode(node), 500);
@@ -118,7 +122,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         setActiveNode(node);
       }
     },
-    [dataset, cam, cruise],
+    [dataset, cam, cruise, incrementClick],
   );
 
   const handleNodeHover = useCallback((slug: string | null) => {
@@ -221,6 +225,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       <CosmosErrorBoundary>
       <CosmosScene
         data={dataset}
+        clicks={clicks}
         cameraRef={cam._stateRef}
         hoveredSlug={hoveredSlug}
         activeSlug={activeNode?.slug ?? null}
