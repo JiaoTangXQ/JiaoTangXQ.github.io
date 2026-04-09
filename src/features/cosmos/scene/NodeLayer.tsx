@@ -202,6 +202,7 @@ export function NodeLayer({
       ref={meshRef}
       args={[geometry, undefined, nodes.length]}
       renderOrder={10}
+      frustumCulled={false}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
