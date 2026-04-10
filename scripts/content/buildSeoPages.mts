@@ -13,6 +13,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { readArticles } from "./readArticles.mjs";
+import { readExternalContent } from "./readExternalContent.mjs";
 
 const SITE_URL = "https://jiaotangxq.github.io";
 const SITE_NAME = "焦糖星球";
@@ -65,6 +66,7 @@ function stripFrontmatter(md: string): string {
 // --- 读取 Vite 构建产物作为模板 ---
 const template = fs.readFileSync(path.join(DIST, "index.html"), "utf-8");
 const articles = readArticles();
+const externalItems = readExternalContent();
 
 // --- 为每篇文章生成预渲染 HTML ---
 let count = 0;
@@ -125,6 +127,67 @@ async function buildArticlePages() {
 }
 
 await buildArticlePages();
+
+function buildExternalSummaryBlock(item: ReturnType<typeof readExternalContent>[number]) {
+  const dateStr = normalizeDate(item.date);
+
+  return `
+    <noscript>
+      <article style="max-width:680px;margin:0 auto;padding:2rem;color:#ccc;font-family:sans-serif">
+        <p style="margin-bottom:0.75rem;opacity:0.75">外部来源 · ${escapeHtml(item.sourceName)}</p>
+        <h1>${escapeHtml(item.title)}</h1>
+        <time datetime="${dateStr}">${dateStr}</time>
+        <p>${escapeHtml(item.summary)}</p>
+        <p>${escapeHtml(item.whyWorthReading)}</p>
+        <p><a href="${escapeHtml(item.sourceUrl)}" rel="noopener noreferrer">去看原文</a></p>
+      </article>
+    </noscript>`;
+}
+
+function buildExternalPages() {
+  for (const item of externalItems) {
+    const dir = path.join(DIST, "article", item.slug);
+    fs.mkdirSync(dir, { recursive: true });
+
+    const title = `${escapeHtml(item.title)} — ${SITE_NAME}`;
+    const desc = escapeHtml(item.summary);
+    const localUrl = `${SITE_URL}/article/${item.slug}`;
+    const dateStr = normalizeDate(item.date);
+
+    const headBlock = [
+      `<meta name="robots" content="noindex,follow" />`,
+      `<link rel="canonical" href="${escapeHtml(item.sourceUrl)}" />`,
+      `<meta property="og:title" content="${escapeHtml(item.title)}" />`,
+      `<meta property="og:description" content="${desc}" />`,
+      `<meta property="og:type" content="article" />`,
+      `<meta property="og:url" content="${localUrl}" />`,
+      `<meta property="og:site_name" content="${SITE_NAME}" />`,
+      `<meta name="twitter:card" content="summary_large_image" />`,
+      `<meta name="twitter:title" content="${escapeHtml(item.title)}" />`,
+      `<meta name="twitter:description" content="${desc}" />`,
+      `<meta property="article:published_time" content="${dateStr}" />`,
+    ].join("\n    ");
+
+    let html = template;
+    html = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
+    html = html.replace(
+      /<meta name="description"[^>]*\/>/,
+      `<meta name="description" content="${desc}" />`,
+    );
+    html = html.replace("</head>", `    ${headBlock}\n  </head>`);
+    html = html.replace(
+      '<div id="root"></div>',
+      `<div id="root"></div>${buildExternalSummaryBlock(item)}`,
+    );
+
+    fs.writeFileSync(path.join(dir, "index.html"), html);
+    count++;
+  }
+
+  console.log(`✓ SEO: ${externalItems.length} 篇外部摘要页已预渲染`);
+}
+
+buildExternalPages();
 
 // --- A1: 站点级 OG 标签 ---
 const siteOg = [
