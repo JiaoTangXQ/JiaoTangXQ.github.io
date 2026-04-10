@@ -1,7 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { readArticles } from "./readArticles.mjs";
-import type { CosmosData, CosmosNode, ClusterInfo } from "../../src/lib/content/types.js";
+import { readExternalContent } from "./readExternalContent.mjs";
+import type {
+  CosmosData,
+  CosmosNode,
+  ClusterInfo,
+  CoverConfig,
+  ExternalContentRecord,
+} from "../../src/lib/content/types.js";
 
 const CLUSTER_COLORS: Record<string, string> = {
   // 原主题
@@ -46,20 +53,8 @@ function seededRandom(seed: number) {
   };
 }
 
-const rand = seededRandom(42);
-
-/** 在范围内生成随机数 */
-function randRange(min: number, max: number): number {
-  return min + rand() * (max - min);
-}
-
-/** 高斯近似：多个均匀随机求和，产生中间密两端疏的分布 */
-function gaussRand(scale: number): number {
-  return (rand() + rand() + rand() - 1.5) * scale;
-}
-
 /** 构建时大小 = 纯 importance 权重（时间衰减和点击热度由运行时动态计算） */
-function computeSize(article: ReturnType<typeof readArticles>[number]): number {
+function computeSize(article: { importance?: number }): number {
   return article.importance ?? 1.0;
 }
 
@@ -73,8 +68,25 @@ function tooClose(x: number, y: number, placed: Array<{ x: number; y: number }>,
   return false;
 }
 
-function buildCosmosData(): CosmosData {
-  const articles = readArticles();
+type LocalBuildRecord = ReturnType<typeof readArticles>[number] & {
+  contentType: "local";
+};
+
+type CosmosBuildRecord = LocalBuildRecord | ExternalContentRecord;
+
+function readAllContent(): CosmosBuildRecord[] {
+  const articles: LocalBuildRecord[] = readArticles().map((article) => ({
+    ...article,
+    contentType: "local",
+  }));
+  const externalItems = readExternalContent();
+
+  return [...articles, ...externalItems];
+}
+
+export function buildCosmosData(): CosmosData {
+  const records = readAllContent();
+  const rand = seededRandom(42);
 
   // 所有星球完全随机散布在整个宇宙中，不按主题聚集
   const UNIVERSE_W = 12000;
@@ -83,7 +95,7 @@ function buildCosmosData(): CosmosData {
   const nodePositions: Array<{ x: number; y: number }> = [];
   const minNodeDist = 70;
 
-  for (const _article of articles) {
+  for (const _record of records) {
     let x: number, y: number;
     let tries = 0;
 
@@ -98,17 +110,23 @@ function buildCosmosData(): CosmosData {
   }
 
   // Build nodes
-  const nodes: CosmosNode[] = articles.map((article, i) => ({
-    slug: article.slug,
-    title: article.title,
-    summary: article.summary,
-    topics: article.topics,
-    date: article.date,
+  const nodes: CosmosNode[] = records.map((record, i) => ({
+    slug: record.slug,
+    title: record.title,
+    summary: record.summary,
+    topics: record.topics,
+    date: record.date,
+    contentType: record.contentType,
+    sourceName: record.contentType === "external" ? record.sourceName : undefined,
+    sourceUrl: record.contentType === "external" ? record.sourceUrl : undefined,
+    sourceDomain: record.contentType === "external" ? record.sourceDomain : undefined,
+    whyWorthReading:
+      record.contentType === "external" ? record.whyWorthReading : undefined,
     x: nodePositions[i].x,
     y: nodePositions[i].y,
-    size: computeSize(article),
-    cluster: article.topics[0] ?? "其他",
-    cover: article.cover ?? { style: "gradient" },
+    size: computeSize(record),
+    cluster: record.topics[0] ?? "其他",
+    cover: (record.cover ?? { style: "gradient" }) as CoverConfig,
   }));
 
   // Cluster centers 用实际节点的平均位置
@@ -132,14 +150,15 @@ function buildCosmosData(): CosmosData {
   return { nodes, clusters };
 }
 
-// Run
-const data = buildCosmosData();
-const outDir = path.resolve("public/data");
-fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(
-  path.join(outDir, "cosmos.json"),
-  JSON.stringify(data, null, 2),
-);
-console.log(
-  `✓ cosmos.json: ${data.nodes.length} nodes, ${data.clusters.length} clusters`,
-);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const data = buildCosmosData();
+  const outDir = path.resolve("public/data");
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(outDir, "cosmos.json"),
+    JSON.stringify(data, null, 2),
+  );
+  console.log(
+    `✓ cosmos.json: ${data.nodes.length} nodes, ${data.clusters.length} clusters`,
+  );
+}
