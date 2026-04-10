@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CosmosData,
   CosmosNode,
@@ -17,7 +17,6 @@ import { CosmosChrome } from "./CosmosChrome";
 import { SummaryCard } from "./SummaryCard";
 import { SearchPalette } from "./SearchPalette";
 import { TransitionOverlay } from "./TransitionOverlay";
-import { ThemeLens } from "./ThemeLens";
 import { GalaxyCompass } from "./GalaxyCompass";
 import { NodeLabels } from "./NodeLabels";
 import "@/styles/cosmos-ui.css";
@@ -45,7 +44,6 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
   // --- UI state ---
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [activeNode, setActiveNode] = useState<CosmosNode | null>(null);
-  const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
   // --- DOM overlay camera state (updated via RAF for smooth labels) ---
@@ -96,11 +94,6 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
-
-  const themes = useMemo(() => {
-    if (!dataset) return [];
-    return Array.from(new Set(dataset.nodes.map((n) => n.cluster))).sort();
-  }, [dataset]);
 
   const lodMode = getLodMode(domCamera.zoom);
 
@@ -214,22 +207,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     [cruise, transition],
   );
 
-  const handleThemeChange = useCallback(
-    (theme: string | null) => {
-      setActiveTheme(theme);
-      if (theme && dataset) {
-        const cluster = dataset.clusters.find((c) => c.name === theme);
-        if (cluster) {
-          cruise.interrupt();
-          cam.flyTo(cluster.centerX, cluster.centerY, 1.2);
-        }
-      }
-    },
-    [dataset, cam, cruise],
-  );
-
   const handleReset = useCallback(() => {
-    setActiveTheme(null);
     cruise.interrupt();
     cam.reset();
   }, [cam, cruise]);
@@ -278,7 +256,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         cameraRef={cam._stateRef}
         hoveredSlug={hoveredSlug}
         activeSlug={activeNode?.slug ?? null}
-        activeTheme={activeTheme}
+        activeTheme={null}
         onNodeHover={handleNodeHover}
         onNodeClick={handleNodeClick}
       />
@@ -308,19 +286,12 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
           left: 0,
           right: 0,
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "flex-end",
           padding: "1.5rem",
           pointerEvents: "none",
         }}
       >
-        <div style={{ pointerEvents: "auto" }}>
-          <ThemeLens
-            themes={themes}
-            activeTheme={activeTheme}
-            onChange={handleThemeChange}
-          />
-        </div>
         <div style={{ pointerEvents: "auto" }}>
           <GalaxyCompass
             clusters={dataset.clusters}
