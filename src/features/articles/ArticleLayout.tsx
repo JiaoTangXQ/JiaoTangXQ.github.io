@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { getPalette, buildCoverGradient } from "@/lib/content/types";
-import type { CoverConfig } from "@/lib/content/types";
+import type { ContentType, CoverConfig } from "@/lib/content/types";
 
 type Props = {
   title: string;
@@ -9,6 +9,10 @@ type Props = {
   cluster: string;
   cover: CoverConfig;
   bodyHtml: string;
+  contentType?: ContentType;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceDomain?: string;
   backUrl: string;
   /** 自定义返回处理（用于过渡动画），若提供则替代默认 Link 行为 */
   onBack?: (e: React.MouseEvent) => void;
@@ -40,6 +44,10 @@ export function ArticleLayout({
   cluster,
   cover,
   bodyHtml,
+  contentType,
+  sourceName,
+  sourceUrl,
+  sourceDomain,
   backUrl,
   onBack,
   children,
@@ -131,11 +139,46 @@ export function ArticleLayout({
         </div>
       </div>
 
+      {contentType === "external" && sourceName && sourceUrl && (
+        <section className="article-source-card">
+          <div className="article-source-card__eyebrow">外部来源</div>
+          <div className="article-source-card__title-row">
+            <a
+              className="article-source-card__link"
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {sourceName}
+            </a>
+            {sourceDomain && (
+              <span className="article-source-card__domain">{sourceDomain}</span>
+            )}
+          </div>
+          <p className="article-source-card__note">
+            这是一条外部内容摘要页，用来帮你快速判断它值不值得继续看原文。
+          </p>
+        </section>
+      )}
+
       {/* Prose body */}
       <article
         className="article-body article-enter"
         dangerouslySetInnerHTML={{ __html: bodyHtml }}
       />
+
+      {contentType === "external" && sourceUrl && (
+        <div className="article-outbound">
+          <a
+            className="article-outbound__cta"
+            href={sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            去看原文
+          </a>
+        </div>
+      )}
 
       {/* Footer slot (NearbyPlanets, etc.) */}
       {children}

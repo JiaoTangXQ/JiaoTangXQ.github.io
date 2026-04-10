@@ -17,6 +17,7 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const palette = getPalette(node.cluster);
+  const isExternal = node.contentType === "external";
 
   // Animate in on mount
   useEffect(() => {
@@ -94,6 +95,11 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
         <div className="summary-card__body">
           <div className="summary-card__meta">
             <span className="summary-card__date">{formattedDate}</span>
+            {isExternal && node.sourceName && (
+              <span className="summary-card__source">
+                外部来源 · {node.sourceName}
+              </span>
+            )}
             <div className="summary-card__tags">
               {node.topics.map((topic) => (
                 <span key={topic} className="summary-card__tag">
@@ -110,7 +116,7 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
             onClick={handleReadMore}
             style={{ background: ctaGradient }}
           >
-            阅读全文
+            {isExternal ? "查看摘要" : "阅读全文"}
             <span className="summary-card__cta-arrow" aria-hidden="true">
               →
             </span>

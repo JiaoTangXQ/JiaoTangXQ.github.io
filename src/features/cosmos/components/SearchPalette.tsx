@@ -243,16 +243,19 @@ export function SearchPalette({
                     className="search-palette__result-dot"
                     style={{ background: palette.core[0] }}
                   />
-                  <div className="search-palette__result-info">
-                    <div className="search-palette__result-title">
-                      {result.node.title}
-                    </div>
-                    <div className="search-palette__result-date">
-                      {result.node.date}
+                    <div className="search-palette__result-info">
+                      <div className="search-palette__result-title">
+                        {result.node.title}
+                      </div>
+                      <div className="search-palette__result-meta">
+                        {result.node.contentType === "external" &&
+                        result.node.sourceName
+                          ? `外部来源 · ${result.node.sourceName}`
+                          : result.node.date}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
+                );
             })
           )}
         </div>

@@ -14,6 +14,14 @@ type ArticleData = {
   bodyHtml: string;
 };
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 /** Strip YAML front-matter (between opening and closing ---) from markdown. */
 function stripFrontmatter(md: string): string {
   const trimmed = md.trimStart();
@@ -31,6 +39,19 @@ async function renderMarkdown(md: string): Promise<string> {
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(result);
+}
+
+function renderExternalSummary(node: CosmosNode): string {
+  const summary = `<p>${escapeHtml(node.summary)}</p>`;
+  const whyWorthReading = node.whyWorthReading
+    ? `<h2>为什么值得看</h2><p>${escapeHtml(node.whyWorthReading)}</p>`
+    : "";
+
+  return [
+    "<h2>内容总结</h2>",
+    summary,
+    whyWorthReading,
+  ].join("");
 }
 
 export function ArticlePage() {
@@ -82,6 +103,12 @@ export function ArticlePage() {
       const node = cosmosData.nodes.find((n) => n.slug === targetSlug);
       if (!node) {
         setStatus("not-found");
+        return;
+      }
+
+      if (node.contentType === "external") {
+        setArticle({ node, bodyHtml: renderExternalSummary(node) });
+        setStatus("ready");
         return;
       }
 
@@ -218,6 +245,10 @@ export function ArticlePage() {
         cluster={node.cluster}
         cover={node.cover}
         bodyHtml={bodyHtml}
+        contentType={node.contentType}
+        sourceName={node.sourceName}
+        sourceUrl={node.sourceUrl}
+        sourceDomain={node.sourceDomain}
         backUrl={backUrl}
         onBack={handleBack}
       >
