@@ -1,22 +1,43 @@
 ---
-title: "Logo 也要 memo 住，说明长会话里连页头乱动都会拖垮整段重绘"
+title: "为什么 Logo 也要 React.memo"
 slug: "11-07-10-logomemo"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`Messages.tsx` 里的 `LogoHeader` 被 `React.memo` 包住，内部再放 `LogoV2` 和 `StatusNotices`，这样消息数组一变，也不一定把页头一起重..."
+summary: "Messages.tsx 里的 LogoHeader 被 React.memo 包住，内部放 LogoV2 和 StatusNotices。Logo 看起来是静态装饰，但在长会话的重绘压力下，让它脱离消息更新的渲染周期有实际意义。"
 importance: 1
 ---
 
-# Logo 也要 memo 住，说明长会话里连页头乱动都会拖垮整段重绘
+# 为什么 Logo 也要 React.memo
 
-## 实现链
-`Messages.tsx` 里的 `LogoHeader` 被 `React.memo` 包住，内部再放 `LogoV2` 和 `StatusNotices`，这样消息数组一变，也不一定把页头一起重新刷掉。它的目的不是省一个 logo，而是别让最上面的那点脏状态把后面整段消息重绘拖慢。
+`Messages.tsx` 里：
 
-## 普通做法
-普通列表常常把页头当成普通装饰，每次父组件刷新就跟着一起重建。
+```typescript
+const LogoHeader = React.memo(function LogoHeader() {
+  return (
+    <>
+      <LogoV2 />
+      <StatusNotices />
+    </>
+  );
+});
+```
 
-## 为什么不用
-Claude Code 的会话可能很长，页头看起来再轻，也会参与整棵树的脏标记传播。这里把它单独 memo，是因为它要服务的是整段滚动体验，不是单独一块“看着不重要”的装饰。
+Logo 被 `React.memo` 包住了。
 
-## 代价
-代价是顶部结构多了一层 memo 和冻结壳，读代码时不如直写那么顺。好处是长会话里页面更稳，不会因为页头抖动把后面都拖重绘。
+## 直觉上这显得多余
+
+Logo 不会变。`LogoV2` 渲染的是一个固定的 ASCII 艺术字或图标，`StatusNotices` 只在真正有通知时才有内容。大多数时候，这两个组件看起来「永远一样」，memo 似乎什么都不做。
+
+## 长会话里的实际代价
+
+`Messages.tsx` 是一个非常活跃的组件。每当消息列表更新——也就是每次助手流式输出一段文字、每次工具调用返回结果——这个组件都会重新渲染。在长会话里，这可以是每秒好几次。
+
+没有 memo，`LogoHeader` 在每次父组件更新时都会参与重渲染。单次渲染的成本很低，但它处于整棵树的最上层，它的重渲染会触发它下面所有子树的重渲染检查。在主线程空间有限的终端环境里，任何不必要的计算都是摩擦。
+
+更重要的是：`StatusNotices` 有自己的状态订阅。在没有 memo 的情况下，每次 `Messages.tsx` 更新都会重新执行 `StatusNotices` 里的状态读取逻辑，即使消息区的更新与通知状态完全无关。
+
+## memo 在这里做的事
+
+用 `React.memo` 包住 `LogoHeader`，在说：**页头部分的重渲染不应该由消息列表的变化触发**。只有 Logo 或通知本身的状态改变，才需要重渲染页头。
+
+这是一个关于「哪个更新应该触发哪个重渲染」的架构决策，而不是简单的性能优化。它在把组件树里的更新传播路径明确化：消息区更新 → 消息区重渲染，但不波及页头。

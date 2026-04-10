@@ -1,26 +1,97 @@
 ---
-title: "Command 导读：不同来源最后都要说同一种命令语言"
+title: "面试题：Claude Code 里有多少种命令来源？它们最后统一成什么？"
 slug: "03-04-00-command"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "这一章要先钉住一个判断：Claude Code 不会让内建命令、skills、插件命令和 MCP 技能各自说各自的话。来源可以不同，进系统以后还是得先变成同一种 `Command` 语言。 所以这一章..."
+summary: "内建命令、skills 目录、插件、MCP 能力——四种来源，最后都统一成 Command 类型。这个统一不是抹平差异，而是先给所有能力一张「身份证」，再让它们按各自的物理机制执行。"
 importance: 1.4
 ---
 
-# Command 导读：不同来源最后都要说同一种命令语言
+# 面试题：Claude Code 里有多少种命令来源？它们最后统一成什么？
 
-这一章要先钉住一个判断：Claude Code 不会让内建命令、skills、插件命令和 MCP 技能各自说各自的话。来源可以不同，进系统以后还是得先变成同一种 `Command` 语言。
+## 命令来源的多样性
 
-所以这一章的三片叶子，要连起来读成“统一入口怎样成立”。先看 [03-04-01-不同来源最后都说同一种Command语言.md](/Users/xxx/tmp/cc/docs/claude-code-book/03-用户一句话怎样进入系统/03-04-Command收编不同来源能力/03-04-01-不同来源最后都说同一种Command语言.md)，再顺着公共身份和来源差异保留位置往下读，这一章才会从“抽象定义说明”变成“命令世界怎样先有共同语言”的入口。
+翻开 `commands.ts`，`loadAllCommands` 这样组装完整命令列表：
 
-## 实现链
-不管命令来自内建 slash、skills、plugins 还是 MCP，最终都会在 `commands.ts` 和 `types/command.ts` 这套模型里被表示成 `Command`。后面的解析、遥测、显示和权限逻辑都围着这套统一接口转。
+```typescript
+const loadAllCommands = memoize(async (cwd: string): Promise<Command[]> => {
+  const [
+    { skillDirCommands, pluginSkills, bundledSkills, builtinPluginSkills },
+    pluginCommands,
+    workflowCommands,
+  ] = await Promise.all([
+    getSkills(cwd),
+    getPluginCommands(),
+    getWorkflowCommands ? getWorkflowCommands(cwd) : Promise.resolve([]),
+  ])
 
-## 普通做法
-很多系统会让不同来源保持各自的命令协议，最后靠适配层临时拼一下。
+  return [
+    ...bundledSkills,         // 随 Claude Code 打包的内置 skills
+    ...builtinPluginSkills,   // 内建插件提供的 skills
+    ...skillDirCommands,      // ~/.claude/commands/ 目录里用户自定义的 skills
+    ...workflowCommands,      // workflow 脚本生成的命令
+    ...pluginCommands,        // 已安装插件带来的命令
+    ...pluginSkills,          // 已安装插件带来的 skills
+    ...COMMANDS(),            // 内建命令（clear、compact、config 等）
+  ]
+})
+```
 
-## 为什么不用
-因为入口层需要统一判断“这是不是用户可调用技能、是否需要 fork、是否能在 bridge 上执行、结果怎么显示”。没有统一命令语言，这些公共判断会散落一地。
+七种来源。加上 MCP（从 `AppState.mcp.commands` 独立管理），实际上是八种来源。
 
-## 代价
-抽象层更厚；但一旦统一，命令来源再多，也不至于把入口层重新拆开。
+每种来源加载方式不同，存储位置不同，更新时机不同。但最终都返回 `Command[]`。
+
+## Command 类型为什么是统一的语言
+
+```typescript
+export type Command = CommandBase & (PromptCommand | LocalCommand | LocalJSXCommand)
+```
+
+`CommandBase` 是所有命令共有的「身份证字段」：
+
+```typescript
+type CommandBase = {
+  name: string
+  description: string
+  availability?: CommandAvailability[]
+  isEnabled?: () => boolean
+  isHidden?: boolean
+  aliases?: string[]
+  isMcp?: boolean
+  argumentHint?: string
+  whenToUse?: string
+  version?: string
+  disableModelInvocation?: boolean
+  userInvocable?: boolean
+  loadedFrom?: 'commands_DEPRECATED' | 'skills' | 'plugin' | 'managed' | 'bundled' | 'mcp'
+  kind?: 'workflow'
+  immediate?: boolean
+  isSensitive?: boolean
+  userFacingName?: () => string
+}
+```
+
+不管一个命令来自哪里，它都得回答这些问题：叫什么名字、怎么描述、什么时候可用、要不要对用户隐藏、能不能让模型调用、从哪里加载的。
+
+这套共同语言让系统可以在不知道具体来源的情况下做这些事：
+
+- **补全列表排序**：按 `name`、`description` 排序，不需要区分来源
+- **可见性过滤**：`isEnabled()` 和 `availability` 决定是否显示，统一处理
+- **远端安全过滤**：`REMOTE_SAFE_COMMANDS.has(cmd)` 直接用 Set 过滤，不需要分来源判断
+- **bridge 安全过滤**：`isBridgeSafeCommand(cmd)` 看 `cmd.type`，不看来源
+
+## 统一的代价与收益
+
+**代价**：抽象层更厚。最简单的内建命令（比如 `clear`）也必须符合这套完整的 `Command` schema，即使它只需要 `name`、`description`、`type: 'local'` 三个字段。
+
+**收益**：每个新的命令来源只需要把自己的格式转成 `Command`，就能自动获得排序、过滤、显示、安全检查这整套基础设施。
+
+这一章（03-04）要展开讲三件事：
+1. `Command` 统一了哪些公共身份（03-04-01、03-04-02）
+2. 统一之后，来源差异被保留在哪里（03-04-03）
+
+理解这三件事，才能理解为什么 Claude Code 的命令系统可以同时接住八种来源，还能保持入口层的清晰。
+
+---
+
+*面试指导：被问到「Claude Code 的命令架构是怎么设计的」时，从「多种来源 → 统一 Command 类型 → 保留差异字段」这个三段论展开，比说「有内建命令也有插件命令」更能体现架构意识。*

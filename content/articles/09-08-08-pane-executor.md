@@ -1,28 +1,40 @@
 ---
-title: "pane executor 首次创建后就缓存，说明团队执行世界也要统一口音"
+title: "面试题：解释 PaneBackendExecutor 的缓存策略，以及为什么不每次按需创建"
 slug: "09-08-08-pane-executor"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "Claude Code 不只缓存 backend，还缓存 `PaneBackendExecutor` 本身，说明它连执行器口音都想统一。 `registry.ts` 里的 `getPaneBacken..."
+summary: "PaneBackendExecutor 在 registry.ts 里首次创建后就被缓存，而不是每次调用 spawn/sendMessage/terminate 时重建。这个决定揭示了执行器和临时包装器的本质差异。"
 importance: 1
 ---
 
-# pane executor 首次创建后就缓存，说明团队执行世界也要统一口音
+# 面试题：解释 PaneBackendExecutor 的缓存策略，以及为什么不每次按需创建
 
-Claude Code 不只缓存 backend，还缓存 `PaneBackendExecutor` 本身，说明它连执行器口音都想统一。
+这是一道考察候选人对「状态归属」理解的典型题目。题目本身不难——答案在 `registry.ts` 里一目了然——但只会背实现路径的人往往说不清背后的理由。
 
-## 实现链
+## 源码怎么写的
 
-`registry.ts` 里的 `getPaneBackendExecutor()` 首次调用时创建 executor，之后直接复用 `cachedPaneBackendExecutor`。这样后续 spawn、sendMessage、terminate、kill 都走同一个执行器实例。
+`registry.ts` 暴露一个 `getPaneBackendExecutor()` 函数。第一次调用时，它创建 `PaneBackendExecutor` 实例并存入 `cachedPaneBackendExecutor`；之后无论调用多少次，都直接返回这个缓存实例。
 
-## 普通做法
+后续的 `spawn()`、`sendMessage()`、`terminate()`、`kill()` 全部走这同一个执行器。
 
-普通做法会按需新建 executor，反正只是个包装器。
+## 关键在于执行器持有什么
 
-## 为什么不用
+如果执行器只是一个无状态包装器，每次新建当然无所谓。但 `PaneBackendExecutor` 实际上持有：
 
-Claude Code 选择缓存，是因为 executor 里本来就持有 teammate 映射、cleanup 注册和上下文设定。频繁新建会让团队执行世界出现多份“谁是谁”的记忆。
+- teammate 的映射关系（哪些进程还活着、谁的 identity 是什么）
+- cleanup 注册（进程退出时谁负责收拾残局）
+- 上下文设定（团队执行世界的全局配置）
 
-## 代价
+这些东西不能分裂成多份。如果每次调用都新建执行器，第一次 `spawn` 的 teammate 和第二次 `terminate` 的调用者就会活在两个互不相知的实例里，cleanup 会漏，映射会断，整个团队执行世界的口音就乱了。
 
-代价是 executor 生命周期变长，内部状态必须保持干净，否则会更容易积累陈旧引用。
+## 缓存的真实含义
+
+所以这里的缓存不是性能优化，而是**强制单例语义**。它在说：整套团队执行世界只有一个执行器在管，不存在第二个视角。
+
+这正是面试中值得深挖的地方。候选人如果只说「缓存是为了省开销」，说明还没想清楚。真正的原因是：持有共享状态的东西，必须是一个。
+
+## 代价和权衡
+
+缓存策略把执行器的生命周期拉到和进程等长。这意味着内部状态必须被妥善管理，清理时也要显式把缓存中的内容一并处理。如果执行器内部开始积累陈旧引用，问题就会在很晚才暴露。
+
+这是长寿命单例的经典代价：越依赖它，越得保证它的内部始终干净。

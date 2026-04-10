@@ -1,30 +1,129 @@
 ---
-title: "为什么 local-jsx 命令承认有些能力需要临时界面"
+title: "面试题：/config 是怎么弹出配置面板的？为什么这是命令系统的一部分？"
 slug: "03-05-03-local-jsx"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "如果一个系统过度迷信“统一”，它很容易把所有命令都压成两种形态：要么变成发给模型的一段话，要么变成本地执行的一段程序。Claude Code 没这么做，它专门保留了 `local-jsx` 这一类，等..."
+summary: "local-jsx 型命令在终端里挂载一个临时 JSX 界面，等用户交互完成后才继续。这不是「在终端里夹一点 UI」，而是把「命令需要临时界面」这个现实纳入命令模型的正式成员。"
 importance: 1
 ---
 
-# 为什么 local-jsx 命令承认有些能力需要临时界面
+# 面试题：/config 是怎么弹出配置面板的？为什么这是命令系统的一部分？
 
-如果一个系统过度迷信“统一”，它很容易把所有命令都压成两种形态：要么变成发给模型的一段话，要么变成本地执行的一段程序。Claude Code 没这么做，它专门保留了 `local-jsx` 这一类，等于公开承认了一件很多终端工具不太愿意承认的事实：有些能力确实需要一小段临时界面。
+## 场景推演
 
-`processSlashCommand()` 里对 `local-jsx` 的处理很说明问题。它会懒加载命令模块，给出 `onDone` 回调，必要时用 `setToolJSX()` 把一段临时界面挂到当前终端里，还会控制是否隐藏输入框、是否显示 spinner、是不是立即命令。也就是说，这不是“终端里偷偷夹一点 UI”，而是把“临时交互流程”正式纳入命令模型。
+用户输入 `/config`，按 Enter。
 
-这一步非常诚实。像配置选择、向导、确认流程、局部面板这类能力，如果硬写成纯文本命令，用户体验会很别扭；如果全交给模型，也会把本该由程序精确控制的小流程变得松散。`local-jsx` 的存在说明 Claude Code 不会为了抽象整齐而否认现实差异。
+不到一秒，终端里出现了一个可以用方向键导航的配置面板。用户做完选择，按 Escape，面板消失，会话继续。
 
-这也是为什么命令系统看上去统一，内部却没有被压扁。真正好的抽象，不是强迫所有东西长成一样，而是允许那些本来就需要不同交互形态的能力，保留自己的物理结构。
+这是怎么做到的？中间发生了什么？
 
-## 实现链
-`local-jsx` 命令会 `load()` 一个 JSX 组件，通过 `setToolJSX()` 挂到当前终端 UI 上，必要时还支持 `onDone()` 回填消息或直接跳过 transcript。也就是说，命令系统承认“有些命令必须借一块短期界面”。
+## local-jsx 分支的执行逻辑
 
-## 普通做法
-常见替代要么是全部纯文本交互，要么单独开一个外部 GUI 页面。
+```typescript
+case 'local-jsx': {
+  return new Promise<SlashCommandResult>(resolve => {
+    let doneWasCalled = false
 
-## 为什么不用
-纯文本在复杂配置和选择题面前很笨，单独开 GUI 又会把运行时撕成两半。`local-jsx` 让临时界面仍然长在当前工作台里。
+    const onDone = (result?, options?) => {
+      doneWasCalled = true
+      
+      if (options?.display === 'skip') {
+        void resolve({ messages: [], shouldQuery: false, command, ... })
+        return
+      }
 
-## 代价
-命令系统因此必须理解渲染、dismiss、fullscreen 等 UI 状态，不再是纯后端分发器；但这比把复杂交互硬塞进一串问答更清楚。
+      // 组装 messages
+      void resolve({
+        messages: [
+          createUserMessage({ content: formatCommandInput(command, args) }),
+          result ? createUserMessage({ content: `<local-command-stdout>${result}</local-command-stdout>` })
+                 : createUserMessage({ content: `<local-command-stdout>${NO_CONTENT_MESSAGE}</local-command-stdout>` }),
+          ...metaMessages
+        ],
+        shouldQuery: options?.shouldQuery ?? false,
+        command,
+        ...
+      })
+    }
+
+    void command.load().then(mod => mod.call(onDone, context, args))
+      .then(jsx => {
+        if (jsx == null) return
+        if (doneWasCalled) return  // ← 防止 onDone 已经被调用的情况
+        setToolJSX({
+          jsx,
+          shouldHidePromptInput: true,   // ← 隐藏输入框
+          showSpinner: false,
+          isLocalJSXCommand: true,
+          isImmediate: command.immediate === true
+        })
+      })
+  })
+}
+```
+
+关键点：`getMessagesForSlashCommand` 返回的是一个 **未 resolve 的 Promise**。
+
+这个 Promise 不会立刻完成，它等待着 `onDone` 被调用。`onDone` 只有在用户完成 UI 交互后才会被触发（比如选择了一个选项，或者按下 Escape）。
+
+## setToolJSX 做了什么
+
+`setToolJSX` 是一个注入到 `ProcessUserInputContext` 里的回调，签名类似：
+
+```typescript
+type SetToolJSXFn = (value: {
+  jsx: React.ReactNode | null
+  shouldHidePromptInput?: boolean
+  showSpinner?: boolean
+  isLocalJSXCommand?: boolean
+  isImmediate?: boolean
+  clearLocalJSX?: boolean
+} | null) => void
+```
+
+调用 `setToolJSX({ jsx, shouldHidePromptInput: true })` 后：
+- 这段 JSX 被挂到终端的当前渲染层
+- 输入框被隐藏（`shouldHidePromptInput: true`），用户不能输入新命令
+- 原来的会话显示被这个临时界面覆盖
+
+当用户完成操作，config 命令调用 `onDone(result)`：
+- Promise resolve，`getMessagesForSlashCommand` 返回结果
+- 主流程继续
+- `setToolJSX(null)` 在外层被调用，临时界面消失，输入框恢复
+
+## 为什么这是命令系统的正式成员，而不是「特例」
+
+在没有 `local-jsx` 的世界里，有两种替代方案：
+
+**方案 A**：把 `/config` 做成一个独立的外部程序，启动时临时接管终端
+- 问题：配置改变需要回传到当前会话，需要 IPC。两个进程之间的状态同步很复杂。
+
+**方案 B**：把 `/config` 做成纯文本交互
+- 问题：配置选项用文本列表展示和选择，体验很糟糕，尤其是有很多选项时。
+
+**`local-jsx` 的方案**：命令系统承认「有些命令本质上需要临时 UI」，把这种需求纳入正式的类型系统，提供 `setToolJSX` 作为接口，让命令可以渲染自己的 JSX，等交互完成后通过 `onDone` 继续。
+
+这样所有状态（当前会话、配置改变）都在同一个运行时里，不需要 IPC，也不需要把复杂选择题退化成文本列表。
+
+## doneWasCalled 的防御逻辑
+
+注意代码里有一个 `doneWasCalled` 的防御：
+
+```typescript
+if (doneWasCalled) return  // 在 setToolJSX 调用前
+```
+
+和：
+
+```typescript
+if (doneWasCalled) return  // 在错误处理里
+void resolve({ messages: [], shouldQuery: false, command })
+```
+
+这处理了一个边界情况：有些命令在 `mod.call()` 里同步调用了 `onDone`（比如一些「立刻完成不需要显示界面」的命令），然后还返回了一个 JSX 节点。如果不检查 `doneWasCalled`，后来的 `setToolJSX` 调用会把界面挂上去，但 Promise 已经 resolve 了，`useQueueProcessor` 会认为命令结束，界面就永远悬挂在那里无法关闭。
+
+这个细节说明 `local-jsx` 的并发语义需要仔细管理。
+
+---
+
+*面试指导：被问到「怎么在 CLI 工具里实现复杂的 UI 交互」时，`local-jsx` + `setToolJSX` + `onDone` Promise 这个模式是一个很好的例子。核心点是「把 UI 交互变成一个等待完成的 Promise」，让命令系统统一处理，而不是为每个有 UI 的命令单独实现一套 event loop 劫持逻辑。*

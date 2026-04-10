@@ -1,22 +1,72 @@
 ---
-title: "buildMessageLookups 把分散事件重新织成可读关系"
+title: "buildMessageLookups 用 O(n) 查找表替代 O(n²) 遍历，省了多少？"
 slug: "11-08-01-buildmessagelookups"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`Messages.tsx` 先把消息做完 `normalizeMessages`、分组、折叠和截断，再把 `normalizedMessages` 和当前要显示的 `messagesToShow` ..."
+summary: "Claude Code 的消息渲染层不是让每个组件自己扫数组找关系，而是用 buildMessageLookups 一次性建立 7 张查找表，把工具请求、结果、进度、hook 的因果链压缩成 O(1) 查询。"
 importance: 1
 ---
 
-# buildMessageLookups 把分散事件重新织成可读关系
+# buildMessageLookups 用 O(n) 查找表替代 O(n²) 遍历，省了多少？
 
-## 实现链
-`Messages.tsx` 先把消息做完 `normalizeMessages`、分组、折叠和截断，再把 `normalizedMessages` 和当前要显示的 `messagesToShow` 一起交给 `buildMessageLookups`。这个函数不是单纯建一个表，而是先扫 assistant 消息里的 `tool_use`，建立 `toolUseByToolUseID`、`toolUseIDToMessageID` 和 `siblingToolUseIDs`，再扫 `progress`、`user`、`hook_attachment` 和未收尾的 `server_tool_use` / `mcp_tool_use`，补出 `progressMessagesByToolUseID`、`toolResultByToolUseID`、`resolvedToolUseIDs`、`erroredToolUseIDs`、`inProgressHookCounts` 和 `resolvedHookCounts`。后面的 `MessageRow`、`AssistantToolUseMessage`、`UserToolResultMessage`、`HookProgressMessage` 都是直接读这批 lookup，不再自己猜关系。
+面试问题直接问：一个组件需要"找到当前 tool_use 对应的 tool_result"，最朴素的写法是什么，Claude Code 的实际做法是什么，差距在哪？
 
-## 普通做法
-更普通的写法，是让每个行组件自己向前后扫一遍，碰到 `tool_result` 再临时找对应的 `tool_use`，碰到 hook 再数现场出现了几次，碰到 sibling 再从邻居里拼关系。这样看起来省事，但每个消费者都会重复同一套判断。
+## 朴素写法的代价
 
-## 为什么不用
-这里不是单条消息自己能说清楚自己的语义。assistant 文本、用户结果、进度消息、hook attachment 和 synthetic streaming 消息会被拆到不同的行里，还可能在流式更新和重排里换位置。靠邻居临时推断，不但容易把同一个工具调用看成几件事，还会把关系判断做成 O(n²)。
+朴素写法：每个 `AssistantToolUseMessage` 渲染时，从 props 里拿到整个消息数组，线性扫描找到 `type === 'user' && content[0].tool_use_id === myId` 的那条。每条消息 O(n)，n 条消息全渲染 → O(n²)。更糟的是，sibling 关系（同一次 `tool_use` 块里有多个工具调用）、progress 行、PostToolUse hook 都要各自再扫一遍，实际是 O(k×n²)，k 是关联类型数。
 
-## 代价
-代价是每次渲染都要先做一轮全量索引，额外维护几张 Map 和 Set。换来的好处是关系不会跟着列表抖，界面读到的是稳定的因果网，而不是一堆临时拼出来的猜测。
+流式场景下每收到一个 `input_json_delta` 就触发一次渲染，这个代价在 200 条消息的会话里已经明显可感。
+
+## buildMessageLookups 的实际结构
+
+`Messages.tsx` 在渲染前先调用 `buildMessageLookups(normalizedMessages, messagesToShow)`，一次 O(n) 扫描建出 7 张表：
+
+```
+toolUseByToolUseID          Map<string, AssistantToolUse>
+toolUseIDToMessageID        Map<string, string>
+siblingToolUseIDs           Map<string, string[]>
+progressMessagesByToolUseID Map<string, ProgressMessage[]>
+toolResultByToolUseID       Map<string, UserToolResult>
+resolvedToolUseIDs          Set<string>
+erroredToolUseIDs           Set<string>
+inProgressHookCounts        Map<string, Map<string, number>>
+resolvedHookCounts          Map<string, Map<string, number>>
+```
+
+扫描逻辑分两轮：第一轮过 assistant 消息，把所有 `tool_use` 块的 ID 和 sibling 关系写进前三张表；第二轮过 user、progress、hook_attachment 行，补出结果状态、进度映射和 hook 计数。
+
+结果通过 `lookupsRef.current = lookups` 传给下游，任何组件读关系都是 O(1)。
+
+## 为什么要分两轮而不是一轮
+
+第一个问题的答案是：sibling 关系需要同一次 assistant 消息里的多个 `tool_use` 块互相引用，只有先把一条 assistant 消息里的所有工具 ID 收集完，才能回填 `siblingToolUseIDs`。
+
+第二个问题：为什么 `buildMessageLookups` 同时接收 `normalizedMessages` 和 `messagesToShow`？因为 progress 行和 hook attachment 只需要出现在视口里，但 `tool_use` 和 `tool_result` 的因果链必须从完整的 normalized 数组里扫，否则超出视口的工具请求就找不到它的结果。
+
+## ref 而不是 prop
+
+建出来的 lookups 不是作为 prop 传进每个子组件，而是通过 `lookupsRef.current` 提供给 `isItemClickable` 回调使用。原因：`isItemClickable` 用 `useCallback([tools])` 稳定化，如果 lookups 进入 deps，每次消息更新都重建 callback，VirtualMessageList 里绑定的 onClick 也跟着换，导致正在进行中的 hover 状态失效。用 ref 分离数据更新和函数身份，是这里的关键设计决策。
+
+## shouldRenderStatically 的门槛
+
+`MessageRow` 的 `shouldRenderStatically` 依赖 lookups：
+
+```typescript
+function shouldRenderStatically(msg, lookups) {
+  const resolved = lookups.resolvedToolUseIDs.has(toolUseId)
+  const hasUnresolved = hasUnresolvedHooksFromLookup(toolUseId, 'PostToolUse', lookups)
+  return resolved && !hasUnresolved
+}
+```
+
+意思是：就算 `tool_result` 已经到了，只要 PostToolUse hook 还在跑，消息就保持动态状态继续接受渲染更新。这是 lookup 驱动渲染决策的直接体现，不是由某个本地 flag 控制的。
+
+## 面试指导
+
+这道题真正在考的是"组件职责边界"和"共享状态的正确形式"。
+
+**常见错误答案**：把 lookups 用 React Context 传递。Context 变化会触发所有消费者重渲，而 lookups 在流式期间每次 delta 都更新，等于把最热的路径插入了全局广播。正确的做法是 ref（不触发渲染）+ 在需要的地方直接读。
+
+**进阶追问**：如果 session 有 2000 条消息，每次追加一条消息时 buildMessageLookups 会重跑全量，怎么优化？答：消息数组是 append-only 的，可以增量更新——只把新增的那条消息加入已有的 Map/Set，不重建。但 Claude Code 当前的实现是全量重建，因为流式场景里 tool_result 不一定在 tool_use 之后紧跟，sibling 修改也可能影响早先的条目。这是一个有意识的 simplicity 取舍。
+
+**面试现场的加分句**：提到 WeakMap 用于缓存搜索文本（VirtualMessageList 里的 `fallbackLowerCache`），它和 lookups 形成两层缓存体系：一层负责关系图（Map），一层负责搜索文本（WeakMap，随消息对象 GC 自动释放）。

@@ -1,27 +1,42 @@
 ---
-title: "stdin 一断先 flush 分析再退出，说明浏览器 MCP server 也要体面收场"
+title: "stdin 断开时先 flush 分析，再退出：收场有纪律"
 slug: "12-07-05-stdinflushmcp-server"
 date: 2026-04-09
 topics: [外延执行]
-summary: "浏览器 MCP server 的收场顺序也很讲究。它不是一发现父进程断开就立刻粗暴退出，而是先把第一方事件日志和 Datadog 都尽量冲干净，再真正 `exit`。这说明在 Claude Code ..."
+summary: "runClaudeInChromeMcpServer() 在 stdin end/error 时，不直接 process.exit(0)，而是先运行 shutdown1PEventLogging() 和 shutdownDatadog()，再退出。浏览器 MCP server 的退出序列是正式工程问题，不是「关了就算」。"
 importance: 1
 ---
 
-# stdin 一断先 flush 分析再退出，说明浏览器 MCP server 也要体面收场
+# stdin 断开时先 flush 分析，再退出：收场有纪律
 
-浏览器 MCP server 的收场顺序也很讲究。它不是一发现父进程断开就立刻粗暴退出，而是先把第一方事件日志和 Datadog 都尽量冲干净，再真正 `exit`。这说明在 Claude Code 心里，“断线”不是可以随便烂尾的时刻，而是仍然要好好收口的一部分。
+子进程通常怎么处理父进程断开？大多数实现是：检测到 stdin 关闭，立刻退出。简洁，合理，够用。
 
-这种设计常常只藏在几行清理代码里，却特别值钱。因为只要系统真要长期跑，收场纪律就和开场纪律一样重要。
+`runClaudeInChromeMcpServer()` 多做了几步：
 
-## 实现链
-`runClaudeInChromeMcpServer()` 在 `stdin` end/error 时不会直接 `process.exit(0)`，而是先跑 `shutdown1PEventLogging()` 和 `shutdownDatadog()` 再退出。浏览器 MCP server 的收场被当成正式工程问题处理。
+```typescript
+stdin.on('end', async () => {
+  await shutdown1PEventLogging();
+  await shutdownDatadog();
+  process.exit(0);
+});
+```
 
-## 普通做法
-普通子进程服务器常常父进程一断就立刻退出。
+`stdin` 关闭后，先把第一方事件日志冲干净，再把 Datadog 的数据推出去，然后才退出。
 
-## 为什么不用
-Claude Code 不这么草率，因为浏览器掉线、断开和收尾事件本身就是线上诊断线索，直接死掉会把最后一批观测丢掉。
+## 为什么退出前要 flush
 
-## 代价
-代价是退出路径更长，也多了一层“收尾本身可能出错”的复杂度。
+在线上运行的系统里，最后一批数据往往是最关键的诊断信息：
 
+- 进程为什么退出了？
+- 退出前最后做了什么？
+- 最后一批任务是成功还是失败？
+
+如果在 flush 之前就退出，这批信息就丢了。线上出现问题时，工程师打开 Datadog 或日志系统，发现进程突然消失，但没有任何关于「它在消失前经历了什么」的记录——这是诊断的盲区。
+
+浏览器 MCP server 在真实用户环境里运行，它的断线、超时、错误，都可能是需要分析的真实案例。先 flush 再退出，是在保证这些数据能到达分析系统，而不是在进程消亡时一并丢失。
+
+## 收场纪律的普遍价值
+
+「先清理，再退出」是一个普遍适用的工程原则。数据库连接要正常关闭，文件要正确写入，临时资源要清理。日志和遥测也不例外——它们是运营观测的基础设施，退出时不冲出去，就等于在最需要数据的时刻主动断了信号。
+
+进程的生命由启动纪律和退出纪律共同定义。只重视启动，不重视退出，是一种不完整的工程意识。

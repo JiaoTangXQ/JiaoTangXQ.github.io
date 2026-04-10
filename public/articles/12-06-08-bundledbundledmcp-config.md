@@ -1,27 +1,119 @@
 ---
-title: "bundled 和非 bundled 走不同路径却回到同一 MCP config，说明产品形态差异不该改运行时口音"
+title: "架构分析：bundled 和非 bundled 模式为什么要输出同一套 MCP 配置？"
 slug: "12-06-08-bundledbundledmcp-config"
 date: 2026-04-09
 topics: [外延执行]
-summary: "无论是 bundled 形态还是非 bundled 形态，Claude Code 都会因为打包方式不同而改动脚本路径和启动参数，但最后吐回来的还是同一种 `MCP config`、同一组 `allow..."
+summary: "setupClaudeInChrome() 对 bundled 和非 bundled 两种打包形态的处理方式不同，但最终返回的 MCP 配置、allowedTools 和 systemPrompt 的结构完全相同。这是「产品形态差异不应该污染运行时协议」原则的具体实现。"
 importance: 1
 ---
 
-# bundled 和非 bundled 走不同路径却回到同一 MCP config，说明产品形态差异不该改运行时口音
+# 架构分析：bundled 和非 bundled 模式为什么要输出同一套 MCP 配置？
 
-无论是 bundled 形态还是非 bundled 形态，Claude Code 都会因为打包方式不同而改动脚本路径和启动参数，但最后吐回来的还是同一种 `MCP config`、同一组 `allowedTools`、同一句系统提示。这种设计很有分寸：产品形态可以不同，运行时口音不要乱。
+## 两种打包形态
 
-这类统一特别重要，因为一旦外层形态差异直接污染运行时语言，后面的工具发现、权限判断和问题排查都会开始分叉。Claude Code 在这里刻意把分叉拦在更外面。
+Claude Code 有两种运行方式：
 
-## 实现链
-`setupClaudeInChrome()` 会根据 `isInBundledMode()` 决定是直接用当前二进制，还是指向 `cli.js`，但最终都返回同样形状的 `type: 'stdio'` 动态 MCP 配置、同样的工具名和同样的 system prompt。产品形态变了，运行时口音不变。
+**Bundled 模式**：打包成单个可执行文件（native binary），所有 JS 代码都预先编译打包。`process.execPath` 就是 Claude Code 本身。
 
-## 普通做法
-普通做法是 bundled 和源码运行各自维护一套接入逻辑，甚至对外工具形状都不同。
+**非 Bundled 模式**：通过 Node.js 运行 JS 代码。`process.execPath` 是 Node.js，还需要指定 `cli.js` 的路径。
 
-## 为什么不用
-Claude Code 不愿意让产品包装差异泄漏到能力协议层，否则后面每个消费者都得知道“现在是哪种打包方式”。
+这两种模式在"如何启动子进程"上完全不同，`setupClaudeInChrome()` 里有明确的分支处理：
 
-## 代价
-代价是 setup 里要额外维护一套分支，把不同产物收口回同一接口。
+```ts
+export function setupClaudeInChrome(): { mcpConfig, allowedTools, systemPrompt } {
+  const isNativeBuild = isInBundledMode()
+
+  if (isNativeBuild) {
+    // Bundled：直接用当前二进制 + 参数
+    const execCommand = `"${process.execPath}" --chrome-native-host`
+    void createWrapperScript(execCommand)...
+    
+    return {
+      mcpConfig: {
+        [CLAUDE_IN_CHROME_MCP_SERVER_NAME]: {
+          type: 'stdio' as const,
+          command: process.execPath,
+          args: ['--claude-in-chrome-mcp'],  // 直接带参数
+          scope: 'dynamic' as const,
+        },
+      },
+      allowedTools,
+      systemPrompt: getChromeSystemPrompt(),
+    }
+  } else {
+    // 非 Bundled：用 Node.js + cli.js 路径 + 参数
+    const __filename = fileURLToPath(import.meta.url)
+    const __dirname = join(__filename, '..')
+    const cliPath = join(__dirname, 'cli.js')
+
+    void createWrapperScript(`"${process.execPath}" "${cliPath}" --chrome-native-host`)...
+    
+    return {
+      mcpConfig: {
+        [CLAUDE_IN_CHROME_MCP_SERVER_NAME]: {
+          type: 'stdio' as const,
+          command: process.execPath,
+          args: [`${cliPath}`, '--claude-in-chrome-mcp'],  // Node + cli.js + 参数
+          scope: 'dynamic' as const,
+        },
+      },
+      allowedTools,
+      systemPrompt: getChromeSystemPrompt(),
+    }
+  }
+}
+```
+
+两个分支的 `command` 和 `args` 不同，但其他所有字段（`type`、`scope`、allowedTools 的内容、systemPrompt）完全相同。
+
+## 为什么要保持返回值结构一致
+
+返回值的消费方（`main.tsx`、工具发现逻辑、权限系统）不需要知道 Claude Code 是 bundled 还是非 bundled 运行的。它们只关心：
+- 这个 server 的 type 是什么（`stdio`）
+- 工具名有哪些
+- 需要追加什么 system prompt
+
+如果 bundled 和非 bundled 返回的结构不同，消费方就需要加条件分支：
+
+```ts
+// 假设的坏设计
+if (isBundledMode) {
+  setupWithBundledConfig()
+} else {
+  setupWithNonBundledConfig()
+}
+```
+
+这让消费方知道了它本来不需要知道的信息（打包方式），增加了不必要的耦合。
+
+## isInBundledMode() 的隔离作用
+
+`isInBundledMode()` 这个函数把"打包方式检测"这个逻辑隔离在一个地方，`setupClaudeInChrome()` 和 `setupComputerUseMCP()` 在内部用这个函数做分支，但对外暴露的是统一的接口。
+
+```ts
+// computerUse 的同样模式
+const args = isInBundledMode()
+  ? ['--computer-use-mcp']
+  : [join(fileURLToPath(import.meta.url), '..', 'cli.js'), '--computer-use-mcp']
+```
+
+这是一个"把差异吸收在接缝处"的设计：差异在函数内部处理完，对外不暴露。
+
+## 开发者体验的一致性
+
+对 Claude Code 的开发者来说，这种一致性很有价值：无论他们在哪种模式下工作（开发时用非 bundled，发布时用 bundled），Chrome 功能的行为表现是完全一样的。
+
+工具名一样、权限一样、system prompt 一样。开发时调试出来的行为，在 bundled 版本里会完全一样。
+
+如果两种模式的行为有差异，开发者在开发阶段测试的结果就不能代表发布版本的行为，这会显著增加调试难度。
+
+## 面试考察点
+
+这道题考察的是**在多种部署形态下保持接口一致性**的架构思维。
+
+一个推论：当你设计一个需要在多种环境/形态里运行的系统（开发/生产、容器/裸机、bundled/非 bundled），一个很有价值的设计原则是：**让环境差异在接入层消化，不要让它泄漏到业务逻辑层**。
+
+接入层知道所有的环境差异，业务逻辑层面对的是统一的抽象。这样的系统在不同环境里运行时，业务逻辑不需要修改。
+
+Claude Code 的 `setupClaudeInChrome()` 是这个原则的一个小而清晰的实现。
 

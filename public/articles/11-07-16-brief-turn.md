@@ -1,28 +1,38 @@
 ---
-title: "brief turn 文本要留在真正解释制度的位置，说明压缩不是把说明一起删掉"
+title: "dropTextInBriefTurns 只删模型的多余话，不删用户的证据"
 slug: "11-07-16-brief-turn"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`brief` 模式不是把一整轮都压成空白, 而是有选择地删掉重复文本。Claude Code 真正想删的是“已经被 Brief 工具替代掉的助手铺陈”, 不是把这轮为什么会被压缩、系统到底做了什么也..."
+summary: "dropTextInBriefTurns() 在完整 transcript 里，只删掉「这一轮调用了 Brief 工具」的助手文本，不动用户输入和工具结果。它的边界很精确：冗余的铺陈可以去掉，但不影响理解这轮工作的骨架信息。"
 importance: 1
 ---
 
-# brief turn 文本要留在真正解释制度的位置，说明压缩不是把说明一起删掉
+# dropTextInBriefTurns 只删模型的多余话，不删用户的证据
 
-`brief` 模式不是把一整轮都压成空白, 而是有选择地删掉重复文本。Claude Code 真正想删的是“已经被 Brief 工具替代掉的助手铺陈”, 不是把这轮为什么会被压缩、系统到底做了什么也一起抹掉。
+`dropTextInBriefTurns()` 和 `filterForBriefTool()` 是 brief 模式的两个不同层次的过滤器。前者用于完整的 transcript 视图，后者用于主会话视图。
 
-## 实现链
+理解 `dropTextInBriefTurns()` 需要先理解它要解决的问题。
 
-这条线落在 `Messages.tsx` 里两套过滤器上。`filterForBriefTool()` 在 brief-only 模式下只保留 Brief 相关 `tool_use`、对应的 `tool_result`、真实用户输入, 以及必要的系统反馈; `dropTextInBriefTurns()` 则在普通 transcript 里只删那些“这一轮已经调用了 Brief 工具”的助手文本。代码里还明确保留 system message, 只特判丢掉 `api_metrics` 这种调试噪声。所以真正承担“解释制度”的文本, 会留在系统提示、工具结果或必要的用户输入位置上, 不是被一刀切删光。
+## Brief 工具的作用
 
-## 普通做法
+当模型在某轮对话里调用了 Brief 工具，Brief 工具会产生一个简洁的摘要。这个摘要本来就是对这轮工作的压缩表达。
 
-更简单的做法是要么整轮都保留, 让 brief 形同虚设; 要么整轮都砍掉, 用户只看到一个空壳结果。
+但模型在产生这个摘要之外，可能还写了一大段助手文本——解释它做了什么、为什么这样做、结果是什么。这段文本和 Brief 工具的输出是冗余的：它们在表达同样的内容，只是详细程度不同。
 
-## 为什么不用
+## 什么被删，什么被留
 
-Claude Code 不选这两种极端, 因为 brief 的目标是压冗余, 不是压事实。要是把真正解释这轮制度变化的内容也删掉, 用户只会看到“屏幕突然少了很多字”, 却不知道为什么少、少掉的是什么。它宁可多写几条过滤规则, 也要保住必要说明还留在正确位置。
+`dropTextInBriefTurns()` 的规则：
 
-## 代价
+- **检查条件**：这一轮是否有 Brief 工具的 `tool_use` 调用
+- **如果是**：删除这一轮里助手产生的文本块（text content blocks）
+- **不动的**：用户的输入、工具结果、system 消息、所有其他轮次
 
-代价是 brief 逻辑不再是一个简单的布尔开关, 而是要理解 turn 边界、tool name、meta/user/system 的区别。阅读源码时, 你得同时看 `filterForBriefTool()` 和 `dropTextInBriefTurns()` 才知道某段文本为什么消失、另一段为什么保留。
+它删除的是「Brief 工具已经更精炼地表达过的那段铺陈」，不是「这轮发生的所有事情」。
+
+## 精确的边界
+
+brief 的设计目标是减少阅读量，不是抹除信息。删掉的是已经有更好替代的助手铺陈；留下的是用户说了什么（用户的输入）、工具实际做了什么（工具结果）以及 Brief 工具的摘要。
+
+用户仍然能看到：我提了什么要求、系统执行了哪些操作、Brief 工具给出了什么结论。这条因果链保持完整。
+
+被删掉的是：模型用来「解释自己」的那段助手文字——因为 Brief 工具已经替它说完了，更精炼。

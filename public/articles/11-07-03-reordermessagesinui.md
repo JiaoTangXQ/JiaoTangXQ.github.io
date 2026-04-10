@@ -1,28 +1,48 @@
 ---
-title: "reorderMessagesInUI 承认程序顺序和人类顺序不是一回事"
+title: "reorderMessagesInUI：程序记账顺序和人类阅读顺序不是一回事"
 slug: "11-07-03-reordermessagesinui"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`reorderMessagesInUI()` 体现的是一种很成熟的产品判断: 最适合程序记账的顺序, 不一定最适合人阅读。Claude Code 在这里没有崇拜原始日志, 而是承认“人要看懂一轮动作..."
+summary: "reorderMessagesInUI() 按「tool_use → PreToolUse hooks → tool_result → PostToolUse hooks」的顺序重建消息链。这是在把系统的时间序列翻译成人能读懂的因果链。"
 importance: 1
 ---
 
-# reorderMessagesInUI 承认程序顺序和人类顺序不是一回事
+# reorderMessagesInUI：程序记账顺序和人类阅读顺序不是一回事
 
-`reorderMessagesInUI()` 体现的是一种很成熟的产品判断: 最适合程序记账的顺序, 不一定最适合人阅读。Claude Code 在这里没有崇拜原始日志, 而是承认“人要看懂一轮动作”比“屏幕机械复述数组顺序”更重要。
+`reorderMessagesInUI()` 是消息编排流水线里最「胆大」的一步——它会重新排列消息顺序。
 
-## 实现链
+## 系统追加顺序 vs. 人类阅读顺序
 
-真正的重排逻辑写在 `src/utils/messages.ts` 的 `reorderMessagesInUI()` 里。它先按 `toolUseID` 收集四类东西: `tool_use`、`PreToolUse` hooks、`tool_result`、`PostToolUse` hooks, 然后在第二遍重建时按“工具调用 -> 前置 hook -> 工具结果 -> 后置 hook”的顺序吐回列表。`Messages.tsx` 再把这份重排后的结果交给 `applyGrouping()`、各种 collapse 逻辑和 divider 逻辑继续处理, 所以消息区看到的其实是一条被整理过的叙事链, 不是底层数组裸奔。
+系统按时间追加消息：先来的在前，后来的在后。但工具调用的执行流程会产生这样的时间顺序：
 
-## 普通做法
+1. 助手发出 `tool_use` 请求（工具调用）
+2. PreToolUse hook 触发（前置拦截）
+3. 工具执行
+4. 用户侧收到 `tool_result`（工具结果）
+5. PostToolUse hook 触发（后置处理）
 
-更常见的聊天界面会直接按消息数组顺序 `map(render)`。最多在单行组件里临时判断要不要加样式, 但不会先在渲染前重组整条消息链。
+如果按追加顺序显示，这五件事可能被其他消息穿插，用户需要自己把它们拼回「这是同一次工具调用的完整过程」。
 
-## 为什么不用
+## 重排的逻辑
 
-Claude Code 没选这种“原样回放”, 因为它的消息不是单纯的人类对话, 里面混着工具调用、工具结果、前后置 hooks、brief 过滤和流式更新。要是还坚持谁先 append 谁先显示, 一次工具调用会被拆散在好几处, 人要自己在屏幕上重新拼因果关系。这里先替人重排, 本质上是在把“程序的记账顺序”翻译成“人能读懂的工作顺序”。
+`reorderMessagesInUI()` 按 `toolUseID` 收集同一次工具调用的所有相关消息，然后按固定顺序重新组织：
+
+```
+tool_use → PreToolUse hooks → tool_result → PostToolUse hooks
+```
+
+这个顺序反映的是一次工具调用从「发起」到「完成」的因果链，而不是系统追加消息的时间序列。
+
+## 为什么这很重要
+
+工具调用是 Claude Code 工作的核心动作。用户看到屏幕上的工具调用序列，其实是在追踪「模型决定做什么、实际做了什么、结果是什么」这条理解链。
+
+如果这条链是散的——工具结果出现在比它们对应的工具调用晚几行的位置，hooks 和主内容混在一起——用户就需要在屏幕上做大量的认知重组工作。
+
+重排把这个工作从用户脑子里移到了代码里。用户看到的是一个连贯的、从上到下可以直接阅读的因果叙事。
 
 ## 代价
 
-代价是消息区不再是轻薄渲染层, 而是一层真正的编排器。调试时如果看到顺序和原始 transcript 不同, 你不能只盯着消息数组, 还得回头看 `reorderMessagesInUI()` 和后续 grouping/collapse 政策, 理解成本会明显高一点。
+代价是消息区不再是原始日志的忠实镜像。`transcript` 文件里的顺序和屏幕上的顺序会不同。调试时这可能造成困惑，因为「系统实际记录的」和「用户看到的」是两种顺序。
+
+但这个代价值得：用户不需要成为系统内部运行顺序的专家，才能理解模型在做什么。

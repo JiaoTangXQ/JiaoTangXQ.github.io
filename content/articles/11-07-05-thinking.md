@@ -1,28 +1,41 @@
 ---
-title: "thinking 停止后还再留三十秒，说明消息编排也在照顾迟到的眼睛"
+title: "thinking 停止后还留 30 秒，是在照顾刚把视线移过来的人"
 slug: "11-07-05-thinking"
 date: 2026-04-09
 topics: [终端界面]
-summary: "流式 thinking 不是一停就立刻消失。Claude Code 故意给它一个短暂的缓冲窗口, 让刚把视线移过来的人还能看见“刚才模型在想什么”。这说明消息编排关心的不只是数据是否结束, 也关心人有..."
+summary: "流式 thinking 停止后，isStreamingThinkingVisible 会继续维持 true 长达 30 秒（streamingEndedAt 到现在不超过 30000ms）。这个缓冲窗口不是随意的延迟，而是对「人的观看节奏」的主动适配。"
 importance: 1
 ---
 
-# thinking 停止后还再留三十秒，说明消息编排也在照顾迟到的眼睛
+# thinking 停止后还留 30 秒，是在照顾刚把视线移过来的人
 
-流式 thinking 不是一停就立刻消失。Claude Code 故意给它一个短暂的缓冲窗口, 让刚把视线移过来的人还能看见“刚才模型在想什么”。这说明消息编排关心的不只是数据是否结束, 也关心人有没有来得及看到。
+`Messages.tsx` 里有一段 thinking 可视性逻辑：
 
-## 实现链
+```typescript
+const isStreamingThinkingVisible =
+  streamingThinking.isStreaming ||
+  (streamingThinking.streamingEndedAt !== null &&
+   Date.now() - streamingThinking.streamingEndedAt < 30_000);
+```
 
-`Messages.tsx` 里专门有一段 `isStreamingThinkingVisible` 逻辑: 如果 `streamingThinking.isStreaming` 还在, 当然继续显示; 如果已经停了, 但 `streamingEndedAt` 距离现在还不到 30000 毫秒, 也继续显示。随后 `lastThinkingBlockId` 会配合 `hidePastThinking` 去隐藏更早的 thinking, 保留“当前这轮还值得看见的那一段”。也就是说, 这不是随机的延迟消失, 而是代码里明写的 30 秒可视期。
+两个条件：正在流式输出，**或者**停止不超过 30 秒。
 
-## 普通做法
+## 为什么需要这个缓冲窗口
 
-更普通的做法要么是 thinking 一结束就瞬间撤掉, 要么干脆全部永久留着, 让每一轮思考都一直占屏。
+模型在思考时，用户可能在做别的事情——等待、切换窗口、看手机。当他们把视线移回来时，thinking 已经结束了。如果 thinking 在结束的瞬间就消失，这些用户永远不知道模型刚才在想什么。
 
-## 为什么不用
+30 秒的缓冲给了「稍晚把视线移过来的人」一个机会。他们仍然能看到模型思考的摘要，理解这个回复的推理过程。
 
-Claude Code 没选前者, 因为那会让 thinking 像闪一下就没的临时噪声, 用户稍微晚看一眼就错过了; 也没选后者, 因为长会话里 thinking 会很快把屏幕淹掉。30 秒是个折中: 它承认 thinking 刚结束时仍然有阅读价值, 但这份价值不是无限期的。
+## 与「永远保留」的区别
 
-## 代价
+另一种做法是让 thinking 永远留着，让用户随时可以回来看。但这在长会话里会产生问题：每次对话都有 thinking，随着会话累积，历史 thinking 会逐渐占据大量屏幕空间。
 
-代价是界面里会存在一种“技术上已经停止, 视觉上还暂留”的状态。实现上也要额外维护 `streamingEndedAt` 这种时间语义, 让消息区不再只是静态渲染当前状态, 而是开始管理人的观看节奏。
+Claude Code 的解决方案是：**用 `lastThinkingBlockId` 和 `hidePastThinking` 组合**——只保留「当前这轮」的 thinking，历史轮次的 thinking 会被隐藏。30 秒缓冲 + 只保留当前轮次，这两个机制合在一起，让 thinking 在它最有价值的时刻可见，在它不再需要的时刻退场。
+
+## 管理观看节奏
+
+这里有一个微妙的设计意识：**数据是否结束，和用户是否已经看过，是两件不同的事**。
+
+流式传输停止了，但并不意味着所有用户都已经读完了。UI 应该适配人的观看节奏，而不是严格同步于数据的生命周期。
+
+这 30 秒代表的不是技术需求，而是「合理的人类视线延迟」——一个足够长的窗口，让大多数情况下稍晚看到这里的人也不会错过。

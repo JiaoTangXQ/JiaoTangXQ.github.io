@@ -1,30 +1,95 @@
 ---
-title: "showSetupScreens 真正在确认哪些危险开闸顺序"
+title: "showSetupScreens() 里的十几个对话框——顺序是怎么决定的？"
 slug: "02-06-02-showsetupscreens"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "`showSetupScreens()` 最值得注意的，不是它弹了多少个框，而是它把哪些东西故意排了先后。Claude Code 在这里并不是把一堆初始化提示杂乱地堆给用户，而是在按危险度和依赖关系开..."
+summary: "系统设计式分析：showSetupScreens() 里有十几个首次启动检查，包括 onboarding、trust、MCP 审批、企业政策、API key 确认等。这个顺序是随意的还是有约束的？"
 importance: 1
 ---
 
-# showSetupScreens 真正在确认哪些危险开闸顺序
+# showSetupScreens() 里的十几个对话框——顺序是怎么决定的？
 
-`showSetupScreens()` 最值得注意的，不是它弹了多少个框，而是它把哪些东西故意排了先后。Claude Code 在这里并不是把一堆初始化提示杂乱地堆给用户，而是在按危险度和依赖关系开闸。
+## 完整的执行序列
 
-顺序大致很清楚。先是 onboarding，然后是 trust；只有 trust 通过之后，系统才把这次会话正式标记为可信，重置并初始化 GrowthBook，开始预取 system context，审批 `.mcp.json` 里的服务器，检查 `CLAUDE.md` 外部引用，更新仓库路径映射，应用完整环境变量，再异步启动遥测。之后才轮到 Grove 政策弹窗、自定义 API key 审批、危险跳过权限模式提示、auto mode opt-in、开发频道确认，以及 Claude in Chrome 的首次引导。
+`showSetupScreens()` 里的操作（按实际执行顺序，简化）：
 
-这个顺序感非常见功力。它说明 Claude Code 不只是问“哪些功能要不要开”，而是在问“哪些能力只有在前一层世界已经被确认后才配出现”。trust 没过之前，不该先跑外部引用；环境变量没应用前，不该初始化某些依赖；auto mode 真正可用之前，也不该先弹同意框。
+```
+1. onboarding screens（欢迎/功能介绍）
+2. trust dialog（工作区信任确认）
+   ↓ trust 通过后才继续
+3. GrowthBook 重新初始化（refreshGrowthBookAfterAuthChange）
+4. getSystemContext() 预取启动（git 命令，需要 trust）
+5. MCP JSON 审批（.mcp.json 里的新服务器）
+6. CLAUDE.md 外部引用检查
+7. 仓库路径映射更新（filterExistingPaths）
+8. 完整环境变量应用（applyConfigEnvironmentVariables）
+9. 遥测初始化（initializeTelemetryAfterTrust）
+   ↓ 后续对话框
+10. Grove/Grove policy 警告（企业政策提示）
+11. 自定义 API key 审批
+12. 危险跳过权限模式提示（--dangerously-skip-permissions）
+13. auto mode opt-in 提示
+14. 开发频道确认（--channels）
+15. Claude in Chrome 首次引导
+```
 
-这正是成熟系统的制度感。看起来像几道对话框，背后其实是一张风险地图。Claude Code 在这里最优雅的地方，不是谨慎，而是连谨慎都做出了严格次序。
+## 哪些顺序是有约束的？
 
-## 实现链
-这页对应的实现链都属于 trust 边界：先判断当前会话有没有资格进入交互世界，再决定是展示哪一层确认、用哪种方式表达风险，还是在非交互路径里直接走另一套边界处理。
+**约束一：Trust 必须在 MCP 审批之前**
 
-## 普通做法
-更普通的做法是把风险确认当作 onboarding 的一部分，或者把同一套界面确认硬套给所有会话形态。
+`.mcp.json` 里的 MCP 服务器是来自项目目录的配置。执行 MCP 审批（问用户是否允许这些服务器）之前，必须先确认这个项目目录是可信的——否则在不信任的目录里展示 MCP 审批，就是在用户还没确认信任这个项目的情况下，展示来自这个项目的工具列表。
 
-## 为什么不用那种做法
-Claude Code 不这么做，因为它把 trust 看成运行时边界，而不是欢迎页。对交互和非交互会话来说，边界必须真实，不能只求界面统一。
+**约束二：Trust 必须在 CLAUDE.md 外部引用检查之前**
 
-## 代价与回报
-回报是用户进入的是被认真确认过的能力世界。代价是首屏前会多出一层制度感很强的流程。
+CLAUDE.md 里可能有 `@external-file.md` 这样的外部引用。检查这些引用（并可能读取外部文件）是一个读文件操作，来自项目目录。在 trust 确认之前，不该读取来自不信任项目的文件。
+
+**约束三：Trust 必须在完整环境变量应用之前**
+
+`.claude/settings.json` 里可能有项目级别的 `env` 配置。应用这些环境变量之前，必须确认项目可信——不信任的项目可能通过 `env` 注入恶意变量。
+
+**约束四：GrowthBook 重新初始化在 Trust 之后**
+
+GrowthBook（feature flag 系统）初始化时会做认证，认证结果可能影响后续对话框是否显示（某些功能门控）。Trust 确认后认证状态可能发生变化（比如 OAuth 信息被确认了），所以需要在 trust 后重新初始化。
+
+## 哪些顺序是"最佳实践"而非硬约束？
+
+**auto mode opt-in 在 MCP 审批之后**
+
+Auto mode 要求用户明确 opt-in。但用户是否选择 auto mode，可能影响他们对 MCP 服务器的审批决策（auto mode 下 MCP 工具会更自由地被调用）。
+
+理论上可以倒过来，但先完成 MCP 审批（"这些工具你允许吗"），再问 auto mode（"允许工具自动调用吗"），语义上更自然。
+
+**onboarding 在 trust 之前**
+
+Onboarding 屏幕是纯介绍性的，不会产生任何副作用，不需要信任前提。放在 trust 之前，让新用户在确认信任之前先了解工具是什么，可以帮助他们做出更有信息的信任决策。
+
+**危险权限模式提示在 trust 之后**
+
+`--dangerously-skip-permissions` 是一个明确的危险操作。在 trust 确认后再提示这个警告，确保用户已经处于"完整认知"状态——他们知道这是一个真实的工作目录，才能更认真地对待"跳过所有权限检查"这个决定。
+
+## 条件性显示
+
+不是所有对话框都每次都会显示：
+
+```typescript
+// 只在满足特定条件时显示
+if (hasMcpJsonApprovals) {
+  await processMcpJsonApprovals(...)
+}
+if (!hasClaudeInChromeBeenShownBefore && shouldEnableClaudeInChrome()) {
+  await showClaudeInChromeFirstTime()
+}
+```
+
+这意味着"哪些对话框会出现"是动态决定的，但"如果出现，它们的相对顺序"是固定的。
+
+## 面试指导
+
+这种"有条件的顺序序列"在系统初始化、wizard 流程、onboarding 体验里很常见。
+
+设计要点：
+1. **识别硬约束**（B 必须在 A 之后）：通常来自安全要求、数据依赖、状态依赖
+2. **识别软约束**（A 在 B 之前更合理）：通常来自用户理解顺序、认知负荷
+3. **条件性 vs 必要性**：某个步骤可以不出现，但如果出现，必须在特定位置
+
+能分析出"为什么这个顺序"，比"记住这个顺序"更有价值。安全相关的顺序约束，通常能追溯到"什么信息应该在什么时候才能被信任"这个核心问题。

@@ -1,27 +1,38 @@
 ---
-title: "本地 bridge 才带 devUserId，说明开发便利被认真关在实验围栏里"
+title: "devUserId 只在本地 bridge 里存在：开发便利关在围栏里"
 slug: "12-07-08-bridgedevuserid"
 date: 2026-04-09
 topics: [外延执行]
-summary: "Claude Code 并不是把所有开发期便利都混进正式线路里。只有在本地 bridge 场景下，它才会额外带上 `devUserId` 这类开发辅助信息。也就是说，开发便利被刻意关在实验围栏里，没有..."
+summary: "createChromeContext() 只有在 isLocalBridge() 时才给 bridgeConfig 附上 devUserId: 'dev_user_local'。这个开发期辅助标识不存在于任何生产路径里，确保开发期的便利不会污染真实用户身份。"
 importance: 1
 ---
 
-# 本地 bridge 才带 devUserId，说明开发便利被认真关在实验围栏里
+# devUserId 只在本地 bridge 里存在：开发便利关在围栏里
 
-Claude Code 并不是把所有开发期便利都混进正式线路里。只有在本地 bridge 场景下，它才会额外带上 `devUserId` 这类开发辅助信息。也就是说，开发便利被刻意关在实验围栏里，没有顺手污染正式世界。
+```typescript
+const bridgeConfig = isLocalBridge()
+  ? { ...baseBridgeConfig, devUserId: 'dev_user_local' }
+  : baseBridgeConfig;
+```
 
-这种克制很重要，因为很多系统不是死在功能不够，而是死在实验便利一路混进生产现实。Claude Code 在这里很清醒：方便开发可以，但得关在明确边界内。
+`devUserId` 只在本地 bridge 模式下才被注入，其他所有路径都不带这个字段。
 
-## 实现链
-`createChromeContext()` 只有在 `isLocalBridge()` 时才给 `bridgeConfig` 附上 `devUserId: 'dev_user_local'`。开发便利被明确关在本地桥路径里，没有泄漏到正常线上路径。
+## 为什么需要 devUserId
 
-## 普通做法
-偷懒做法是所有环境都顺手带一个固定开发标识。
+在本地开发时，工程师需要能快速测试 bridge 功能，不想每次都走完整的 OAuth 流程来建立真实身份。`devUserId: 'dev_user_local'` 提供了一个固定的假身份，让本地测试可以跑起来，而不需要真实账号。
 
-## 为什么不用
-Claude Code 不敢这么做，因为桥接系统牵涉真实账号和浏览器现场，开发捷径一旦溢出就会污染线上身份。
+## 为什么它不能泄漏到生产
 
-## 代价
-代价是本地调试和线上行为存在差异，开发者需要知道自己是否在实验围栏里。
+Bridge 系统连接的是真实的浏览器扩展和真实的用户账号。如果 `devUserId` 这样的假身份出现在生产路径里：
 
+1. 真实用户可能被系统误认为是「开发测试用户」，触发错误的行为
+2. 真实的遥测和分析数据会被「dev_user_local」污染，指标失真
+3. 如果有按用户身份做的权限检查，假身份可能绕过或触发错误的权限
+
+`isLocalBridge()` 条件确保这个假身份只在真正的本地开发环境里存在。一旦连的是任何真实的 bridge（staging 或生产），这个字段就不再注入。
+
+## 开发便利和生产安全的隔离模式
+
+这类「只在本地有的辅助配置」在工程里很常见：测试 token、fake API 响应、跳过验证的标志……每一个都是为了让本地开发更流畅而存在的，但每一个也都是潜在的生产污染源。
+
+用代码显式隔离（`isLocalBridge()` 条件），比靠注释提醒（「注意：不要在生产里用这个」）可靠得多。条件检查会强制执行，注释不会。

@@ -1,30 +1,36 @@
 ---
-title: "看着某个 agent 时 placeholder 会直接改口，说明输入框先服从当前对话对象"
+title: "placeholder 文案是对当前对话对象的一次翻译"
 slug: "11-04-06-agentplaceholder"
 date: 2026-04-09
 topics: [终端界面]
-summary: "当用户正在看某个 teammate，输入框占位词不会再说泛泛的“输入点什么”，而是直接改成“`Message @名字…`”。这很像真人团队里先转身再开口的动作。系统先承认你现在是在对谁说话，再把文本输..."
+summary: "usePromptInputPlaceholder() 在检测到 viewingAgentName 时，会把占位词换成「Message @名字…」。这个改动很轻，但它在做一件实质性的工作：告诉用户现在在对谁说话。"
 importance: 1
 ---
 
-# 看着某个 agent 时 placeholder 会直接改口，说明输入框先服从当前对话对象
+# placeholder 文案是对当前对话对象的一次翻译
 
-当用户正在看某个 teammate，输入框占位词不会再说泛泛的“输入点什么”，而是直接改成“`Message @名字…`”。这很像真人团队里先转身再开口的动作。系统先承认你现在是在对谁说话，再把文本输入这件事交给你。
+打开任何普通聊天 app，输入框的占位符通常是一句永远一样的话：「输入消息」「Ask anything」「Say something…」
 
-这里还有一层很成熟的小克制。名字过长会先被截短，避免一整条 placeholder 被身份信息拖坏。也就是说，驾驶舱既要把对话关系说清楚，又不让这种说明反过来破坏操纵面的稳定。
+这种通用文案在单对话场景里够用。但 Claude Code 可以同时跑多个 teammate，用户可以随时跳进任何一个 agent 的视图。在这种多对象协作结构下，通用占位符就开始撒谎了——它假装你总是在对同一个人说话。
 
-## 实现链
+## viewingAgentName 触发的切换
 
-`usePromptInputPlaceholder()` 先看 `viewingAgentName`，命中就直接生成 `Message @name…`，名字太长还会先截断。placeholder 不是固定文案，而是当前对话对象的一次翻译。
+`usePromptInputPlaceholder()` hook 的第一件事是检查 `viewingAgentName`。如果当前正在查看某个 teammate，占位词直接生成为 ``Message @${name}…``。
 
-## 普通做法
+还有一个细节：名字过长会被截断。这避免了一个长 agent 名字把整条 placeholder 变成一串身份 token 而让文本区显得不稳定。
 
-更普通的 placeholder 会永远写着同一句通用提示，比如“输入消息”或“Ask anything”。
+这两行代码在说：**先承认你现在在对谁说话，再把输入权交给你**。
 
-## 为什么不用
+## 驾驶舱里的身份感知
 
-Claude Code 不保留那种通用口吻，是因为在 teammate 视图里，你已经不是在对主会话说话，而是在对某个 agent 发消息。placeholder 要先服从当前关系，才能减少误操作。
+这不只是文案的问题。在多 agent 会话里，一个「Message @Backend-Agent…」和一个泛泛的「Ask anything」，会带来完全不同的认知负担。
 
-## 代价
+前者让用户一眼知道下一句话的接收方。后者要求用户自己记住当前视图里看的是谁，然后在脑子里做上下文匹配，再开口。
 
-代价是输入区要读团队上下文，连占位词都带上身份判断；但换来的是用户一眼就知道自己此刻在对谁开口。
+认知负担的积累是慢性的。每次切换 teammate 都多一次「我现在在和谁说话」的确认步骤，听起来很小，但在长时间多 agent 工作里会让人持续分心。
+
+placeholder 的改变把这个认知步骤从用户的脑子里移到了界面里，由界面来做，用户就不用做了。这是在对的地方做了一次合适的外包。
+
+---
+
+`usePromptInputPlaceholder()` 的其余部分处理历史搜索状态、vim 模式、粘贴状态等，但 viewingAgent 的分支是第一优先级——对话对象的身份，比任何其他状态都更先该被说清楚。

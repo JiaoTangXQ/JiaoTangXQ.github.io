@@ -1,30 +1,119 @@
 ---
-title: "为什么 trust 不是 onboarding，而是真正的能力边界"
+title: "checkHasTrustDialogAccepted() 这个函数名里藏着什么设计信息？"
 slug: "02-06-01-trustonboarding"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "很多软件第一次启动时都会弹一堆欢迎页、偏好设置、主题选择，看起来都像 onboarding。Claude Code 的 `showSetupScreens()` 里当然也有 onboarding，但真..."
+summary: "Claude Code 里判断 trust 状态的函数叫 checkHasTrustDialogAccepted()，不叫 isUserTrusted() 或 hasPermission()。这个命名选择说明了什么？"
 importance: 1
 ---
 
-# 为什么 trust 不是 onboarding，而是真正的能力边界
+# checkHasTrustDialogAccepted() 这个函数名里藏着什么设计信息？
 
-很多软件第一次启动时都会弹一堆欢迎页、偏好设置、主题选择，看起来都像 onboarding。Claude Code 的 `showSetupScreens()` 里当然也有 onboarding，但真正最重要的那一层不是欢迎，而是 trust。
+## 名字即文档
 
-源码里的注释说得很清楚：trust dialog 是工作区信任边界，不受普通 permission mode 影响。也就是说，它不是在问你“想不想把界面配舒服一点”，而是在问“这是不是一个你愿意让系统认真接触的现场”。只有这一步过了，系统才会把这次会话标成已信任，重新初始化 GrowthBook，开始获取 system context，处理 `.mcp.json` 审批，检查 `CLAUDE.md` 外部引用，应用完整环境变量，甚至启动后面的遥测与更多能力。
+Claude Code 在 `prefetchSystemContextIfSafe()` 里：
 
-这背后的设计非常成熟。Claude Code 没有把“危险操作前询问一下”理解成唯一的安全模型，而是先设了一道更前面的世界边界: 这个目录值不值得信。只要这一步没有过，后面很多看似方便的事情都不能贸然发生，因为它们本身就可能执行来自不可信现场的配置、引用和外部逻辑。
+```typescript
+function prefetchSystemContextIfSafe(): void {
+  const isNonInteractiveSession = getIsNonInteractiveSession();
+  if (isNonInteractiveSession) {
+    void getSystemContext();
+    return;
+  }
+  
+  const hasTrust = checkHasTrustDialogAccepted();
+  if (hasTrust) {
+    void getSystemContext();
+  }
+}
+```
 
-这也是为什么非交互模式会绕过整套界面确认，但帮助文本还要明确提醒“只在你信任的目录里使用”。系统不是不知道这里有风险，而是承认不同模式对应不同信任假设。真正好的 agent，不会把安全全写成按钮弹窗，而是先把“你现在站在什么样的世界里”讲明白。
+函数名是 `checkHasTrustDialogAccepted`，不是 `isUserTrusted()`、`hasPermission()` 或 `isTrustedDirectory()`。
 
-## 实现链
-这页对应的实现链都属于 trust 边界：先判断当前会话有没有资格进入交互世界，再决定是展示哪一层确认、用哪种方式表达风险，还是在非交互路径里直接走另一套边界处理。
+这个命名的精确性很值得分析。
 
-## 普通做法
-更普通的做法是把风险确认当作 onboarding 的一部分，或者把同一套界面确认硬套给所有会话形态。
+## "Dialog Accepted" vs "Trusted"
 
-## 为什么不用那种做法
-Claude Code 不这么做，因为它把 trust 看成运行时边界，而不是欢迎页。对交互和非交互会话来说，边界必须真实，不能只求界面统一。
+`checkHasTrustDialogAccepted()` 的含义：这台机器上的用户是否曾经明确接受过 trust dialog。
 
-## 代价与回报
-回报是用户进入的是被认真确认过的能力世界。代价是首屏前会多出一层制度感很强的流程。
+如果叫 `isUserTrusted()`，会暗示这是在判断"某个用户是否可信"——这是错误的语义，trust 不针对用户，而是针对"系统状态"（是否已经完成了 trust 确认流程）。
+
+如果叫 `hasPermission()`，会和具体的操作权限混淆——Claude Code 有一套独立的 permission 系统（auto mode、bypass 等），trust 是更上层的"能进入完整能力世界"的开关。
+
+如果叫 `isTrustedDirectory()`，会暗示这是针对特定目录的信任——但实际上 `checkHasTrustDialogAccepted()` 检查的是全局状态（用户是否在全局配置里记录了"已接受"）。
+
+"Dialog Accepted" 精确描述了：这是一个"用户有没有经历过那个对话框并点击接受"的状态检查，而不是更宽泛的信任判断。
+
+## Trust 状态存在哪里？
+
+```typescript
+// config.ts（大致逻辑）
+export function checkHasTrustDialogAccepted(): boolean {
+  return getGlobalConfig().hasTrustDialogAccepted === true;
+}
+```
+
+这个状态存在 `~/.claude/settings.json` 的全局配置里，是持久化的、跨会话的状态。
+
+一旦用户接受了 trust dialog，后续启动不需要再次确认（除非配置被重置）。这是一个合理的 UX 决策——每次启动都要重新确认信任，用户体验会很差；但完全没有信任确认，安全性又不够。
+
+`prefetchSystemContextIfSafe()` 里用这个状态来决定是否可以提前执行 git 命令——如果用户曾经明确确认过 trust，就认为在这台机器上的使用是安全的。
+
+## Trust 的多个层次
+
+Claude Code 里有多个层次的"信任"判断，它们有不同的含义：
+
+**1. `checkHasTrustDialogAccepted()`**：全局持久化的"已完成首次信任确认"状态。
+
+**2. `getIsNonInteractiveSession()`**：会话级别的"这次是自动化调用，默认信任"判断。
+
+**3. Permission mode**（`auto`、`default`、`bypass`等）：操作级别的"这类操作需要多大程度的用户确认"。
+
+**4. MCP server trust**：每个 MCP 服务器的独立信任状态（是否允许这个工具运行）。
+
+这四个层次是叠加的，不相互替代。即使 `checkHasTrustDialogAccepted()` 为 true，某个危险操作仍然可能需要额外确认（取决于 permission mode）。
+
+## showSetupScreens() 里的 trust 序列
+
+```typescript
+// 源码里的 showSetupScreens()（简化）
+async function showSetupScreens(...) {
+  // onboarding 先
+  if (shouldShowOnboarding()) {
+    await showOnboardingScreen();
+  }
+  
+  // trust 是独立的闸门
+  if (!checkHasTrustDialogAccepted()) {
+    const accepted = await showTrustDialog();
+    if (!accepted) {
+      await gracefulShutdown(0);
+      return;
+    }
+    // 记录已接受
+    saveGlobalConfig(prev => ({...prev, hasTrustDialogAccepted: true}));
+  }
+  
+  // trust 通过后才做的事情
+  initializeTelemetryAfterTrust();
+  void getSystemContext();
+  // ...
+}
+```
+
+注意 `if (!checkHasTrustDialogAccepted())` 包裹的是 trust dialog 的显示——如果已经接受过，跳过这段，直接执行 trust 通过后的操作。
+
+也就是说：`checkHasTrustDialogAccepted() === true` 不表示"跳过所有 trust 相关逻辑"，而是"跳过 trust 确认界面，但仍然执行只有 trust 通过后才能做的初始化操作"。
+
+函数名 `checkHasTrustDialogAccepted` 准确地只代表了"是否曾经接受过对话框"这一层含义，不涉及后续的能力解锁逻辑。
+
+## 面试指导
+
+函数命名看起来是小事，但在安全相关代码里，命名准确性很重要。
+
+评估命名的标准：
+1. **含义精确**：不包含额外的语义（`isTrustedDirectory` 比实际函数做的事情更多）
+2. **范围清晰**：是全局状态、会话状态还是操作状态？（`checkHasTrustDialogAccepted` 是全局持久化的）
+3. **不与其他概念混淆**：和 permission、role、capability 等概念有明确区分
+
+在代码 review 里指出"这个函数名不准确，可能导致误用"，是展示对代码质量有高要求的好方式。特别是安全相关代码，命名混淆可能导致开发者错误地使用某个信任检查来替代另一个，造成安全漏洞。

@@ -1,30 +1,182 @@
 ---
-title: "StatsProvider 可外接也可自建说明仪表层被故意做成可替换"
+title: "可测试性设计：「自带电池」模式为什么比强制注入更务实？StatsProvider 案例"
 slug: "11-01-05-statsprovider"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`StatsProvider` 既能接收外部传进来的 `store`，也能自己创建内部 `store`。这说明测量体系被当成可替换仪表，而不是焊死在应用骨头里的零件。 这样 CLI、测试、特殊会话都能..."
+summary: "StatsProvider 可以接受外部传入的 store，也可以自己创建。这个「可选注入」不是为了方便，而是一个精心设计的可测试性接口。它让生产代码不需要每次都传 store，测试代码可以精确控制统计行为。"
 importance: 1
 ---
 
-# StatsProvider 可外接也可自建说明仪表层被故意做成可替换
+# 可测试性设计：「自带电池」模式为什么比强制注入更务实？StatsProvider 案例
 
-`StatsProvider` 既能接收外部传进来的 `store`，也能自己创建内部 `store`。这说明测量体系被当成可替换仪表，而不是焊死在应用骨头里的零件。
+依赖注入（DI）是个好原则，但走极端会变成负担：每次创建组件都要传一堆依赖，连最简单的用法也要先 mock 一遍。
 
-这样 CLI、测试、特殊会话都能换一块表，但工作台主结构不需要跟着改。观测层被设计成能插拔，这很成熟。
+Claude Code 的 `StatsProvider` 用一个「可选参数 + 自带电池」的模式找到了平衡点。
 
-## 实现链
+---
 
-`StatsProvider` 接受可选的 `store` 参数；外面传进来就用外部 store，不传就自己创建。这说明统计层被设计成“可挂接，也可自带电池”的容器，既能接入已有仪表体系，也能在普通会话里独立工作。
+## StatsProvider 的双模式实现
 
-## 普通做法
+```tsx
+export function StatsProvider({ store: externalStore, children }) {
+  const internalStore = useMemo(() => createStatsStore(), [])
+  const store = externalStore ?? internalStore
 
-普通做法往往会把统计直接写死在 provider 里，组件树只能吃这一种实现，测试和替换都要跟着真实统计后端走。
+  // ... 使用 store 做统计
+}
+```
 
-## 为什么不用
+这六行代码包含了完整的设计逻辑：
 
-Claude Code 不把统计实现焊死，是因为它既要在真实交互里记指标，也要给测试、注入和特殊运行模式留下替换空间。仪表层如果不可替换，观察系统本身就会变成硬依赖。
+- `externalStore` 是可选的（参数名有 `: externalStore` 解构别名提示这是外来的）
+- 没有传就用 `useMemo` 创建内部的
+- 外部优先（`??` 操作符：只有外部为 null/undefined 时才用内部的）
 
-## 代价
+调用方既可以：
 
-代价是 provider 接口更抽象，调用方得理解“外接 store”和“自建 store”两种路径；但换来的是统计层更容易测试，也更不容易反咬主逻辑。
+```tsx
+// 生产用法：不传，用内部创建的
+<StatsProvider>
+  {children}
+</StatsProvider>
+
+// 测试用法：注入精确控制的 mock
+<StatsProvider store={mockStatsStore}>
+  {children}
+</StatsProvider>
+```
+
+---
+
+## 为什么不直接强制要求外部传入？
+
+如果 API 设计成这样：
+
+```tsx
+// 强制注入版本
+<StatsProvider store={statsStore}>
+```
+
+那么每一个渲染 `App` 的地方都需要先创建一个 `statsStore` 实例传进来。这意味着：
+
+1. 生产代码里 `ink.ts` 的调用方（实际的应用启动点）需要显式创建和管理 `statsStore` 的生命周期
+2. 每次写测试都要先 mock `statsStore`，哪怕这个测试根本不关心统计
+
+第二点是主要的痛点。如果一个测试只是想验证某个按键行为是否正确，它不应该被迫先搭建一个完整的统计基础设施。
+
+---
+
+## 「自带电池」不等于「无法测试」
+
+这个模式经常被误解：「自带电池」看起来像是把依赖藏起来了，测试时怎么验证统计行为？
+
+答案是：需要验证统计行为的测试，才注入 mock。不关心统计的测试，用默认的内部 store 就行。
+
+```tsx
+// 只测 UI 行为的测试：不传 stats
+test('按下 Esc 关闭对话框', () => {
+  render(
+    <App getFpsMetrics={noop} initialState={testState}>
+      <SomeDialog />
+    </App>
+  )
+  // ...
+})
+
+// 验证统计记录的测试：注入 mock
+test('完成任务时记录 task_complete 指标', () => {
+  const mockStore = createMockStatsStore()
+  render(
+    <App getFpsMetrics={noop} stats={mockStore} initialState={testState}>
+      <TaskComponent />
+    </App>
+  )
+  completeTask()
+  expect(mockStore.get('task_complete')).toBe(1)
+})
+```
+
+---
+
+## createStatsStore 的内部实现
+
+自带电池好用的前提是内部实现足够健壮。`createStatsStore` 不是随手写的计数器：
+
+```ts
+// stats.ts（概念还原版）
+export function createStatsStore(): StatsStore {
+  const metrics = new Map<string, number>()
+  const histograms = new Map<string, number[]>()  // Reservoir sampling
+  const sets = new Map<string, Set<string>>()
+  
+  return {
+    increment(key: string, by = 1) {
+      metrics.set(key, (metrics.get(key) ?? 0) + by)
+    },
+    
+    recordHistogram(key: string, value: number) {
+      // Algorithm R — 等概率水塘采样
+      const samples = histograms.get(key) ?? []
+      if (samples.length < SAMPLE_SIZE) {
+        samples.push(value)
+      } else {
+        const idx = Math.floor(Math.random() * (samples.length + 1))
+        if (idx < SAMPLE_SIZE) samples[idx] = value
+      }
+      histograms.set(key, samples)
+    },
+    
+    addToSet(key: string, value: string) {
+      const s = sets.get(key) ?? new Set<string>()
+      s.add(value)
+      sets.set(key, s)
+    },
+    
+    getAll() {
+      // 聚合所有数据并返回
+    }
+  }
+}
+```
+
+三种数据结构：
+
+- **metrics**：简单计数器，用于记录次数（任务完成次数、工具调用次数）
+- **histograms**：用 Reservoir Sampling（Algorithm R）维护等概率样本，用于延迟、token 数量等分布数据
+- **sets**：记录不重复项目，用于统计唯一工具用了哪些、唯一文件被改了哪些
+
+Reservoir Sampling 是统计学里的经典算法：不需要知道总样本量，能在内存有限的情况下维持等概率采样。Claude Code 在这里用的是工业级方案，不是玩具。
+
+---
+
+## useMemo 的选择而不是 useRef
+
+```tsx
+const internalStore = useMemo(() => createStatsStore(), [])
+```
+
+为什么用 `useMemo` 而不是 `useRef`？
+
+两者在这里效果等同：都是只在第一次渲染时创建，之后复用。差别在于语义：
+
+- `useMemo(() => createStatsStore(), [])` 表达「这是一个记忆化计算值，依赖为空意味着只算一次」
+- `useRef(createStatsStore())` 表达「这是一个持久的可变容器」
+
+`store` 是个不可变身份（创建后不替换），但内容会变（stats 会被更新）。两种写法都能工作，`useMemo` 的语义稍微清晰一点。
+
+---
+
+## 面试指导
+
+**「自带电池 + 可选注入」适合哪些场景？**
+
+适合以下特征的依赖：
+- 大多数使用方不关心它的具体实现（只有少数测试需要精确控制）
+- 有一个合理的默认实现（不是 noop，而是真正能工作的实现）
+- 替换实现不改变接口契约
+
+不适合：安全相关的依赖（认证、加密）——这类依赖必须强制注入，不能有「默认实现」的侥幸心理。
+
+**可选参数和默认参数有什么区别？**
+
+可选参数（`store?`）意味着不传就是 `undefined`，组件自己决定怎么处理 undefined。默认参数（`store = createStatsStore()`）意味着每次调用时如果不传，就会执行 `createStatsStore()` 创建一个新实例——这在 React 函数组件里是危险的，每次渲染都会创建新实例。`useMemo` 解决了这个问题。

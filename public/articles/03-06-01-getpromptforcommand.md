@@ -1,28 +1,114 @@
 ---
-title: "getPromptForCommand 真正在生成什么"
+title: "面试题：getPromptForCommand 为什么返回 ContentBlockParam[] 而不是 string？"
 slug: "03-06-01-getpromptforcommand"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "如果只从名字看，`getPromptForCommand()` 很像是在“帮命令生成一段提示词”。Claude Code 里的它其实更像一台装配机。它产出的不是一小段孤零零的文字，而是 prompt ..."
+summary: "如果 getPromptForCommand 只返回字符串，skill 就只能包含文本。返回 ContentBlockParam[]，skill 可以包含图片、结构化内容、多个文本块，以及所有 Anthropic API 支持的内容类型。这个类型选择不是偶然的。"
 importance: 1
 ---
 
-# getPromptForCommand 真正在生成什么
+# 面试题：getPromptForCommand 为什么返回 ContentBlockParam[] 而不是 string？
 
-如果只从名字看，`getPromptForCommand()` 很像是在“帮命令生成一段提示词”。Claude Code 里的它其实更像一台装配机。它产出的不是一小段孤零零的文字，而是 prompt 命令准备塞进当前会话的那份核心材料。
+## 类型定义
 
-这份材料至少有三层意义。第一层，当然是技能正文本身，它告诉模型接下来该按什么角度想、按什么步骤做。第二层，它不是只返回单纯字符串，而是返回一组内容块，这意味着图片、结构化文本和别的会话材料都能一起进来。第三层，这份正文后面还会继续触发附件抽取、工具许可解析和 hooks 注册，所以它其实是整套“会话装配链”的起点。
+在 `types/command.ts` 里，`PromptCommand` 的接口是：
 
-所以 `getPromptForCommand()` 真正在生成的，不是一段提示词，而是一份即将进入当前轮次的工作蓝图。Claude Code 把它放在这里，非常高明。因为只有先把“这次想让会话成为什么样”生成出来，后面系统才知道要不要加权限、要不要挂 hooks、要不要抽附件、要不要把这一轮继续推给主循环。它不是在写一句话，它是在起草一份新的会话工作条件。
+```typescript
+export type PromptCommand = {
+  type: 'prompt'
+  // ...
+  getPromptForCommand(
+    args: string,
+    context: ToolUseContext,
+  ): Promise<ContentBlockParam[]>  // ← 不是 Promise<string>
+}
+```
 
-## 实现链
-它生成的不是一句简单提示，而是一组要注入当前会话的 prompt 片段和加载元信息。命令参数、前置文本块、图片块、命令加载元数据都会在这里被组织成新的用户消息或系统语境。
+`ContentBlockParam` 是 Anthropic SDK 里的类型，代表消息内容的一个块，可以是：
 
-## 普通做法
-更普通的实现往往只是把命令模板做一次字符串替换，然后直接发给模型。
+```typescript
+type ContentBlockParam =
+  | TextBlockParam          // { type: 'text', text: string }
+  | ImageBlockParam         // { type: 'image', source: ... }
+  | ToolUseBlockParam       // { type: 'tool_use', ... }
+  | ToolResultBlockParam    // { type: 'tool_result', ... }
+  | DocumentBlockParam      // { type: 'document', ... }
+```
 
-## 为什么不用
-因为这里只做字符串拼接不够，系统还得知道这条命令从哪里来、是否需要显示加载元信息、是否要继续带着图片和前置内容走。
+## 为什么不用字符串
 
-## 代价
-prompt 命令生成逻辑会显得比“模板填空”重很多；但这样它才能真正嵌进会话，而不是在旁边临时插一张纸条。
+**1. skill 可以包含图片**
+
+一个 skill 的内容可以是「参考这张设计图，按相同风格实现」，其中「这张设计图」是一张图片，不是文本描述。如果 `getPromptForCommand` 返回 string，图片就必须被转换成文字描述，精度损失很大。
+
+**2. 参数注入时保留结构**
+
+`getPromptForCommand(args, context)` 接收用户传入的参数 `args`。如果技能内容是结构化的（比如一个 template 里有占位符），参数替换后的结果可以保持每个内容块独立，而不是把所有内容拼成一个大字符串再切。
+
+**3. 调用点的消费方式**
+
+```typescript
+// getMessagesForPromptSlashCommand 里
+const result = await command.getPromptForCommand(args, context)
+
+// result 是 ContentBlockParam[]，可以和其他 block 组合
+const mainMessageContent: ContentBlockParam[] =
+  imageContentBlocks.length > 0 || precedingInputBlocks.length > 0
+    ? [...imageContentBlocks, ...precedingInputBlocks, ...result]  // ← 直接 spread
+    : result
+```
+
+技能内容、粘贴图片（`imageContentBlocks`）、前置内容块（`precedingInputBlocks`）可以直接 spread 组合，不需要先 join 成字符串再解析。
+
+如果是字符串，这里就要写 `[...imageContentBlocks, { type: 'text', text: result }, ...precedingInputBlocks]`，还破坏了顺序。
+
+## 调用链：skill 内容怎么变成 isMeta 消息
+
+```typescript
+// 1. getPromptForCommand 返回 ContentBlockParam[]
+const result = await command.getPromptForCommand(args, context)
+
+// 2. 和图片、前置内容合并
+const mainMessageContent: ContentBlockParam[] = [
+  ...imageContentBlocks,
+  ...precedingInputBlocks,
+  ...result
+]
+
+// 3. 打包成 isMeta 用户消息
+createUserMessage({
+  content: mainMessageContent,
+  isMeta: true  // ← 对用户隐藏
+})
+```
+
+最终 `ContentBlockParam[]` 作为 `content` 字段进入用户消息（Anthropic API 的 `UserMessageParam.content` 支持 `ContentBlockParam[]`），完整保留了多媒体结构。
+
+## 与 local 命令的对比
+
+`local` 命令的实现函数：
+
+```typescript
+type LocalCommandCall = (
+  args: string,
+  context: LocalJSXCommandContext,
+) => Promise<LocalCommandResult>
+```
+
+`LocalCommandResult` 最终是 `text | compact | skip`，是字符串或内部状态对象。
+
+这说明 `local` 命令只需要处理文本输出，不需要多媒体内容。`prompt` 命令需要能构造任意结构的会话内容，所以用 `ContentBlockParam[]`。
+
+## 实践意义
+
+对于想开发 skill 的用户，这个类型意味着：skill 不只是一个 Markdown 文件。在 `getPromptForCommand` 里，可以：
+
+- 动态生成 prompt 内容（根据 `args` 和 `context` 构造不同内容）
+- 包含图片块（比如从当前工作目录加载参考图）
+- 根据当前环境（`context` 里的信息）调整指令内容
+
+这是比「模板文件替换变量」强大得多的能力。
+
+---
+
+*面试指导：被问到「skill 系统的设计亮点」时，从「getPromptForCommand 返回 ContentBlockParam[] 而不是 string」切入，说明这允许 skill 包含多媒体内容、支持动态构造，比静态模板文件更灵活。这个类型选择体现了设计者对 Anthropic API 能力的充分利用。*

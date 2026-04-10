@@ -1,30 +1,39 @@
 ---
-title: "看已完成 teammate 时不再追加 spinner 提示，说明提示也要服从当前关系"
+title: "查看已完成队友时，spinner 提示会主动退场"
 slug: "11-04-04-teammatespinner"
 date: 2026-04-09
 topics: [终端界面]
-summary: "当用户正在查看一个已经结束的 teammate，底部区不会再继续塞“interrupt”之类的 spinner 提示，而是只保留“`esc` 返回 team lead”这一类关系提示。它在承认：此刻最..."
+summary: "isViewingCompletedTeammate 为 true 时，底部区不再追加 spinner 和 interrupt 提示，只保留关系提示。这条判断很小，但体现了一种优先级：当前关系状态比系统忙碌状态更重要。"
 importance: 1
 ---
 
-# 看已完成 teammate 时不再追加 spinner 提示，说明提示也要服从当前关系
+# 查看已完成队友时，spinner 提示会主动退场
 
-当用户正在查看一个已经结束的 teammate，底部区不会再继续塞“interrupt”之类的 spinner 提示，而是只保留“`esc` 返回 team lead”这一类关系提示。它在承认：此刻最重要的不是系统还能转什么，而是你正站在谁的现场里，下一步该回哪。
+界面中的每一条提示都在竞争同一块稀缺空间。好的界面会替用户做第一轮筛选：什么提示现在值得出现，什么提示应该暂时退场。
 
-好的驾驶舱不会把所有可能动作一股脑端给人。它先替人承认当前情境，再决定哪些提示该暂时退场。提示本身，也要服从关系秩序。
+## 触发条件
 
-## 实现链
+`PromptInputFooterLeftSide.tsx` 里，`ModeIndicator` 渲染时有一条注释写得很直接：
 
-`PromptInputFooterLeftSide.tsx` 里专门有一条注释：查看已完成 teammate 时，不再追加 spinner/hint。也就是说，提示层不仅看有没有任务，还看你看的对象是不是已经结束；关系状态会直接改写提示文案。
+> Don't append spinner hints when viewing a completed teammate
 
-## 普通做法
+这里的判断链是：`isViewingTeammate` 为真，且 `viewedTask.status !== 'running'`，意味着 `isViewingCompletedTeammate` 为真。在这个状态下，即使系统其他地方还有 spinner 在转，这块 footer 也不会再把那些 spinner 提示追加进来。
 
-更普通的做法，是只要系统里还有 loading 或 spinner，就统一显示一个忙碌提示。
+底部只会保留「esc to return to team lead」这类关系语气的文案。
 
-## 为什么不用
+## 为什么不是所有 spinner 都值得出现
 
-Claude Code 不这么粗暴，是因为你正在查看的对象如果已经完成，再继续显示“它还在忙”的提示就是错现实。这里宁可少说，也不把别处的忙碌错贴到当前关系上。
+想象一下：你正盯着一个已经跑完的 teammate 的输出记录，底部却一直提示「系统正在处理中，可以按 Ctrl+C 中断」。这是个真实的谎言——这个 teammate 已经不在运行了，那个 interrupt 提示对应的是别的东西。
 
-## 代价
+Claude Code 不接受这种信息混淆。哪怕技术上系统还在忙，当前视图里最重要的事实是：你正站在一个已经完成的队友的现场，下一个有意义的操作是「回去」，而不是「中断」。
 
-代价是提示逻辑得知道更多上下文，判断更细；但换来的是底部提示更忠于眼前这个协作对象。
+## 优先级的翻译
+
+这类判断本质上是一种**情境优先级**的翻译工作：
+
+- 系统状态（忙碌、spinner）是背景信息
+- 当前视图关系（你在看谁、那个对象处于什么状态）是前景信息
+
+当两者冲突时，前景覆盖背景。底部提示服从的是你当前所处的关系，而不是系统某个不相干的状态。
+
+这个规则很小，但它解释了为什么在同样的「系统忙碌」条件下，不同视图的底部提示可以完全不同——因为界面先问「你在看什么」，再决定「应该告诉你什么」。

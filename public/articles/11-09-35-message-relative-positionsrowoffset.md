@@ -1,22 +1,37 @@
 ---
-title: "当前位置高亮要用 message-relative positions，说明滚动后重算 rowOffset 才不会漂"
+title: "搜索高亮用 message-relative positions：滚动后重算 rowOffset 才不漂"
 slug: "11-09-35-message-relative-positionsrowoffset"
 date: 2026-04-09
 topics: [终端界面]
-summary: "scanElement 给出的 positions 是 message-relative 的，真正的 yellow current 由 setPositions({ positions, rowOff..."
+summary: "scanElement 给出的命中 positions 是相对于消息内容的坐标，真正的黄色 current 由 { positions, rowOffset, currentIdx } 结合当前 scrollTop 决定。分离消息坐标和屏幕坐标，才能让高亮在滚动后也准确追踪。"
 importance: 1
 ---
 
-# 当前位置高亮要用 message-relative positions，说明滚动后重算 rowOffset 才不会漂
+# 搜索高亮用 message-relative positions：滚动后重算 rowOffset 才不漂
 
-## 实现链
-scanElement 给出的 positions 是 message-relative 的，真正的 yellow current 由 setPositions({ positions, rowOffset, currentIdx }) 结合当前 scrollTop 决定。只要 rowOffset 每次滚动都重算，高亮就不会跟着漂。
+搜索高亮的「黄色 current 位置」需要精确标记「当前命中在哪条消息的哪一行里」。
 
-## 普通做法
-普通实现常会直接记屏幕行号，或者把高亮位置当成静态坐标。那样一滚动，位置就会和消息内容脱钩。
+这里有一个坐标系的问题：命中位置应该用**屏幕坐标**（第几行？）表示，还是用**消息内坐标**（这条消息的第几行？）表示？
 
-## 为什么不用
-这里必须用 message-relative positions，因为虚拟列表会移动，屏幕坐标不会自己保真。重算 rowOffset 才能把“当前命中”重新钉回真正的消息上。
+## 屏幕坐标的问题
 
-## 代价
-代价是搜索状态里要同时保存位置和当前 scrollTop，计算链也更长。好处是滚动后 current 仍然指向同一条命中，而不是一个旧屏幕坐标。
+如果存储「命中在屏幕的第 42 行」，那么：
+
+1. 用户滚动一下，第 42 行的内容变了，高亮就指向了错误的地方
+2. 新消息加载、行高变化，第 42 行对应的内容也会变
+
+屏幕坐标是一个随滚动状态持续变化的量，不适合作为稳定的命中标记。
+
+## message-relative positions 的设计
+
+`scanElement` 扫描一条消息里的所有命中时，给出的是相对于这条消息内部的坐标——「消息里第 3 行第 7 列开始，长 5 个字符」。
+
+这个坐标是稳定的：不管视口怎么滚，不管这条消息显示在屏幕哪个位置，消息内部的坐标不变。
+
+## rowOffset 的角色
+
+`setPositions({ positions, rowOffset, currentIdx })` 里的 `rowOffset` 是「这条消息的顶部当前在屏幕第几行」。它结合 `positions`（消息内坐标），就能算出「命中在屏幕的绝对位置」。
+
+关键是：每次滚动时，`rowOffset` 都要重新计算（因为消息在屏幕上的位置确实变了），但 `positions` 不需要重算（消息内坐标没变）。
+
+两层分离：稳定层（消息内坐标）+ 变化层（消息的当前屏幕位置）。稳定层存一次，变化层按需更新。结果是：高亮始终精确追踪「那个词」，而不是追踪「那个屏幕位置」。

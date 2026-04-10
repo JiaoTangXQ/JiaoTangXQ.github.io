@@ -1,34 +1,127 @@
 ---
-title: "合成 tool_result 为什么是中断和 fallback 后的重要补救"
+title: "边界条件：StreamingToolExecutor.discard() 和 getRemainingResults() 有什么本质区别？"
 slug: "04-08-02-tool-resultfallback"
 date: 2026-04-09
 topics: [主循环]
-summary: "现实里的运行时不会永远按理想路径收尾。模型可能流到一半就 fallback，用户可能在工具执行时打断，甚至底层 bug 也可能让一条 `tool_use` 刚露头就来不及正常结束。Claude Cod..."
+summary: "当工具执行被中止时，StreamingToolExecutor 有两个看起来相似但语义完全不同的方法：discard() 和 getRemainingResults()。前者用于 fallback 模型切换，后者用于用户中断。搞混这两个，会让 transcript 出现孤儿 tool_use 或错误的合成结果。"
 importance: 1
 ---
 
-# 合成 tool_result 为什么是中断和 fallback 后的重要补救
+# 边界条件：StreamingToolExecutor.discard() 和 getRemainingResults() 有什么本质区别？
 
-现实里的运行时不会永远按理想路径收尾。模型可能流到一半就 fallback，用户可能在工具执行时打断，甚至底层 bug 也可能让一条 `tool_use` 刚露头就来不及正常结束。Claude Code 在这些时候做的一件很关键的事，就是主动补写合成 `tool_result`。
+`StreamingToolExecutor` 在主循环里有两种被"停止"的方式。理解它们的区别，需要先理解它们服务的不同场景。
 
-这不是装样子，更不是伪造结果。它补写的通常正是失败、取消、fallback 丢弃这类事实。意思是：这次动作没有自然做完，但系统必须明确告诉后续世界，它已经以什么方式结束了。否则会出现最糟的情况: 会话里挂着一堆已经发出去、却永远没结案的动作，后面恢复、重试、继续都会越来越乱。
+## 场景一：Fallback 模型切换 → discard()
 
-Claude Code 这里特别成熟。它宁可主动补一条明确的失败结果，也不愿意留下结构性烂尾。因为它知道，运行时真正怕的不是失败，而是失败以后没有记账。
+```typescript
+// Fallback 时
+if (innerError instanceof FallbackTriggeredError && fallbackModel) {
+  if (streamingToolExecutor) {
+    streamingToolExecutor.discard()         // ← discard
+    streamingToolExecutor = new StreamingToolExecutor(...)  // ← 重建
+  }
+  assistantMessages.length = 0
+  toolResults.length = 0
+  // ...
+}
+```
 
-所以合成 `tool_result` 的价值，不在于补文字，而在于补秩序。
+Fallback 的情境：主模型不可用，整个流式请求失败。已经开始执行的工具，它们的结果对应的是旧模型生成的 `tool_use_id`。新模型会重新生成，产生新的 `tool_use_id`。
 
-代码里这件事落在两处：普通异常和 fallback 路径用 `yieldMissingToolResultBlocks()` 补，流式执行器自己也会为被放弃或被兄弟错误连带取消的工具生成 synthetic `tool_result`，内容明确写成 `Streaming fallback - tool execution discarded` 或 `Cancelled: parallel tool call ... errored`。更直觉的做法是简单丢掉这些半成品，因为“反正没成功，也没必要记”。
+**旧 tool_use_id 的结果完全没有价值**——新模型不会引用它们，把它们 yield 出来只会污染 transcript。
 
-Claude Code 不敢这么丢，是因为 API、resume 和下一轮推理都需要看见“这次动作后来怎样了”。如果 transcript 里只有 `tool_use` 没有结果，后面的任何推理都会站在断裂历史上。代价是 transcript 中会出现一些并非真实外部工具输出、而是系统补写的说明性结果，但这比历史断掉更可接受。
+`discard()` 的语义是：**静默丢弃**所有排队中和执行中的工具，它们的结果永远不会被 yield。已经在 OS 层面运行中的命令（比如 Bash）可能会继续跑完，但结果不会出现在输出流里。
 
-## 实现链
-异常、fallback 和流式中断都会补 synthetic `tool_result`，避免历史悬空。
+之后重建一个新的 `StreamingToolExecutor`，完全干净的状态，准备为新模型的工具调用服务。
 
-## 普通做法
-直接丢掉未完成的 tool_use。
+## 场景二：用户中断（Ctrl+C）→ getRemainingResults()
 
-## 为什么不用
-因为只有 tool_use 没结果会破坏 API 轨迹和后续推理。
+```typescript
+// 用户中断时
+if (toolUseContext.abortController.signal.aborted) {
+  if (streamingToolExecutor) {
+    for await (const update of streamingToolExecutor.getRemainingResults()) {
+      if (update.message) {
+        yield update.message  // ← yield 出来（即使是合成的取消结果）
+      }
+    }
+  }
+  // ...
+}
+```
 
-## 代价
-会出现并非真实外部输出的系统补写结果。
+用户中断的情境：用户主动停止了执行，但系统需要保持 transcript 结构完整，以便后续 resume。
+
+`getRemainingResults()` 的语义是：**收集所有剩余结果**，包括：
+- 已经完成的工具：返回真实结果
+- 还在执行中的工具：等待中止后，生成合成的取消结果（`"Interrupted by user"`）
+- 排队中还没开始的工具：生成合成的取消结果
+
+这些合成结果会被 yield 出来，出现在 transcript 里。
+
+## 为什么两种场景需要不同的处理？
+
+关键差异在于：**这次的 tool_use_id 在未来还有意义吗？**
+
+**Fallback 场景**：不会。新模型会生成全新的 tool_use_id，旧的 id 对应的结果没有任何消费者。如果把旧结果 yield 出来，transcript 里会出现没有对应 tool_use 的孤儿 tool_result（因为 assistantMessages 已经被清空了）。
+
+**用户中断场景**：会。这次的 assistant 消息会被保留在 transcript 里（不打 tombstone，因为是正常的用户中断，不是模型错误），tool_use_id 依然需要对应的 tool_result，否则下次 resume 时 API 会报错。
+
+## 两者的共同点：prevent orphaned tool_use
+
+尽管实现不同，两者解决的是同一个底层问题：**确保每个 tool_use 都有对应的 tool_result**。
+
+- `discard()` 通过"清空 assistantMessages，让旧的 tool_use 也消失"来解决
+- `getRemainingResults()` 通过"为每个 tool_use 生成合成结果"来解决
+
+两条路都达到了"transcript 里没有孤儿 tool_use"的目标，只是路径不同。
+
+## 合成 tool_result 的内容规范
+
+合成的取消/错误 tool_result 的内容格式比较统一：
+
+```
+来自 yieldMissingToolResultBlocks():
+  "Interrupted by user"
+  "Model fallback triggered"
+  "<error.message>"
+
+来自 StreamingToolExecutor 自身:
+  "Streaming fallback - tool execution discarded"
+  "Cancelled: parallel tool call <id> errored"  ← 兄弟工具被 sibling abort 取消
+```
+
+这些内容不是随意写的。模型会看到这些合成 tool_result，需要能够理解"这次工具调用没有成功，原因是..."并做出合理的后续决策。
+
+比较这两种写法：
+
+```
+方案 A（信息丰富）: "Interrupted by user"
+  → 模型理解：用户主动停了，也许用户想换个方向
+  
+方案 B（信息缺失）: ""（空字符串）
+  → 模型困惑：工具调用结果是空的？可能是读了个空文件？
+```
+
+方案 A 让模型能够推断中断的原因，做出更合理的响应。
+
+## 实际调试价值
+
+在调试长会话问题时，transcript 里出现 `"Interrupted by user"` 或 `"Model fallback triggered"` 的 tool_result，是一个重要的诊断信号：
+
+- 大量 `"Interrupted by user"` → 用户频繁中断，可能系统响应太慢
+- `"Model fallback triggered"` → 主模型有可用性问题
+- `"Cancelled: parallel tool call ... errored"` → 某个并发 Bash 命令失败，导致整批工具被取消
+
+这些合成结果不是噪音，而是**系统事件的结构化记录**，比在 log 里写一行 `ERROR: tool cancelled` 更有可观测价值，因为它们直接出现在模型的 context 里，可以被模型感知到。
+
+## 面试指导
+
+这道题考察的是**异常路径的完整性保证**。
+
+一个好的框架：
+1. **识别不同中止场景**：fallback（需要全新开始）vs 用户中断（需要保留历史）
+2. **分析每种场景的 tool_use_id 生命周期**：这决定了要丢弃结果还是生成合成结果
+3. **合成结果的内容选择**：不造假，用真实原因告诉模型发生了什么
+
+能说出"合成 tool_result 的目的不是欺骗模型，而是给模型准确的失败信息"的候选人，面试官会认为他理解了 LLM 会话管理的深层原则。

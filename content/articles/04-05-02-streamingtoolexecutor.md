@@ -1,34 +1,138 @@
 ---
-title: "StreamingToolExecutor 真正在调度什么"
+title: "为什么 Claude Code 不用 Promise.all 并发执行工具，而是自己造了一个四状态调度器？"
 slug: "04-05-02-streamingtoolexecutor"
 date: 2026-04-09
 topics: [主循环]
-summary: "`StreamingToolExecutor` 如果只被理解成“边生成边跑工具的提速器”，就太低估它了。它真正调度的，其实是同一轮里几种完全不同的时间。 第一种时间是开始动手的时间。工具块一流出来，只..."
+summary: "大多数人看到并发执行工具，第一反应是 Promise.all。但 Claude Code 写了一个 531 行的 StreamingToolExecutor，维护了 queued → executing → completed → yielded 四种状态。这不是过度工程，而是因为它要同时解决三个互相矛盾的需求：执行要并行、结果要有序、进度要实时。这篇从源码拆解这个调度器的核心设计，以及为什么面试中'设计一个工具并发执行器'是一道比你想象中更难的题。"
 importance: 1
 ---
 
-# StreamingToolExecutor 真正在调度什么
+# 为什么 Claude Code 不用 Promise.all 并发执行工具，而是自己造了一个四状态调度器？
 
-`StreamingToolExecutor` 如果只被理解成“边生成边跑工具的提速器”，就太低估它了。它真正调度的，其实是同一轮里几种完全不同的时间。
+面试官经常问："给你一组异步任务，有些可以并行，有些必须串行，怎么调度？" 大部分人会回答 Promise.all 加条件判断。但如果面试官追问三个约束——并行执行、有序返回、实时进度——你会发现 Promise.all 根本撑不住。
 
-第一种时间是开始动手的时间。工具块一流出来，只要条件允许，它就可以立即开跑，不必等整段回复结束。第二种时间是人该什么时候知道进展。进度消息会被尽快吐出来，不必和最终结果一起憋到最后。第三种时间是系统该什么时候正式承认一项动作已经完成。Claude Code 又不会为了快而把结果顺序打散，而是把真正的结果按安全顺序交还，必要时还会在流式 fallback 或兄弟工具出错时补上合成错误。
+Claude Code 的 `StreamingToolExecutor` 就是这道题的生产级答案。
 
-所以它调度的不只是工具，而是“启动”“进展”“交还”“中断”这几种时机。Claude Code 在这里显得很像一个真正的运行时，而不是一个把整批动作做完后再统一结算的批处理器。
+## 核心矛盾：三个需求互相打架
 
-这层设计的味道很强。因为一台成熟的 agent，不该只是会思考，它还得会掌握节奏。
+先看需求：
 
-代码里它维护的是一张小型执行账本：每个工具有 `queued / executing / completed / yielded` 状态，有没有并发安全标记，有没有待发的 progress，有没有需要晚点合并的 `contextModifiers`。更普通的写法是 `Promise.all()` 一把梭，哪个先返回就先吐哪个结果，或者干脆全串行跑。这两种都好写，但前者会把副作用顺序搅乱，后者又把本可并行的只读工具白白拖慢。
+1. **并行执行**——读文件和搜索代码没有依赖关系，同时跑能省一半时间
+2. **有序返回**——模型和用户看到的结果顺序必须和工具请求顺序一致，否则 transcript 会乱
+3. **实时进度**——Bash 命令跑 30 秒，用户不能等 30 秒才看到第一行输出
 
-Claude Code 现在这套做法，本质上是在追求“执行可以并行，结果仍像顺序系统一样可读”。这很合理，尤其面对 transcript 和恢复链时更稳，但代价是执行器本身已经像一个迷你调度器，不再是普通工具循环，理解门槛明显更高。
+Promise.all 能做到第一点，但它返回时要么全部完成要么全部失败，没有"部分完成按顺序吐"的能力。Promise.race 能做到实时响应，但它不保证顺序。把两者组合起来？代码会变成一坨难以维护的 Promise 编排。
 
-## 实现链
-执行器维护工具状态、并发安全、进度消息和延后合并的 `contextModifiers`。
+Claude Code 的做法是：不用 Promise 原语编排，而是自己维护一张状态表。
 
-## 普通做法
-`Promise.all()` 全并发，或一律串行。
+## 四状态机：queued → executing → completed → yielded
 
-## 为什么不用
-因为系统要同时保住速度、顺序和上下文一致性。
+每个被模型调用的工具，在 StreamingToolExecutor 内部被包装成一个 `TrackedTool`：
 
-## 代价
-执行器本身会长成一个小调度器。
+```
+┌─────────────────────────────────────────────────┐
+│                  TrackedTool                     │
+├──────────┬──────────────────────────────────────┤
+│ id       │ 工具调用的唯一标识                      │
+│ block    │ 模型返回的 ToolUseBlock                │
+│ status   │ queued → executing → completed → yielded │
+│ isConcurrencySafe │ 这个工具能否和别人并行？       │
+│ pendingProgress   │ 实时进度消息的缓冲区           │
+│ results  │ 最终执行结果                            │
+│ contextModifiers  │ 执行后对上下文的修改函数        │
+└──────────┴──────────────────────────────────────┘
+```
+
+状态流转：
+
+```
+     addTool()          processQueue()        getCompletedResults()
+        │                    │                        │
+        ▼                    ▼                        ▼
+    ┌────────┐  canExecute?  ┌───────────┐  done?  ┌─────────┐
+    │ queued │──── yes ──────│ executing │── yes ──│completed│──── yield ────→ yielded
+    │        │               │           │         │         │
+    │        │◄── no ────────│           │         │         │
+    └────────┘  (等待)        └───────────┘         └─────────┘
+                                   │
+                                   │ pendingProgress
+                                   ▼
+                              (立即 yield 给 UI，不等完成)
+```
+
+关键在于 `canExecuteTool()` 的判断逻辑只有 4 行，但信息密度极高：
+
+```
+canExecute(isConcurrencySafe):
+  正在执行的工具数 === 0  →  当然可以
+  新工具是并发安全的 AND 所有正在执行的也是并发安全的  →  可以
+  否则  →  排队等待
+```
+
+这意味着：Read + Grep + Glob 可以同时跑（都是并发安全的），但一旦队列里出现 Bash 或 Write，整个队列暂停，等它独占执行完再继续。这不是简单的"串行 vs 并行"二选一，而是一个**动态的互斥锁**，粒度到单个工具级别。
+
+## processQueue 的队列扫描策略
+
+`processQueue()` 遍历工具数组时有一个微妙的分支：
+
+```
+for each tool in queue:
+  if tool.status !== 'queued': 跳过
+  if canExecuteTool(tool.isConcurrencySafe): 启动执行
+  else if !tool.isConcurrencySafe: break  ← 关键！
+```
+
+为什么遇到不能执行的非并发安全工具要 break 而不是 continue？
+
+因为**非并发安全工具之间有隐式的顺序依赖**。假设队列是 `[Write A, Read B, Write C]`，Write A 正在执行。如果用 continue 跳过 Write C 去启动 Read B，那 Read B 可能读到 Write A 的中间状态，而 Write C 最终覆盖了 Write A 的结果——顺序语义被破坏了。
+
+用 break 意味着：一旦遇到一个必须等待的非并发安全工具，后面的所有工具都不启动，即使后面有可以并行的只读工具。这是牺牲了一点并发性来换取**绝对的顺序安全**。
+
+## 有序返回的秘密：getCompletedResults 的 FIFO 扫描
+
+`getCompletedResults()` 是一个同步生成器，它按数组顺序遍历所有工具：
+
+```
+for each tool (按添加顺序):
+  1. 先把 pendingProgress 全部 yield 出去（不管工具状态如何）
+  2. 如果 status === completed：标记 yielded，yield 所有 results
+  3. 如果 status === executing 且不是并发安全的：break
+```
+
+第 3 步是关键：如果一个非并发安全工具还在执行，后面的工具即使已经完成了也不会被 yield。这保证了**结果顺序和请求顺序严格一致**。
+
+但 pendingProgress 不受这个限制——进度消息永远立即 yield，哪怕工具还没完成。这就是为什么你能在终端里实时看到 Bash 命令的输出，同时最终结果仍然是有序的。
+
+## Bash 的特殊待遇：兄弟中止控制器
+
+StreamingToolExecutor 构造时创建了一个 `siblingAbortController`，它是 `toolUseContext.abortController` 的子控制器。每个工具执行时，又从 siblingAbortController 创建自己的子控制器：
+
+```
+                  toolUseContext.abortController  (query 级)
+                              │
+                   siblingAbortController  (本轮工具级)
+                    ╱         │          ╲
+            tool-1 ctrl   tool-2 ctrl   tool-3 ctrl
+```
+
+当 Bash 工具报错时，系统做了一件独特的事：只中止 siblingAbortController，不中止父级的 query controller。效果是：**同一轮的其他工具被取消，但整个会话继续运行**。
+
+为什么只有 Bash 触发这个逻辑？源码注释说得很直白：Bash 命令之间经常有隐式依赖链（mkdir 失败了，后面的 cd 和 write 都没意义），而 Read、WebFetch 这类工具是独立的，一个失败不应该连累其他的。
+
+但反过来，如果是权限对话被用户取消（不是工具执行出错），per-tool 的中止信号会冒泡到 query controller，因为这意味着**用户主动拒绝了整个操作意图**，不只是这一个工具。
+
+这个三层中止控制器的设计，在面试中可以展开讲很久——它本质上是一个**分级熔断机制**：工具级错误只熔断兄弟，用户级拒绝熔断整个 query。
+
+## 面试怎么答这道题
+
+如果面试官问"设计一个并发工具执行器"，大部分候选人会直奔 Promise.all + 互斥锁。这能拿到及格分，但缺少三个关键洞察：
+
+**第一，并发控制不是全局锁，而是动态互斥。** 不是"要么全并行要么全串行"，而是根据每个工具的 isConcurrencySafe 属性动态决定。正确答案是维护一个状态表，在队列扫描时实时判断。
+
+**第二，有序返回需要一个独立的 yield 机制。** Promise.all 返回的是全部完成后的数组，无法做到"前面的完成了先吐，后面的等着"。正确做法是用生成器（Generator）按顺序扫描，遇到未完成的 blocking 工具就 break。
+
+**第三，进度和结果要走不同的通道。** 进度消息是"尽力而为"的实时流，不需要等工具完成就能吐给 UI。结果消息是"严格有序"的最终产物，必须按顺序 yield。两者的语义不同，通道也应该不同。StreamingToolExecutor 用 pendingProgress 数组做了这个分离。
+
+最后一个加分点：**错误传播的粒度**。Promise.all 的 fast-fail 是全局的——一个失败全部失败。生产系统需要更细的粒度：Bash 失败取消兄弟但不取消 query，权限拒绝取消整个 query。这需要一个分层的 AbortController 树，每一层的中止语义不同。
+
+这道题之所以难，不是因为单个技术点复杂，而是因为它要求你同时考虑并发性、有序性、实时性和错误传播四个维度。能把这四个维度讲清楚并给出分层方案的候选人，在系统设计面试中通常能拿到 strong hire。

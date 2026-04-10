@@ -1,22 +1,42 @@
 ---
-title: "brief 模式也保留 system 和 error，说明压缩不能把反馈一起删掉"
+title: "filterForBriefTool 删冗余，不删解释"
 slug: "11-07-06-briefsystemerror"
 date: 2026-04-09
 topics: [终端界面]
-summary: "`filterForBriefTool()` 在 brief-only 模式下会只留 Brief 相关的 `tool_use` / `tool_result` / 真实用户输入，但 `system` ..."
+summary: "filterForBriefTool() 在 brief-only 模式下只保留 Brief 工具的 tool_use/tool_result、真实用户输入，以及必须保留的 system 消息和 API 错误。压缩不等于把「理解这轮发生了什么」所需的信息也一起删掉。"
 importance: 1
 ---
 
-# brief 模式也保留 system 和 error，说明压缩不能把反馈一起删掉
+# filterForBriefTool 删冗余，不删解释
 
-## 实现链
-`filterForBriefTool()` 在 brief-only 模式下会只留 Brief 相关的 `tool_use` / `tool_result` / 真实用户输入，但 `system` 消息和 API error 还会留下来；`dropTextInBriefTurns()` 则是在完整 transcript 里，专门去掉调用 Brief 那一轮里重复的助手正文。它们的共同点是先问“这条信息是不是还得对人负责”，再决定要不要删。
+`filterForBriefTool()` 是 brief 模式的核心过滤器。它的任务是：在保持会话可读性的前提下，最大程度地压缩助手产生的冗余文本。
 
-## 普通做法
-普通列表如果做压缩，常常会顺手把“看起来不重要”的反馈也一起吞掉，最后只剩正文。
+关键词是**冗余**。
 
-## 为什么不用
-Claude Code 的 brief 不是静音模式。用户需要知道系统消息、报错和真实输入，不然就看不出这轮是成功、失败，还是只是模型少说了一句。压缩可以拿掉重复内容，但不能把解释现场的那部分也拿掉。
+## 什么被删，什么被留
 
-## 代价
-代价是 brief 过滤更严格，也更容易出现“空白一轮”的感觉。但这不是 UI 没做事，而是它故意不替模型补台。
+| 消息类型 | 处理 |
+|---------|------|
+| assistant 正文（非 Brief 工具） | 删除 |
+| Brief 工具的 tool_use | 保留 |
+| 对应的 tool_result | 保留 |
+| 真实用户输入 | 保留 |
+| system 消息 | 保留（但排除 api_metrics） |
+| API error | 保留 |
+| isMeta 的伪用户消息 | 删除 |
+
+删除的是「已经被 Brief 工具替代的助手铺陈」。保留的是「理解这轮会话需要的骨架信息」。
+
+## 为什么 system 消息和 error 不能删
+
+Brief 模式的目标是减少阅读量，让用户能更快地理解发生了什么。但 system 消息和 API error 恰恰是「理解发生了什么」所必需的信息。
+
+如果一次 API 调用失败了，删掉 error 消息，用户就只看到「这轮什么都没发生」，而不知道是失败了。如果 system 消息也删掉，用户就看不到当前的工具权限设置或环境配置。
+
+压缩的目的是去掉已经有 Brief 工具覆盖的重复内容，而不是让用户理解会话更难。把解释信息也删掉，brief 就变成了一个让人摸不着头脑的黑盒。
+
+## dropTextInBriefTurns 的补充
+
+`filterForBriefTool()` 的兄弟函数 `dropTextInBriefTurns()` 做的是另一个方向的优化：在完整 transcript 里，找到那些调用了 Brief 工具的轮次，把那轮里多余的助手正文文本删掉（因为 Brief 工具的输出已经更简洁地表达了同样的内容）。
+
+两个函数合在一起，解决的是同一个问题的两个面：brief 过滤应该聪明到「知道哪些文字是冗余的」，而不是简单到「除了工具调用什么都删」。

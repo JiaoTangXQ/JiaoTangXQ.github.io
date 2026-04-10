@@ -1,28 +1,137 @@
 ---
-title: "context: fork 为什么是命令系统通往任务系统的桥"
+title: "面试题：context: fork 的命令和普通 prompt 命令，执行路径有哪些不同？"
 slug: "03-07-01-context-fork"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "`context: fork` 最漂亮的地方，在于它没有逼用户学习一套全新的“子任务语法”。从外面看，你还是在用同一个命令；从里面看，这条命令却已经不再把内容内联进当前会话，而是被转成一个独立 age..."
+summary: "context: fork 的 skill 不把内容内联进当前会话，而是拉起一个独立子 agent 执行，然后把结果回填。这是从命令世界通往任务世界的桥——同一个命令入口，完全不同的执行载体。"
 importance: 1
 ---
 
-# context: fork 为什么是命令系统通往任务系统的桥
+# 面试题：context: fork 的命令和普通 prompt 命令，执行路径有哪些不同？
 
-`context: fork` 最漂亮的地方，在于它没有逼用户学习一套全新的“子任务语法”。从外面看，你还是在用同一个命令；从里面看，这条命令却已经不再把内容内联进当前会话，而是被转成一个独立 agent 去执行。
+## 分叉点
 
-源码里这一步很清楚。命令先照常走 prompt 体系，拿到技能内容、工具许可和目标 agent 类型；但一旦 `context` 变成 `fork`，系统就不再把正文直接塞进当前轮次，而是准备 forked context，生成独立 agent 身份，交给 `runAgent()` 去跑，还会把进度消息、结果提取、后台排队这些东西一起接上。也就是说，命令系统没有消失，它只是把执行载体换成了另一种工作单元。
+在 `getMessagesForSlashCommand` 的 `prompt` 分支里：
 
-这就是为什么它是桥，而不是分叉后的另一个王国。命令世界负责统一入口，任务世界负责独立执行，两边靠 `context: fork` 接起来。Claude Code 在这里非常节制: 它没有把“子 agent”做成神秘能力，而是让它仍然从命令系统这扇门进来。这样用户看到的是连续的产品体验，系统内部得到的却是清晰的任务边界。
+```typescript
+case 'prompt': {
+  if (command.context === 'fork') {
+    return await executeForkedSlashCommand(...)  // ← 分叉
+  }
+  return await getMessagesForPromptSlashCommand(...)  // ← 普通 prompt
+}
+```
 
-## 实现链
-当 `command.context === 'fork'`，slash 处理不会继续走普通 prompt，而是进入 `executeForkedSlashCommand()`，调用 `prepareForkedCommandContext()`、`runAgent()`，必要时还会在 assistant 模式下异步排队回灌结果。这已经是任务世界，不只是命令世界。
+`command.context === 'fork'` 这一行是分叉点。两条路的差异是：
 
-## 普通做法
-更直觉的做法是所有命令都在当前线程里同步跑完。
+**普通 prompt 路径**：技能内容注入当前会话 → 主循环继续 → 模型在当前 context 里推理
 
-## 为什么不用
-因为像 `/commit`、计划类 skill 或定时任务这类动作，常常比一次普通 slash 执行重得多，继续堵在当前输入链里既慢又难恢复。
+**fork 路径**：创建独立 agent → 独立 context → 独立 token 预算 → 结果回填主会话
 
-## 代价
-fork 会引入 agentId、结果回灌、进度消息和异步队列这些额外复杂度；但不这么做，命令系统就很难真正通向任务系统。
+## executeForkedSlashCommand 做了什么
+
+### 同步路径（用户主动调用的 skill）
+
+```typescript
+// 准备 fork 上下文
+const {
+  skillContent,
+  modifiedGetAppState,
+  baseAgent,
+  promptMessages
+} = await prepareForkedCommandContext(command, args, context)
+
+// 收集子 agent 消息
+const agentMessages: Message[] = []
+for await (const message of runAgent({
+  agentDefinition,
+  promptMessages,
+  toolUseContext: { ...context, getAppState: modifiedGetAppState },
+  ...
+})) {
+  agentMessages.push(message)
+  // 显示进度 UI
+  progressMessages.push(createProgressMessage(message))
+  updateProgress()
+}
+
+// 提取结果文本
+const resultText = extractResultText(agentMessages, 'Command completed')
+
+// 返回结果消息（不是 shouldQuery: true）
+return {
+  messages: [
+    createUserMessage({ content: formatCommandInput(command, args) }),
+    createUserMessage({ content: `<local-command-stdout>\n${resultText}\n</local-command-stdout>` }),
+  ],
+  shouldQuery: false,  // ← 子 agent 执行完，主循环不继续推理
+  command,
+  resultText
+}
+```
+
+子 agent 完全执行完，结果作为「命令输出」写回主会话，不触发主会话的额外推理。
+
+### 异步路径（KAIROS 模式下的定时任务）
+
+```typescript
+if (feature('KAIROS') && (await context.getAppState()).kairosEnabled) {
+  // 立即返回，不等子 agent
+  void (async () => {
+    // 等 MCP 连接就绪
+    while (Date.now() < deadline) {
+      if (!mcpPending) break
+      await sleep(MCP_SETTLE_POLL_MS)
+    }
+    
+    // 后台运行子 agent
+    for await (const message of runAgent({ ..., isAsync: true })) {
+      agentMessages.push(message)
+    }
+    
+    // 结果重新进入队列（isMeta: true，用户不可见）
+    enqueuePendingNotification({
+      value: `<scheduled-task-result command="/${commandName}">...\n${resultText}\n</scheduled-task-result>`,
+      mode: 'prompt',
+      priority: 'later',
+      isMeta: true,
+      skipSlashCommands: true,
+    })
+  })()
+  
+  // 立即返回空结果
+  return { messages: [], shouldQuery: false, command }
+}
+```
+
+在 KAIROS（助手模式）下，定时任务触发的 fork skill 不等待执行完成——主线程立刻返回，子 agent 在后台异步运行，完成后把结果以 `isMeta` 消息的形式重新入队，触发一轮新的主 agent 推理（决定是否通过 SendUserMessage 汇报）。
+
+## 为什么要 fork
+
+**普通 prompt 命令的 token 预算问题**：
+
+如果 `/commit` 是普通 prompt 命令，commit 推理会在当前会话的 context 里进行。当前会话可能已经有很长的对话历史，大量 token 被占用，commit 推理的结果会和当前会话历史混在一起，压缩时也更难管理。
+
+**fork 解决了什么**：
+
+fork 的子 agent 有独立的 context 和 token 预算，执行重量级任务不会把当前会话撑爆。执行结果以结构化文本返回，主会话只看到「`/commit` 的输出是 xxx」，不看到子 agent 的整个推理过程。
+
+## MCP settle 等待逻辑
+
+异步 fork 路径里有一段有趣的代码：
+
+```typescript
+const deadline = Date.now() + MCP_SETTLE_TIMEOUT_MS  // 10秒
+while (Date.now() < deadline) {
+  const s = context.getAppState()
+  if (!s.mcp.clients.some(c => c.type === 'pending')) break
+  await sleep(MCP_SETTLE_POLL_MS)  // 200ms 轮询
+}
+const freshTools = context.options.refreshTools?.() ?? context.options.tools
+```
+
+定时任务在启动时（session 初始化阶段）触发，MCP 服务器可能还没连接好。等 MCP 就绪后再用最新的工具集（`freshTools`）运行子 agent，避免子 agent 在 MCP 未就绪时开始执行，工具集不完整。
+
+---
+
+*面试指导：被问到「如何在 agent 里实现子任务的异步执行」时，fork + 结果重新入队这个模式是一个很好的例子。核心是「子 agent 异步执行，结果以 isMeta 消息入队，触发主 agent 处理」——这是 Claude Code 里多 agent 协调的基础机制之一。*
