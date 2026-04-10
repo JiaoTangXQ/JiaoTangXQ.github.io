@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import { readSourceRegistry } from "./external/readSourceRegistry.mjs";
-import { normalizeFeedItems } from "./external/normalizeFeedItems.mjs";
-import { summarizeExternalItems } from "./external/summarizeExternalItems.mjs";
-import { scoreExternalItems } from "./external/scoreExternalItems.mjs";
+import { readSourceRegistry } from "./external/readSourceRegistry.mts";
+import { normalizeFeedItems } from "./external/normalizeFeedItems.mts";
+import { summarizeExternalItems } from "./external/summarizeExternalItems.mts";
+import { scoreExternalItems } from "./external/scoreExternalItems.mts";
 
 test("fixture feed can become approved external discovery items", async () => {
   const fixturePath = path.resolve("scripts/content/external/fixtures/sample-feed.xml");

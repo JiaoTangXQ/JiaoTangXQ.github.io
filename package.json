@@ -11,7 +11,8 @@
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
-    "ai:suggest": "tsx scripts/content/aiSuggest.mts"
+    "ai:suggest": "tsx scripts/content/aiSuggest.mts",
+    "refresh:external": "node --import tsx scripts/content/refreshExternalContent.mts"
   },
   "dependencies": {
     "@react-three/fiber": "^9.1.2",

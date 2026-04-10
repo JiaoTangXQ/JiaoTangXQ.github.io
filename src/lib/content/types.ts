@@ -9,12 +9,55 @@ export type CoverConfig = {
   overlayOpacity?: number;
 };
 
+export type ContentType = "local" | "external";
+
+export type ExternalSource = {
+  id: string;
+  name: string;
+  siteUrl: string;
+  feedUrl: string;
+  defaultTopics: string[];
+  enabled: boolean;
+};
+
+export type ExternalContentCandidate = {
+  slug: string;
+  title: string;
+  date: string;
+  topics: string[];
+  sourceName: string;
+  sourceUrl: string;
+  sourceDomain: string;
+  rawExcerpt: string;
+};
+
+export type ExternalContentRecord = {
+  slug: string;
+  contentType: "external";
+  title: string;
+  date: string;
+  topics: string[];
+  summary: string;
+  whyWorthReading: string;
+  sourceName: string;
+  sourceUrl: string;
+  sourceDomain: string;
+  importance: number;
+  noveltyScore: number;
+  cover?: CoverConfig;
+};
+
 export type CosmosNode = {
   slug: string;
   title: string;
   summary: string;
   topics: string[];
   date: string;
+  contentType?: ContentType;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceDomain?: string;
+  whyWorthReading?: string;
   x: number;
   y: number;
   size: number;
@@ -42,6 +85,11 @@ export type SearchIndexEntry = {
   date: string;
   cluster: string;
   body: string;
+  contentType?: ContentType;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceDomain?: string;
+  whyWorthReading?: string;
 };
 
 export type ArticleFrontmatter = {

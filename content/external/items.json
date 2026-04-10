@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "slug": "ext-sample-source-how-public-libraries-are-turning-into-climate-shelters",
+    "contentType": "external",
+    "title": "How public libraries are turning into climate shelters",
+    "date": "2026-04-10T08:00:00.000Z",
+    "topics": [
+      "技术",
+      "思考"
+    ],
+    "summary": "Public libraries in several cities are being redesigned as heat-safe community shelters during longer and more frequent summer heat waves.",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Sample Source",
+    "sourceUrl": "https://example.com/library-climate-shelters",
+    "sourceDomain": "example.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-sample-source-why-small-museums-are-publishing-open-conservation-logs",
+    "contentType": "external",
+    "title": "Why small museums are publishing open conservation logs",
+    "date": "2026-04-09T07:00:00.000Z",
+    "topics": [
+      "技术",
+      "思考"
+    ],
+    "summary": "Smaller museums are posting restoration notes in public, giving visitors a closer look at how fragile collections are preserved over time.",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Sample Source",
+    "sourceUrl": "https://example.com/open-conservation-logs",
+    "sourceDomain": "example.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  }
+]
