@@ -1,18 +1,18 @@
 [
   {
-    "slug": "ext-sample-source-how-public-libraries-are-turning-into-climate-shelters",
+    "slug": "ext-mit-news-learning-with-audiobooks",
     "contentType": "external",
-    "title": "How public libraries are turning into climate shelters",
-    "date": "2026-04-10T08:00:00.000Z",
+    "title": "Learning with audiobooks",
+    "date": "2026-04-09T18:00:00.000Z",
     "topics": [
       "技术",
-      "思考"
+      "科学"
     ],
-    "summary": "Public libraries in several cities are being redesigned as heat-safe community shelters during longer and more frequent summer heat waves.",
+    "summary": "有声书与一对一指导结合时，能更有效帮助学生学习新词汇。",
     "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
-    "sourceName": "Sample Source",
-    "sourceUrl": "https://example.com/library-climate-shelters",
-    "sourceDomain": "example.com",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/learning-audiobooks-vocabulary-0409",
+    "sourceDomain": "news.mit.edu",
     "importance": 1,
     "noveltyScore": 1,
     "cover": {
@@ -20,19 +20,3219 @@
     }
   },
   {
-    "slug": "ext-sample-source-why-small-museums-are-publishing-open-conservation-logs",
+    "slug": "ext-mit-news-a-philosophy-of-work",
     "contentType": "external",
-    "title": "Why small museums are publishing open conservation logs",
-    "date": "2026-04-09T07:00:00.000Z",
+    "title": "A philosophy of work",
+    "date": "2026-04-09T18:00:00.000Z",
     "topics": [
       "技术",
+      "科学"
+    ],
+    "summary": "Michal Masny 正在推动关于新技术社会与伦理维度的研究、教学与公共对话。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/philosophy-work-michal-masny-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-slice-and-dice",
+    "contentType": "external",
+    "title": "Slice and dice",
+    "date": "2026-04-09T18:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "新发现的 SNIPE 防御系统会切碎入侵病毒 DNA，直接保护细菌。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/slice-and-dice-snipe-bacterial-defense-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-a-new-type-of-electrically-driven-artificial-muscle-fiber",
+    "contentType": "external",
+    "title": "A new type of electrically driven artificial muscle fiber",
+    "date": "2026-04-09T15:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "这种电流驱动的电液纤维模仿天然肌肉束结构，可用于更安静紧凑的机器人和假肢。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/new-type-electrically-driven-artificial-muscle-fiber-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-bridging-space-research-and-policy",
+    "contentType": "external",
+    "title": "Bridging space research and policy",
+    "date": "2026-04-09T15:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "博士生 Carissma McGee 一边研究系外行星，一边讨论太空合作中的知识产权框架。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/bridging-space-research-policy-carissma-mcgee-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-new-technique-makes-ai-models-leaner-and-faster-while-they-re-still-learning",
+    "contentType": "external",
+    "title": "New technique makes AI models leaner and faster while they’re still learning",
+    "date": "2026-04-09T13:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "研究者用控制理论在训练过程中剔除 AI 模型冗余复杂度，在不降性能的前提下节省算力。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/new-technique-makes-ai-models-leaner-faster-while-still-learning-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-the-flawed-fundamentals-of-failing-banks",
+    "contentType": "external",
+    "title": "The flawed fundamentals of failing banks",
+    "date": "2026-04-09T04:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "Emil Verner 的历史研究显示，银行业危机往往源于长期累积的糟糕经营实践。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/failing-banks-flawed-fundamentals-emil-verner-0409",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-desir-e-plata-appointed-associate-dean-of-engineering",
+    "contentType": "external",
+    "title": "Desirée Plata appointed associate dean of engineering",
+    "date": "2026-04-08T16:45:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "这位土木与环境工程教师将推动工程学院跨领域研究与创业项目发展。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/desiree-plata-appointed-associate-dean-engineering-0408",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-physicists-zero-in-on-the-mass-of-the-fundamental-w-boson-particle",
+    "contentType": "external",
+    "title": "Physicists zero in on the mass of the fundamental W boson particle",
+    "date": "2026-04-08T16:00:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "团队对 W 玻色子的超高精度测量再次验证了标准模型的预测。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/physicists-report-mass-fundamental-w-boson-particle-0408",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-sixteen-new-start-nano-companies-are-developing-hard-tech-solutions-with-the-sup",
+    "contentType": "external",
+    "title": "Sixteen new START.nano companies are developing hard-tech solutions with the support of MIT.nano",
+    "date": "2026-04-07T20:40:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "MIT.nano 支持的硬科技加速计划已孵化 30 多家公司，其中近半与 MIT 有关。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/sixteen-new-startnano-companies-developing-hard-tech-solutions-with-mitnano-0407",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-researchers-develop-molecular-editing-tool-to-relocate-alcohol-groups",
+    "contentType": "external",
+    "title": "Researchers develop molecular editing tool to relocate alcohol groups",
+    "date": "2026-04-07T16:35:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "这项分子编辑技术可重新定位醇基，帮助化学家更高效微调有机分子结构。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/molecular-editing-tool-relocate-alcohol-groups-0407",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-mit-news-study-reveals-two-factor-authentication-system-that-controls-microrna-destructio",
+    "contentType": "external",
+    "title": "Study reveals “two-factor authentication” system that controls microRNA destruction",
+    "date": "2026-04-07T16:10:00.000Z",
+    "topics": [
+      "技术",
+      "科学"
+    ],
+    "summary": "研究揭示细胞如何借助两个 RNA 信号协同作用，选择性清除特定 microRNA。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "MIT News",
+    "sourceUrl": "https://news.mit.edu/2026/2fa-system-controls-microrna-destruction-0407",
+    "sourceDomain": "news.mit.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-expanding-the-fight-against-heart-disease",
+    "contentType": "external",
+    "title": "Expanding the fight against heart disease",
+    "date": "2026-04-09T17:18:04.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "专家欢迎更积极的心脏病防治建议，认为这有助于扩大干预范围。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/expanding-the-fight-against-heart-disease/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-why-are-communities-pushing-back-against-data-centers",
+    "contentType": "external",
+    "title": "Why are communities pushing back against data centers?",
+    "date": "2026-04-09T17:00:37.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "数据政策专家指出，社区对数据中心耗电、用水和环境影响的担忧完全合理。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/why-are-communities-pushing-back-against-data-centers/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-how-forgiving-can-improve-well-being",
+    "contentType": "external",
+    "title": "How forgiving can improve well-being",
+    "date": "2026-04-08T19:25:47.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "覆盖 22 个国家的新研究发现，宽恕会带来心理、亲社会和品格层面的改善。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/how-forgiving-can-improve-well-being/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-william-paul-94",
+    "contentType": "external",
+    "title": "William Paul, 94",
+    "date": "2026-04-08T15:48:48.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "这是哈佛文理学院对 William Paul 的纪念文字。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/william-paul-94/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-does-vinyl-sound-better",
+    "contentType": "external",
+    "title": "Does vinyl sound better?",
+    "date": "2026-04-07T18:49:29.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "你未必非得是黑胶纯粹主义者才会觉得它更好听，也可能只是更偏爱整张专辑的体验。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/does-vinyl-sound-better/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-known-unknowns",
+    "contentType": "external",
+    "title": "Known unknowns",
+    "date": "2026-04-07T17:01:56.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "这篇文章梳理了那些让科学家夜不能寐的“已知未知”问题。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/the-questions-that-keep-scientists-up-at-night/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-are-your-bathroom-habits-normal",
+    "contentType": "external",
+    "title": "Are your bathroom habits normal?",
+    "date": "2026-04-06T17:01:00.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "一本新书用通俗方式回答了许多人羞于启齿却想知道的如厕与排便问题。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/are-your-bathroom-habits-normal/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-time-has-not-been-kind-to-vhs",
+    "contentType": "external",
+    "title": "Time has not been kind to VHS",
+    "date": "2026-04-03T16:22:58.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "VHS 诞生 50 年之际，保存者正争分夺秒抢救存储其上的影像，甚至要用“烘烤”等方法。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/time-has-not-been-kind-to-vhs/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-demystifying-migraine",
+    "contentType": "external",
+    "title": "Demystifying migraine",
+    "date": "2026-04-03T16:19:35.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "Michael Moskowitz 强调，偏头痛既不是想象出来的头痛，也绝不是轻微不适。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/demystifying-migraine/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-is-a-more-perfect-union-still-possible",
+    "contentType": "external",
+    "title": "Is a more perfect union still possible?",
+    "date": "2026-04-02T20:24:06.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "Faust、Buttigieg 和 Glaude 从历史与当下出发，讨论美国分裂中的共同体可能。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/is-a-more-perfect-union-still-possible/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-writing-about-a-pet-frog-is-trivial-anne-fadiman-disagrees",
+    "contentType": "external",
+    "title": "Writing about a pet frog is trivial? Anne Fadiman disagrees.",
+    "date": "2026-04-02T20:06:21.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "Anne Fadiman 认为，在面对巨大痛苦时，人们更需要对细小事物保持美感、机智与注意力。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/writing-about-a-pet-frog-is-trivial-anne-fadiman-disagrees/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-harvard-gazette-powell-issues-a-warning-on-u-s-debt",
+    "contentType": "external",
+    "title": "Powell issues a warning on U.S. debt",
+    "date": "2026-04-01T21:11:35.000Z",
+    "topics": [
+      "社会",
+      "文化"
+    ],
+    "summary": "鲍威尔警告美国债务路径不可持续，并与哈佛学生谈到通胀、战争影响和央行独立性。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Harvard Gazette",
+    "sourceUrl": "https://news.harvard.edu/gazette/story/2026/04/powell-issues-a-warning-on-u-s-debt/",
+    "sourceDomain": "news.harvard.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-earthset-from-the-lunar-far-side",
+    "contentType": "external",
+    "title": "Earthset From the Lunar Far Side",
+    "date": "2026-04-10T04:00:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "Artemis II 船员在绕月飞行时拍下了从月球背面眺望地球的震撼画面。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/earth/earth-observatory/earthset-from-the-lunar-far-side/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-watching-the-artemis-ii-mission-unfold-at-jpl-s-space-flight-operations-facility",
+    "contentType": "external",
+    "title": "Watching the Artemis II Mission Unfold at JPL’s Space Flight Operations Facility",
+    "date": "2026-04-09T19:32:29.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "JPL 的工作人员在太空飞行操作中心实时关注 Artemis II 任务展开。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/watching-the-artemis-ii-mission-unfold-at-jpls-space-flight-operations-facility/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-the-deep-space-network-acquires-artemis-ii-signal",
+    "contentType": "external",
+    "title": "The Deep Space Network Acquires Artemis II Signal",
+    "date": "2026-04-09T19:28:07.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "这幅图示展示了深空网络的天线如何接收到 Artemis II 发回的无线电信号。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/the-deep-space-network-acquires-artemis-ii-signal-2/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-the-deep-space-network-acquires-artemis-ii-signal",
+    "contentType": "external",
+    "title": "The Deep Space Network Acquires Artemis II Signal",
+    "date": "2026-04-09T19:22:28.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "这幅图示展示了深空网络的天线如何接收到 Artemis II 发回的无线电信号。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/the-deep-space-network-acquires-artemis-ii-signal/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-watching-over-the-deep-space-network-before-artemis-ii-signal-acquisition",
+    "contentType": "external",
+    "title": "Watching Over the Deep Space Network Before Artemis II Signal Acquisition",
+    "date": "2026-04-09T19:17:20.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "Artemis 深空网络运营负责人在 JPL 操作中心监看数据，为任务信号捕获做准备。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/watching-over-the-deep-space-network-before-artemis-ii-signal-acquisition/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-watching-the-artemis-ii-launch-from-jpl-s-space-flight-operations-facility",
+    "contentType": "external",
+    "title": "Watching the Artemis II Launch From JPL’s Space Flight Operations Facility",
+    "date": "2026-04-09T19:12:04.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "JPL 团队在太空飞行操作中心一同观看 Artemis II 登月任务发射。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/watching-the-artemis-ii-launch-from-jpls-space-flight-operations-facility/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-jpl-s-lucky-peanuts-before-artemis-ii-launch",
+    "contentType": "external",
+    "title": "JPL’s ‘Lucky Peanuts’ Before Artemis II Launch",
+    "date": "2026-04-09T19:06:34.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "发射前，JPL 传统的“幸运花生”再次出现在任务操作席上。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/jpls-lucky-peanuts-before-artemis-ii-launch/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-earth-observatory-supporting-artemis-ii-from-jpl-s-space-flight-operations-facility",
+    "contentType": "external",
+    "title": "Supporting Artemis II From JPL’s Space Flight Operations Facility",
+    "date": "2026-04-09T18:57:26.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "太空飞行操作中心的大屏与工位展示了 JPL 团队如何支持 Artemis II 任务。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Earth Observatory",
+    "sourceUrl": "https://science.nasa.gov/photojournal/supporting-artemis-ii-from-jpls-space-flight-operations-facility/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-nasa-natural-events-a-volcanic-medley-near-mammoth-lakes",
+    "contentType": "external",
+    "title": "A Volcanic Medley Near Mammoth Lakes",
+    "date": "2026-04-08T04:01:00.000Z",
+    "topics": [
+      "环境",
+      "科学"
+    ],
+    "summary": "东部内华达山脉的这片地貌由古老巨大破火山口与后来形成的火山口共同塑造。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NASA Natural Events",
+    "sourceUrl": "https://science.nasa.gov/earth/earth-observatory/a-volcanic-medley-near-mammoth-lakes/",
+    "sourceDomain": "science.nasa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noaa-nos-news-new-noaa-data-reveals-strength-of-the-u-s-marine-economy",
+    "contentType": "external",
+    "title": "New NOAA data reveals strength of the U.S. marine economy",
+    "date": "2026-03-18T13:00:00.000Z",
+    "topics": [
+      "环境",
+      "科学"
+    ],
+    "summary": "NOAA 新数据表明，美国海洋经济相关行业的就业与工资都在增长。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NOAA NOS News",
+    "sourceUrl": "https://oceanservice.noaa.gov/news/mar26/economics-national-ocean-watch.html",
+    "sourceDomain": "oceanservice.noaa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noaa-nos-news-colossal-coral-in-the-mariana-islands-is-largest-of-its-kind",
+    "contentType": "external",
+    "title": "Colossal coral in the Mariana Islands is largest of its kind",
+    "date": "2026-03-17T17:00:00.000Z",
+    "topics": [
+      "环境",
+      "科学"
+    ],
+    "summary": "马里亚纳群岛发现的这株巨型石珊瑚面积达 14500 平方英尺，可能已有 2050 多年历史。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "NOAA NOS News",
+    "sourceUrl": "https://oceanservice.noaa.gov/news/mar26/colossal-coral-mariana-islands.html",
+    "sourceDomain": "oceanservice.noaa.gov",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-in-devane-lectures-literary-scholar-and-dean-of-yale-college-will-explore-the-pu",
+    "contentType": "external",
+    "title": "In DeVane Lectures, literary scholar and dean of Yale College will explore the ‘purposes’ of higher education",
+    "date": "2026-04-10T14:36:08.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "Pericles Lewis 将在下学期的公开系列讲座中讨论大学教育究竟承担哪些目的。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/10/devane-lectures-literary-scholar-and-dean-yale-college-will-explore-purposes-higher",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-four-faculty-members-receive-poorvu-awards-for-innovative-teaching",
+    "contentType": "external",
+    "title": "Four faculty members receive Poorvu awards for innovative teaching",
+    "date": "2026-04-10T14:12:22.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "Yale College 院长 Pericles Lewis 表彰了四位年度创新教学奖得主。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/10/four-faculty-members-receive-poorvu-awards-innovative-teaching",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-yale-afternoons-with-alison-gregory-e-sterling",
+    "contentType": "external",
+    "title": "Yale Afternoons with Alison: Gregory E. Sterling",
+    "date": "2026-04-09T20:50:33.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "Alison Cole 采访耶鲁神学院院长 Gregory E. Sterling，谈其治校重点与新校园计划。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://alumni.yale.edu/news/yale-afternoons-alison-gregory-e-sterling",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-why-do-newborns-need-the-vitamin-k-shot",
+    "contentType": "external",
+    "title": "Why do newborns need the vitamin K shot?",
+    "date": "2026-04-09T20:47:04.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "耶鲁儿科专家解释了新生儿维生素 K 注射为何能预防危险甚至致命的出血。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://www.yalemedicine.org/news/why-do-newborns-need-the-vitamin-k-shot",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-how-does-the-liver-change-with-age",
+    "contentType": "external",
+    "title": "How does the liver change with age?",
+    "date": "2026-04-09T18:23:21.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "耶鲁肝病学家 Joseph Lim 解释了衰老如何影响肝脏，以及如何保护它。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/09/how-does-liver-change-age",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-yale-senior-selected-as-gaither-junior-fellow",
+    "contentType": "external",
+    "title": "Yale senior selected as Gaither Junior Fellow",
+    "date": "2026-04-09T17:38:19.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "Maxwell Fisher 获选 Gaither Junior Fellow，将在卡内基国际和平基金会参与美国国策研究。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/09/yale-senior-selected-gaither-junior-fellow",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-awards-celebrate-those-strengthening-the-bond-between-yale-and-new-haven",
+    "contentType": "external",
+    "title": "Awards celebrate those strengthening the bond between Yale and New Haven",
+    "date": "2026-04-09T15:40:03.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "Seton Elm-Ivy Awards 表彰了多位持续强化 Yale 与 New Haven 联结的个人和机构。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/09/awards-celebrate-those-strengthening-bond-between-yale-and-new-haven",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-serving-those-who-served-for-many-yale-physicians-veteran-care-has-become-a-miss",
+    "contentType": "external",
+    "title": "Serving those who served: For many Yale physicians, veteran care has become a mission",
+    "date": "2026-04-08T19:56:51.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "多代 Yale 医师通过与退伍军人医疗体系的合作，把 veteran care 发展成长期使命。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://news.yale.edu/2026/04/08/serving-those-who-served-many-yale-physicians-veteran-care-has-become-mission",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-new-tool-offers-personalized-approach-to-blood-cancer-care",
+    "contentType": "external",
+    "title": "New tool offers personalized approach to blood cancer care",
+    "date": "2026-04-08T19:47:13.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "新的机器学习工具可根据遗传数据判断罕见血癌患者是否以及何时应接受干细胞移植。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://medicine.yale.edu/news-article/new-tool-offers-personalized-approach-to-blood-cancer-care/",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-yale-news-yale-graduate-students-take-science-policy-to-capitol-hill",
+    "contentType": "external",
+    "title": "Yale graduate students take science policy to Capitol Hill",
+    "date": "2026-04-08T19:06:48.000Z",
+    "topics": [
+      "社会",
+      "科学"
+    ],
+    "summary": "26 名 Yale 研究生赴华盛顿为科学政策发声，参与 Yale STEM Hill Day。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Yale News",
+    "sourceUrl": "https://gsas.yale.edu/about/news-announcements/graduate-students-take-science-policy-capitol-hill",
+    "sourceDomain": "news.yale.edu",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-this-punjabi-princess-fought-for-women-s-suffrage-and-sheltered-refugees-during-",
+    "contentType": "external",
+    "title": "This Punjabi Princess Fought for Women's Suffrage and Sheltered Refugees During World War II. A Goddaughter of Queen Victoria, She Rejected British Imperialism",
+    "date": "2026-04-09T11:45:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "肯辛顿宫新展讲述维多利亚女王教女 Sophia Duleep Singh 争取妇女参政并救助难民的故事。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/this-punjabi-princess-fought-for-womens-suffrage-and-sheltered-refugees-during-world-war-ii-a-goddaughter-of-queen-victoria-she-rejected-british-imperialism-180988491/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-customer-loyalty-was-once-measured-in-green-stamps-and-the-more-you-shopped-the-",
+    "contentType": "external",
+    "title": "Customer Loyalty Was Once Measured in Green Stamps. And the More You Shopped, the Bigger the Rewards",
+    "date": "2026-04-08T11:00:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "如今常见的积分忠诚计划，最早可追溯到几乎被遗忘的“绿色邮票”现象。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/customer-loyalty-once-measured-green-stamps-more-shopped-bigger-rewards-180988413/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-in-a-new-documentary-one-of-britain-s-most-famous-historians-reframes-the-americ",
+    "contentType": "external",
+    "title": "In a New Documentary, One of Britain's Most Famous Historians Reframes the American Revolution as a 'Messy Divorce'",
+    "date": "2026-04-06T11:45:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "Lucy Worsley 的新纪录片把美国革命重新讲成一场充满情绪后果的“艰难离婚”。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/in-a-new-documentary-one-of-britains-most-famous-historians-reframes-the-american-revolution-as-a-messy-divorce-180988457/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-native-nations-fought-in-the-american-revolution-to-protect-their-ancestral-land",
+    "contentType": "external",
+    "title": "Native Nations Fought in the American Revolution to Protect Their Ancestral Lands. After the War, Settlers Seized Their Territory Anyway",
+    "date": "2026-04-03T11:15:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "美洲原住民族在独立战争中为守护祖地而战，但战后殖民者仍夺走了他们的领土。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/native-nations-fought-in-the-american-revolution-to-protect-their-ancestral-lands-after-the-war-settlers-seized-their-territory-anyway-180988435/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-the-spirited-revolutionary-who-led-the-fight-for-independence-in-corsica-also-in",
+    "contentType": "external",
+    "title": "The Spirited Revolutionary Who Led the Fight for Independence in Corsica Also Inspired America’s Colonial Rabble-Rousers",
+    "date": "2026-04-02T11:00:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "科西嘉独立领袖 Paoli 对美国殖民地激进派也产生了启发作用。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/spirited-revolutionary-led-fight-independence-corsica-inspired-america-colonial-rabblerouser-180988408/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-to-finance-their-lifestyle-a-young-french-couple-went-to-cambodia-to-steal-antiq",
+    "contentType": "external",
+    "title": "To Finance Their Lifestyle, a Young French Couple Went to Cambodia to Steal Antiquities. They Did Almost Everything Wrong",
+    "date": "2026-04-01T11:00:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "一对法国青年赴柬埔寨盗取古物的拙劣计划，反而引发了更广泛的文物归还斗争。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/to-finance-lifestyle-young-french-couple-cambodia-steal-antiquities-they-did-almost-everything-wrong-180988403/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-abigail-adams-asked-her-husband-to-remember-the-ladies-as-he-drafted-america-s-l",
+    "contentType": "external",
+    "title": "Abigail Adams Asked Her Husband to 'Remember the Ladies' as He Drafted America's Laws. Here's What She Really Meant",
+    "date": "2026-03-31T11:45:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "Abigail Adams 在 1776 年写信提醒丈夫“记住女性”，但这句话的真实含义常被后人误读。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/abigail-adams-asked-her-husband-to-remember-the-ladies-as-he-drafted-americas-laws-heres-what-she-really-meant-180988452/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-history-when-america-found-itself-ready-to-roll-route-66-stretching-from-chicago-to-los-",
+    "contentType": "external",
+    "title": "When America Found Itself Ready to Roll, Route 66, Stretching From Chicago to Los Angeles, Was the Road of Endless Possibilities",
+    "date": "2026-03-30T13:24:49.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "66 号公路从交通干线迅速变成美国自由文化与流动想象的象征。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian History",
+    "sourceUrl": "https://www.smithsonianmag.com/history/when-america-found-itself-ready-rock-roll-route66-stretching-chicago-los-angeles-road-endless-possibilities-180988406/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-after-nearly-80-years-of-doubt-scientists-say-a-spear-lodged-between-elephant-ri",
+    "contentType": "external",
+    "title": "After Nearly 80 Years of Doubt, Scientists Say a Spear Lodged Between Elephant Ribs Offers Evidence That Neanderthals Hunted Big Game",
+    "date": "2026-04-10T16:05:15.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "科学家重新审视 1948 年出土的象肋间长矛证据，认为这支持尼安德特人曾猎杀大型动物。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smart-news/after-nearly-80-years-of-doubt-scientists-say-a-spear-lodged-between-elephant-ribs-offers-evidence-that-neanderthals-hunted-big-game-180988522/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-see-15-sensational-scenes-of-switzerland-europe-s-alpine-wonderland-that-s-beaut",
+    "contentType": "external",
+    "title": "See 15 Sensational Scenes of Switzerland, Europe's Alpine Wonderland That's Beautiful No Matter the Season",
+    "date": "2026-04-10T15:21:22.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "这组摄影作品从多个季节展示了瑞士高山风光的壮阔之美。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/see-15-sensational-scenes-of-switzerland-europe-alpine-wonderland-beautiful-no-matter-season-180988518/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-this-fashion-designer-collaborated-with-salvador-dal-and-jean-cocteau-to-imagine",
+    "contentType": "external",
+    "title": "This Fashion Designer Collaborated With Salvador Dalí and Jean Cocteau to Imagine Fabulous Surrealist Ensembles",
+    "date": "2026-04-10T13:33:39.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "维多利亚与阿尔伯特博物馆的新展回顾了 Schiaparelli 与达利、Jean Cocteau 等人的超现实合作。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smart-news/the-surrealism-inspired-fashions-of-elsa-schiaparelli-take-the-spotlight-in-london-180988503/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-the-james-webb-space-telescope-and-the-parker-solar-probe-changed-how-we-see-the",
+    "contentType": "external",
+    "title": "The James Webb Space Telescope and the Parker Solar Probe Changed How We See the Universe. Now, Their Models Have Found a Home at the Smithsonian",
+    "date": "2026-04-10T12:00:00.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "韦布望远镜和帕克太阳探测器的模型入藏史密森，象征 NASA 在探索技术上的关键跃迁。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smithsonian-institution/the-james-webb-space-telescope-and-the-parker-solar-probe-changed-how-we-see-the-universe-now-their-models-have-found-a-home-at-the-smithsonian-180988524/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-as-their-antarctic-habitat-melts-away-emperor-penguins-are-now-considered-an-end",
+    "contentType": "external",
+    "title": "As Their Antarctic Habitat Melts Away, Emperor Penguins Are Now Considered an Endangered Species",
+    "date": "2026-04-09T20:35:14.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "随着南极栖息地融化，帝企鹅已被 IUCN 列为濒危物种，未来数量可能显著下滑。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smart-news/as-their-antarctic-habitat-melts-away-emperor-penguins-are-now-considered-an-endangered-species-180988520/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-octopus-sex-just-got-weirder-in-addition-to-depositing-sperm-males-specialized-m",
+    "contentType": "external",
+    "title": "Octopus Sex Just Got Weirder. In Addition to Depositing Sperm, Males' Specialized Mating Arm Can 'Taste' Female Hormones",
+    "date": "2026-04-09T18:38:26.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "新研究发现，章鱼雄性的交配臂不仅传递精子，还能“品尝”雌性的激素信号。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smart-news/octopus-sex-just-got-weirder-in-addition-to-depositing-sperm-males-specialized-mating-arm-can-taste-female-hormones-180988500/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-a-mysterious-monumental-scroll-on-public-display-for-the-first-time-paints-a-pic",
+    "contentType": "external",
+    "title": "A Mysterious, Monumental Scroll on Public Display for the First Time Paints a Picture of Artistic Fusion in Colonial India",
+    "date": "2026-04-09T17:45:46.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "这幅首次公开展出的巨型卷轴呈现了殖民印度时期多种艺术传统交汇的图景。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/smart-news/mysterious-monumental-scroll-public-display-first-time-aints-picture-artistic-fusion-colonial-india-180988512/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-latest-chiringuitos-offer-the-quintessential-beach-bar-experience-on-spain-s-costa-del-",
+    "contentType": "external",
+    "title": "Chiringuitos Offer the Quintessential Beach Bar Experience on Spain's Costa del Sol",
+    "date": "2026-04-09T16:49:45.000Z",
+    "topics": [
+      "文化",
+      "科学"
+    ],
+    "summary": "西班牙太阳海岸的 chiringuitos 海滩小馆既保留历史气质，也在适应全球化客群与环保压力。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Latest",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/chiringuitos-offer-the-quintessential-beach-bar-experience-on-spains-costa-del-sol-180988499/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-how-australian-chefs-and-farmers-are-rediscovering-the-ingredients-that-have-bee",
+    "contentType": "external",
+    "title": "How Australian Chefs and Farmers Are Rediscovering the Ingredients That Have Been There All Along",
+    "date": "2026-04-08T10:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "澳大利亚厨师与农民重新发现本土食材，让饮食与土地重新建立联系。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/australian-cherfs-farmers-rediscovering-new-restaurants-australia-incorporate-ingredients-been-there-all-along-180988427/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-the-queen-of-the-ghetto-gave-new-york-s-immigrant-community-a-voice-a-century-la",
+    "contentType": "external",
+    "title": "‘The Queen of the Ghetto’ Gave New York’s Immigrant Community a Voice. A Century Later, It’s Re-emerging",
+    "date": "2026-04-07T11:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "安齐娅·叶济尔斯卡曾为纽约移民社群发声，如今她的作品在百年后重新被看见。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/queen-ghetto-gave-new-york-immigrant-community-voice-century-later-reemerging-180988409/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-see-the-spectacular-winners-of-smithsonian-magazine-s-23rd-annual-photography-co",
+    "contentType": "external",
+    "title": "See the Spectacular Winners of Smithsonian Magazine’s 23rd Annual Photography Contest",
+    "date": "2026-04-06T11:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "史密森摄影大赛的年度获奖作品以大胆色彩与亲密瞬间抓住了观者注意力。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/see-spectacular-winners-smithsonian-magazines-23rd-annual-photography-contest-180988429/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-moma-plans-a-retrospective-for-marcel-duchamp-the-dada-artist-who-was-unimpresse",
+    "contentType": "external",
+    "title": "MoMA Plans a Retrospective for Marcel Duchamp, the Dada Artist Who Was Unimpressed With His Own Masterpieces",
+    "date": "2026-04-03T11:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "MoMA 将为杜尚办大型回顾展，重新讲述这位达达艺术家与自己作品的复杂关系。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/moma-plans-retrospective-marcel-duchamp-dada-artist-who-unimpressed-masterpieces-180988407/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-this-massive-collection-of-more-than-a-million-tools-tells-the-striking-history-",
+    "contentType": "external",
+    "title": "This Massive Collection of More Than a Million Tools Tells the Striking History of Jewelry Making in America",
+    "date": "2026-04-02T11:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "这一百多万件工具的庞大收藏，展示了美国珠宝制造业的手工与工业史。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/this-massive-collection-more-than-million-tools-tells-striking-history-jewelry-making-america-180988428/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-with-doonesbury-garry-trudeau-found-a-way-to-inform-and-entertain-a-generation-o",
+    "contentType": "external",
+    "title": "With ‘Doonesbury,’ Garry Trudeau Found a Way to Inform and Entertain a Generation of Newspaper Readers, One Panel at a Time",
+    "date": "2026-03-31T12:00:00.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "新传记回顾了 Garry Trudeau 如何用《Doonesbury》一格格地塑造一代人的公共阅读经验。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/doonesbury-garry-trudeau-found-way-inform-entertain-generation-newspaper-readers-one-panel-time-180988410/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-view-60-captivating-finalists-from-the-23rd-annual-smithsonian-magazine-photo-co",
+    "contentType": "external",
+    "title": "View 60 Captivating Finalists From the 23rd Annual Smithsonian Magazine Photo Contest. Then, Vote for Your Favorite!",
+    "date": "2026-03-16T21:24:47.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "这 60 幅入围作品带人穿越不同地域、文化与野生世界，并开放公众投票。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/view-60-captivating-finalists-from-the-23rd-annual-smithsonian-magazine-photo-contest-180988314/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-arts-culture-mei-lanfang-was-famous-for-his-masterful-performances-as-female-leads-in-the-193",
+    "contentType": "external",
+    "title": "Mei Lanfang Was Famous for His Masterful Performances as Female Leads. In the 1930s, He Introduced American Audiences to the World of Chinese Opera",
+    "date": "2026-03-13T17:45:49.000Z",
+    "topics": [
+      "文化",
+      "历史"
+    ],
+    "summary": "梅兰芳在 1930 年代把中国戏曲介绍给美国观众，他对表演艺术的影响至今仍在。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Arts & Culture",
+    "sourceUrl": "https://www.smithsonianmag.com/arts-culture/mei-lanfang-was-famous-for-his-masterful-performances-as-female-leads-in-the-1930s-he-introduced-american-audiences-to-the-world-of-chinese-opera-180988340/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-what-lies-beyond-artemis-2-these-other-missions-are-setting-their-sights-on-the-",
+    "contentType": "external",
+    "title": "What Lies Beyond Artemis 2? These Other Missions Are Setting Their Sights on the Moon This Year—and on a Future With Humans in Space",
+    "date": "2026-04-09T14:02:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "Artemis II 之后，还有多项登月与载人太空计划正在排队，把“人类重返月球”继续往前推。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/what-lies-beyond-artemis-2-these-other-missions-are-setting-their-sights-on-the-moon-this-yearand-on-a-future-with-humans-in-space-180988517/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-hear-from-a-wildlife-photographer-s-dramatic-glimpse-into-the-dwindling-world-of",
+    "contentType": "external",
+    "title": "Hear From a Wildlife Photographer's Dramatic Glimpse Into the Dwindling World of the Cascade Red Fox",
+    "date": "2026-04-09T10:15:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "摄影师 Gretchen Kay Stuart 记录了研究团队守护濒危喀斯喀特红狐的艰难工作。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/a-photographers-glimpse-into-the-dwindling-world-of-the-cascade-red-fox-180988516/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-earth-s-smells-are-disappearing-because-of-climate-change-and-it-s-a-vast-cultur",
+    "contentType": "external",
+    "title": "Earth's Smells Are Disappearing Because of Climate Change, and It's a Vast Cultural Loss",
+    "date": "2026-04-08T12:57:09.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "污染、灭绝与变暖正在同时改变地球的气味，这种消失也是巨大的文化损失。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/earths-smells-are-disappearing-because-of-climate-change-and-its-a-vast-cultural-loss-180988496/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-the-la-brea-tar-pits-have-been-sucking-in-visitors-for-millennia-paleontologists",
+    "contentType": "external",
+    "title": "The La Brea Tar Pits Have Been Sucking in Visitors for Millennia. Paleontologists Are Still Finding Out What Lies Within the Ooze",
+    "date": "2026-04-07T11:00:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "洛杉矶的拉布雷亚沥青坑仍在不断给古生物学家提供新的化石线索。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/la-brea-tar-pits-sucking-visitors-millennia-paleontologits-still-finding-out-what-lies-within-ooze-180988404/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-the-endangered-proboscis-monkey-is-easily-identifiable-by-one-physical-trait-its",
+    "contentType": "external",
+    "title": "The Endangered Proboscis Monkey Is Easily Identifiable By One Physical Trait: Its Supersized Schnoz",
+    "date": "2026-04-06T12:00:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "长鼻猴最醒目的大鼻子是它的标志，而婆罗洲的栖息地修复正在争取它的未来。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/endangered-proboscis-monkey-easily-identifiable-by-one-physical-trait-supersized-schnoz-180988420/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-purple-martins-rely-on-human-landlords-to-provide-nest-boxes-each-spring-can-tha",
+    "contentType": "external",
+    "title": "Purple Martins Rely on Human 'Landlords' to Provide Nest Boxes Each Spring. Can That Dynamic Last?",
+    "date": "2026-04-03T12:33:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "紫燕鸥数百年来依赖人类提供巢箱，如今照料者老去，这种共生关系面临考验。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/purple-martins-rely-on-human-landlords-to-provide-nest-boxes-each-spring-can-that-dynamic-last-180988478/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-spectators-flocked-to-the-artemis-2-launch-to-witness-history-being-made-one-awe",
+    "contentType": "external",
+    "title": "Spectators Flocked to the Artemis 2 Launch to Witness History Being Made. One Awed Viewer Called It 'the Best Thing Ever'",
+    "date": "2026-04-02T16:38:25.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "时隔 50 多年的人类登月任务再度升空，13 张照片记录了观众见证历史的现场情绪。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/spectators-flocked-to-the-artemis-2-launch-to-witness-history-being-made-one-awed-viewer-called-it-the-best-thing-ever-180988474/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-science-nature-cascade-red-foxes-are-notoriously-reclusive-so-how-did-this-photographer-capture",
+    "contentType": "external",
+    "title": "Cascade Red Foxes Are Notoriously Reclusive. So How Did This Photographer Capture These Stunning Images of the Endangered Species?",
+    "date": "2026-03-31T11:00:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "濒危的喀斯喀特红狐极少露面，这位摄影师却近距离记录了它们罕见的身影。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Science & Nature",
+    "sourceUrl": "https://www.smithsonianmag.com/science-nature/cascade-red-foxes-notoriously-reclusive-how-photographer-captured-stunning-images-endangered-species-180988419/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-travel-follow-in-the-footsteps-of-the-founders-and-have-a-drink-where-they-planned-the-",
+    "contentType": "external",
+    "title": "Follow in the Footsteps of the Founders and Have a Drink Where They Planned the Revolution Over a Few Beers",
+    "date": "2026-04-09T10:00:00.000Z",
+    "topics": [
+      "文化",
+      "社会"
+    ],
+    "summary": "独立战争前后的酒馆曾是政治谋划与组织中心，这些地方至今仍可探访。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Travel",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/follow-footsteps-founders-have-drink-where-they-planned-revolution-over-small-beers-180988424/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-travel-shakespeare-gardens-around-the-world-honor-the-playwright-and-hold-their-own-sto",
+    "contentType": "external",
+    "title": "Shakespeare Gardens Around the World Honor the Playwright—and Hold Their Own Storied History",
+    "date": "2026-04-08T15:36:23.000Z",
+    "topics": [
+      "文化",
+      "社会"
+    ],
+    "summary": "世界各地的莎士比亚花园不仅纪念剧作家，也各自承载着地方历史。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Travel",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/shakespeare-gardens-around-the-world-honor-the-playwright-and-hold-their-own-storied-history-180988497/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-travel-see-15-images-of-wondrous-west-africa-from-the-smithsonian-magazine-photo-contes",
+    "contentType": "external",
+    "title": "See 15 Images of Wondrous West Africa From the Smithsonian Magazine Photo Contest",
+    "date": "2026-03-27T15:04:20.000Z",
+    "topics": [
+      "文化",
+      "社会"
+    ],
+    "summary": "这组照片带人穿越西非多个国家，感受当地的人群、文化与野生景观。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Travel",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/see-15-images-of-wondrous-west-africa-from-the-smithsonian-magazine-photo-contest-180988430/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-smithsonian-travel-in-one-of-the-wettest-places-on-the-planet-indigenous-people-build-bridges-and-l",
+    "contentType": "external",
+    "title": "In One of the Wettest Places on the Planet, Indigenous People Build Bridges and Ladders Out of Living Tree Roots",
+    "date": "2026-03-25T15:52:30.000Z",
+    "topics": [
+      "文化",
+      "社会"
+    ],
+    "summary": "印度梅加拉亚的 Khasi 与 Jaintia 人数百年来用活树根编桥搭梯，以穿越洪水与密林。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Smithsonian Travel",
+    "sourceUrl": "https://www.smithsonianmag.com/travel/in-one-of-the-wettest-places-on-the-planet-indigenous-people-build-bridges-and-ladders-out-of-living-tree-roots-180988405/",
+    "sourceDomain": "www.smithsonianmag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-chinese-lion-dance-finds-new-life-in-newfoundland",
+    "contentType": "external",
+    "title": "Chinese Lion Dance Finds New Life in Newfoundland",
+    "date": "2026-04-10T13:34:20.000Z",
+    "topics": [
+      "历史",
       "思考"
     ],
-    "summary": "Smaller museums are posting restoration notes in public, giving visitors a closer look at how fragile collections are preserved over time.",
+    "summary": "纽芬兰的小型华裔社区让舞狮传统在代际传承中长出了新的地方样貌。",
     "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
-    "sourceName": "Sample Source",
-    "sourceUrl": "https://example.com/open-conservation-logs",
-    "sourceDomain": "example.com",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/chinese-lion-dance-finds-new-life-in-newfoundland/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-10-prose-poems-that-think-outside-the-line",
+    "contentType": "external",
+    "title": "10 Prose Poems That Think Outside the Line",
+    "date": "2026-04-09T13:33:00.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "这份书单收录多位诗人的散文诗作品，展示了诗歌如何突破行与体裁的边界。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/10-prose-poems-that-think-outside-the-line/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-malibu-in-matchbooks-clues-to-a-lost-coast",
+    "contentType": "external",
+    "title": "Malibu in Matchbooks: Clues to a Lost Coast",
+    "date": "2026-04-08T13:32:00.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "一批南加州火柴盒收藏意外保存了马里布一条已被火灾与时间抹去的商业海岸线。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/malibu-in-matchbooks-clues-to-a-lost-coast/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-the-revolutionary-beginnings-of-the-republican-party",
+    "contentType": "external",
+    "title": "The Revolutionary Beginnings of the Republican Party",
+    "date": "2026-04-07T13:31:18.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "对逃奴法与“奴隶权力”的民间反抗，帮助塑造了共和党的早期政治力量。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/the-revolutionary-beginnings-of-the-republican-party/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-race-fertility-and-the-science-of-slavery-in-antebellum-america",
+    "contentType": "external",
+    "title": "Race, Fertility, and the Science of Slavery in Antebellum America",
+    "date": "2026-04-06T13:27:35.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "关于混血女性生育力的伪科学曾被用来替奴隶制提供“科学”辩护。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/race-fertility-and-the-science-of-slavery-in-antebellum-america/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-how-a-giant-squid-attack-became-an-urban-legend",
+    "contentType": "external",
+    "title": "How a Giant Squid Attack Became an Urban Legend",
+    "date": "2026-04-03T13:35:30.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "一位二战幸存者关于巨型乌贼袭击的说法在多年传播中逐渐变成都市传说。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/how-a-giant-squid-attack-became-an-urban-legend/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-a-reader-s-guide-to-poetry-for-national-poetry-month",
+    "contentType": "external",
+    "title": "A Reader’s Guide to Poetry for National Poetry Month",
+    "date": "2026-04-02T13:45:00.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "这份国家诗歌月导读带读者读诗、识别诗体，并认识更多诗人。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/editors-picks-national-poetry-month/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-the-real-antifa",
+    "contentType": "external",
+    "title": "The Real Antifa",
+    "date": "2026-04-02T13:30:22.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "学者认为 Antifa 组织规模小、去中心化且多偏防御性，这与常见媒体形象不同。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/the-real-antifa/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-the-hidden-politics-of-german-carnival",
+    "contentType": "external",
+    "title": "The Hidden Politics of German Carnival",
+    "date": "2026-04-01T13:45:00.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "从中世纪到第三帝国，德国狂欢节一直既是抗议舞台，也是权力表演的场域。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/the-hidden-politics-of-german-carnival/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-jstor-daily-the-red-chador-and-8217-s-provocative-public-performance",
+    "contentType": "external",
+    "title": "The Red Chador&#8217;s Provocative Public Performance",
+    "date": "2026-03-31T13:35:40.000Z",
+    "topics": [
+      "历史",
+      "思考"
+    ],
+    "summary": "Anida Yoeu Ali 的“红罩袍”通过高可见度的公共表演挑战对穆斯林身份的刻板想象。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "JSTOR Daily",
+    "sourceUrl": "https://daily.jstor.org/the-red-chadors-provocative-public-performance/",
+    "sourceDomain": "daily.jstor.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-patterns-without-desires",
+    "contentType": "external",
+    "title": "Patterns without desires",
+    "date": "2026-04-10T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "在博物馆与拍卖世界中，专家一直决定价值与意义，AI 是否可能取代这一位置？",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/could-ai-replace-human-art-experts-in-attributing-paintings?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-travelling-at-the-speed-of-light",
+    "contentType": "external",
+    "title": "Travelling at the speed of light",
+    "date": "2026-04-09T10:01:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "这部视频带人乘上一艘接近光速的理论飞船，体验相对论尺度下的宇宙旅行。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/videos/take-a-mind-bending-ride-through-the-cosmos-at-light-speed?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-white-collar-sweatshops",
+    "contentType": "external",
+    "title": "White-collar sweatshops",
+    "date": "2026-04-09T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "律所等专业工作场所为何变成高压、空洞的白领血汗工厂？文章追问其制度根源。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/what-made-law-into-a-white-collar-sweatshop-in-the-1980s?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-your-opinion-please",
+    "contentType": "external",
+    "title": "Your opinion, please",
+    "date": "2026-04-08T10:01:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "这档电台节目曾邀请听众就诗歌与政治畅所欲言，几十年后他们的声音仍然动人。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/videos/a-vivid-portrait-of-montana-built-from-call-in-radio-clips?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-living-without-my-self",
+    "contentType": "external",
+    "title": "Living without my self",
+    "date": "2026-04-07T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "阅读 Robert Musil 让我接受“没有一个统一大自我”也可以是一种美。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/robert-musil-gives-confidence-to-the-no-self-minority-like-me?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-is-ai-already-conscious",
+    "contentType": "external",
+    "title": "Is AI already conscious?",
+    "date": "2026-04-06T10:01:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "要断言 AI 不可能有意识并不容易，而且这种草率排除也许在伦理上很危险。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/videos/we-long-misjudged-animal-consciousness-could-ai-be-next?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-the-antibiotic-trap",
+    "contentType": "external",
+    "title": "The antibiotic trap",
+    "date": "2026-04-06T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "对抗生素的易得性在满足需求的同时，也让印度成为全球耐药危机的重要加速器。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/antibiotic-resistance-in-india-has-consequences-everywhere?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-when-trauma-becomes-trope",
+    "contentType": "external",
+    "title": "When trauma becomes trope",
+    "date": "2026-04-03T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "人道主义新闻自认承担记录苦难的道德使命，但实际操作常充满伦理灰区。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/how-might-humanitarian-journalism-be-done-better?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-the-hidden-world-of-plant-roots",
+    "contentType": "external",
+    "title": "The hidden world of plant roots",
+    "date": "2026-04-02T10:01:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "植物根系没有神经系统，却能作出复杂反应，这迫使我们重新思考“智能”意味着什么。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/videos/what-a-plants-decision-making-reveals-about-intelligence?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-the-house-is-a-work-of-art",
+    "contentType": "external",
+    "title": "The house is a work of art",
+    "date": "2026-04-02T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "Frank Lloyd Wright 让日常生活变得更美，但他个人生活也长期被丑闻与悲剧笼罩。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/frank-lloyd-wright-as-a-mirror-of-the-american-condition?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-the-medici-s-lost-garden-of-wonders",
+    "contentType": "external",
+    "title": "The Medici’s lost garden of wonders",
+    "date": "2026-04-01T10:01:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "文章回顾美第奇家族工程奇观“奇迹花园”在托斯卡纳的兴衰，像一座早期主题公园。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/videos/the-rise-and-fall-of-pratolino-tuscanys-proto-theme-park?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-aeon-banking-beyond-the-law",
+    "contentType": "external",
+    "title": "Banking beyond the law",
+    "date": "2026-03-31T10:00:00.000Z",
+    "topics": [
+      "哲学",
+      "社会"
+    ],
+    "summary": "一个延续数百年的秘密代码与影子掮客网络，至今仍能绕开国家控制的金融体系。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Aeon",
+    "sourceUrl": "https://aeon.co/essays/the-underground-bankers-who-reshape-the-flow-of-global-money?utm_source=rss-feed",
+    "sourceDomain": "aeon.co",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-how-to-future-proof-your-career-in-the-age-of-ai",
+    "contentType": "external",
+    "title": "How To Future-Proof Your Career In The Age Of AI",
+    "date": "2026-04-09T12:59:30.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "这篇文章讨论在 AI 时代如何调整能力结构，让职业路径更具韧性和可持续性。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/why-a-liberal-arts-education-will-soon-be-more-valuable-than-ever",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-the-eradication-of-grief",
+    "contentType": "external",
+    "title": "The Eradication Of Grief",
+    "date": "2026-04-07T16:30:20.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "文章追问现代社会是否正试图抹除悲伤，以及这种冲动会让人失去什么。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/the-eradication-of-grief",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-iran-could-become-like-egypt-myanmar-or-pakistan",
+    "contentType": "external",
+    "title": "Iran Could Become Like Egypt, Myanmar or Pakistan",
+    "date": "2026-04-03T16:50:25.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "这篇分析讨论伊朗未来可能滑向类似埃及、缅甸或巴基斯坦式的政治路径。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/iran-could-become-like-egypt-myanmar-or-pakistan",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-limiting-not-just-screen-time-but-screen-space",
+    "contentType": "external",
+    "title": "Limiting Not Just Screen Time, But Screen Space",
+    "date": "2026-04-02T13:09:19.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "作者主张，除了限制屏幕时间，我们还应重新安排屏幕在生活空间里的占比。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/limiting-not-just-screen-time-but-screen-space",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-the-return-of-the-moral-state",
+    "contentType": "external",
+    "title": "The Return Of The Moral State",
+    "date": "2026-03-31T16:35:56.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "文章讨论“道德国家”的回归，以及国家如何重新以价值判断介入公共生活。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/the-return-of-the-moral-state",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-middle-power-multilateralism-in-a-hard-power-world",
+    "contentType": "external",
+    "title": "Middle-Power Multilateralism In A Hard Power World",
+    "date": "2026-03-27T16:46:46.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "在强权回归的国际环境里，这篇文章重新评估中等强国的多边主义空间。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/middle-power-multilateralism-in-a-hard-power-world",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-the-hidden-value-in-the-human-ai-arrangement",
+    "contentType": "external",
+    "title": "The Hidden Value In The Human-AI Arrangement",
+    "date": "2026-03-26T13:40:30.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "这篇文章讨论人类与 AI 协作关系中那些常被忽略、却真正创造价值的部分。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/what-the-ai-consciousness-question-conceals",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-how-reverse-game-theory-could-solve-the-housing-shortage",
+    "contentType": "external",
+    "title": "How Reverse Game Theory Could Solve The Housing Shortage",
+    "date": "2026-03-25T16:30:04.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "作者尝试用“反向博弈论”思路，为长期住房短缺寻找新的协调方案。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/the-architecture-of-cooperation",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-before-waging-war-consult-historians-first",
+    "contentType": "external",
+    "title": "Before Waging War, Consult Historians First",
+    "date": "2026-03-19T14:03:08.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "文章提醒，在发动战争之前先请历史学家发言，避免决策陷入短视重复。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/before-waging-war-consult-historians-first",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-noema-what-are-psychedelic-entities",
+    "contentType": "external",
+    "title": "What Are Psychedelic Entities?",
+    "date": "2026-03-17T13:55:44.000Z",
+    "topics": [
+      "经济",
+      "哲学"
+    ],
+    "summary": "这篇文章讨论迷幻体验中所谓“实体”感的来源，以及它对意识研究的启发。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Noema",
+    "sourceUrl": "https://www.noemamag.com/what-are-psychedelic-entities",
+    "sourceDomain": "www.noemamag.com",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-americans-still-opt-for-print-books-over-digital-or-audio-versions-few-are-in-bo",
+    "contentType": "external",
+    "title": "Americans still opt for print books over digital or audio versions; few are in book clubs",
+    "date": "2026-04-09T13:50:50.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "大多数美国成年人仍然偏好纸质书，电子书和有声书虽在增长，但读书会参与者并不多。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/short-reads/2026/04/09/americans-still-opt-for-print-books-over-digital-or-audio-versions-few-are-in-book-clubs/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-how-often-does-the-supreme-court-overturn-its-own-decisions",
+    "contentType": "external",
+    "title": "How often does the Supreme Court overturn its own decisions?",
+    "date": "2026-04-08T17:56:38.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "最高法院推翻自身既有判例的情形不到 1%，且多集中在经济活动与刑事程序领域。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/short-reads/2026/04/08/how-often-does-the-supreme-court-overturn-its-own-decisions/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-video-can-polls-tell-us-who-will-win-on-election-day",
+    "contentType": "external",
+    "title": "Video: Can polls tell us who will win on Election Day?",
+    "date": "2026-04-08T14:43:38.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这段视频解释所谓“赛马式民调”如何估计候选人支持度，以及它能说和不能说的东西。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/methods/2026/04/08/video-can-polls-tell-us-who-will-win-on-election-day/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-negative-views-of-israel-netanyahu-continue-to-rise-among-americans-especially-y",
+    "contentType": "external",
+    "title": "Negative views of Israel, Netanyahu continue to rise among Americans – especially young people",
+    "date": "2026-04-07T17:54:58.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "美国人对以色列和内塔尼亚胡的负面看法持续上升，年轻人尤为明显。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/short-reads/2026/04/07/negative-views-of-israel-netanyahu-continue-to-rise-among-americans-especially-young-people/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-methodology",
+    "contentType": "external",
+    "title": "Methodology",
+    "date": "2026-04-07T17:53:44.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这篇方法说明介绍了美国趋势面板本次调查的数据来源与执行方式。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/global/2026/04/07/methodology-us-views-of-iran/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-acknowledgments",
+    "contentType": "external",
+    "title": "Acknowledgments",
+    "date": "2026-04-07T17:53:39.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这是一份列出研究参与者与贡献者的致谢说明。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/global/2026/04/07/acknowledgments-us-views-of-iran/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-do-americans-think-trump-can-make-good-decisions-about-various-foreign-policy-is",
+    "contentType": "external",
+    "title": "Do Americans think Trump can make good decisions about various foreign policy issues?",
+    "date": "2026-04-07T17:53:34.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "美国人对特朗普处理俄乌战争以及伊朗、中国、朝鲜等议题的信心较去年下降。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/global/2026/04/07/do-americans-think-trump-can-make-good-decisions-about-various-foreign-policy-issues/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-gas-prices-are-americans-top-concern-in-iran-war",
+    "contentType": "external",
+    "title": "Gas Prices Are Americans’ Top Concern in Iran War",
+    "date": "2026-04-07T17:53:20.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "69% 的美国人担心伊朗战争推高油价，45% 认为美国在避免平民伤亡方面做得不够。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/global/2026/04/07/gas-prices-are-americans-top-concern-in-iran-war/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-appendix-b-supplemental-tables-on-health-ratings",
+    "contentType": "external",
+    "title": "Appendix B: Supplemental tables on health ratings",
+    "date": "2026-04-07T15:55:40.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这里收录的是健康评分相关的补充统计表。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/health-information-appendix-b/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-methodology",
+    "contentType": "external",
+    "title": "Methodology",
+    "date": "2026-04-07T15:55:39.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这篇方法说明介绍了美国趋势面板本次调查的数据来源与执行方式。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/health-information-methodology/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-appendix-a-supplemental-tables-on-health-information-questions",
+    "contentType": "external",
+    "title": "Appendix A: Supplemental tables on health information questions",
+    "date": "2026-04-07T15:55:39.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这里收录的是健康信息问题相关的补充统计表。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/health-information-appendix-a/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-acknowledgments",
+    "contentType": "external",
+    "title": "Acknowledgments",
+    "date": "2026-04-07T15:55:38.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "这是一份列出研究参与者与贡献者的致谢说明。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/health-information-acknowledgments/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-americans-value-their-health-but-many-face-challenges-in-taking-care-of-it",
+    "contentType": "external",
+    "title": "Americans value their health – but many face challenges in taking care of it",
+    "date": "2026-04-07T15:55:37.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "新调查显示，美国人普遍重视健康，但这种重视与日常照护行动之间常有明显落差。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/americans-value-their-health-but-many-face-challenges-in-taking-care-of-it/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-roughly-a-third-of-young-adults-have-negative-views-of-their-mental-health",
+    "contentType": "external",
+    "title": "Roughly a third of young adults have negative views of their mental health",
+    "date": "2026-04-07T15:55:37.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "大约三分之一的年轻成年人对自己的心理健康持负面看法，折射出更广泛的危机感。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/roughly-a-third-of-young-adults-have-negative-views-of-their-mental-health/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-pew-research-users-of-social-media-and-ai-chatbots-for-health-information-are-more-likely-to-",
+    "contentType": "external",
+    "title": "Users of social media and AI chatbots for health information are more likely to say they are convenient than accurate",
+    "date": "2026-04-07T15:55:36.000Z",
+    "topics": [
+      "社会",
+      "思考"
+    ],
+    "summary": "使用社交媒体和 AI 聊天机器人获取健康信息的人，更容易觉得这些工具方便，却不一定准确。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Pew Research Center",
+    "sourceUrl": "https://www.pewresearch.org/science/2026/04/07/users-of-social-media-and-ai-chatbots-for-health-information-are-more-likely-to-say-they-are-convenient-than-accurate/",
+    "sourceDomain": "www.pewresearch.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-quanta-why-do-we-tell-ourselves-scary-stories-about-ai",
+    "contentType": "external",
+    "title": "Why Do We Tell Ourselves Scary Stories About AI?",
+    "date": "2026-04-10T14:25:09.000Z",
+    "topics": [
+      "科学",
+      "技术"
+    ],
+    "summary": "人类为何总爱讲 AI 失控的恐怖故事？这些叙事往往更反映我们自己的焦虑。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Quanta Magazine",
+    "sourceUrl": "https://www.quantamagazine.org/why-do-we-tell-ourselves-scary-stories-about-ai-20260410/",
+    "sourceDomain": "www.quantamagazine.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-quanta-experiments-ring-the-death-knell-for-sterile-neutrinos",
+    "contentType": "external",
+    "title": "Experiments Ring the ‘Death Knell’ for Sterile Neutrinos",
+    "date": "2026-04-08T14:20:38.000Z",
+    "topics": [
+      "科学",
+      "技术"
+    ],
+    "summary": "一系列新实验几乎宣告“无菌中微子”假说走到尽头。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Quanta Magazine",
+    "sourceUrl": "https://www.quantamagazine.org/experiments-ring-the-death-knell-for-sterile-neutrinos-20260408/",
+    "sourceDomain": "www.quantamagazine.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-quanta-an-arctic-road-trip-brings-vital-underground-networks-into-view",
+    "contentType": "external",
+    "title": "An Arctic Road Trip Brings Vital Underground Networks into View",
+    "date": "2026-04-06T15:08:33.000Z",
+    "topics": [
+      "科学",
+      "技术"
+    ],
+    "summary": "研究者在阿拉斯加等地追踪地下真菌网络，试图弄清它们如何支配地表生命。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Quanta Magazine",
+    "sourceUrl": "https://www.quantamagazine.org/an-arctic-road-trip-brings-vital-underground-networks-into-view-20260406/",
+    "sourceDomain": "www.quantamagazine.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-quanta-new-advances-bring-the-era-of-quantum-computers-closer-than-ever",
+    "contentType": "external",
+    "title": "New Advances Bring the Era of Quantum Computers Closer Than Ever",
+    "date": "2026-04-03T15:19:16.000Z",
+    "topics": [
+      "科学",
+      "技术"
+    ],
+    "summary": "两个研究团队大幅降低了破解常见网络加密所需的量子比特和时间，量子计算又近了一步。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Quanta Magazine",
+    "sourceUrl": "https://www.quantamagazine.org/new-advances-bring-the-era-of-quantum-computers-closer-than-ever-20260403/",
+    "sourceDomain": "www.quantamagazine.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-quanta-a-through-the-lens-look-at-the-world-and-8217-s-particle-physics-labs",
+    "contentType": "external",
+    "title": "A Through-The-Lens Look at the World&#8217;s Particle Physics Labs",
+    "date": "2026-04-01T14:58:31.000Z",
+    "topics": [
+      "科学",
+      "技术"
+    ],
+    "summary": "2025 全球物理摄影漫步获奖作品，让人看到粒子物理实验室中劳动与发现的美感。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Quanta Magazine",
+    "sourceUrl": "https://www.quantamagazine.org/global-physics-photowalk-2025-winners-revealed-20260401/",
+    "sourceDomain": "www.quantamagazine.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-plastic-pollution-is-bad-enough-burning-it-can-be-even-worse",
+    "contentType": "external",
+    "title": "Plastic Pollution Is Bad Enough. Burning It Can Be Even Worse.",
+    "date": "2026-04-10T07:28:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "即便使用带净化装置的焚烧炉，燃烧塑料垃圾仍与早产、先天异常等健康风险相关。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/10/burning-plastic-pollution-indonesia/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-scientific-journals-need-dedicated-fact-checkers",
+    "contentType": "external",
+    "title": "Scientific Journals Need Dedicated Fact-Checkers",
+    "date": "2026-04-09T16:01:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "如果科学期刊缺少专门事实核查层，错误信息就可能沿着引用链一路扩散到政策层面。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/09/opinion-journal-fact-checkers/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-the-push-for-artificial-inheritance",
+    "contentType": "external",
+    "title": "The Push for Artificial Inheritance",
+    "date": "2026-04-08T07:20:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "用 CRISPR 改写人类基因库到底意味着什么？支持者的愿景与立法者的担忧在此碰撞。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/08/genetics-artificial-inheritance/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-a-dna-archive-built-to-identify-missing-migrants-has-vanished",
+    "contentType": "external",
+    "title": "A DNA Archive Built to Identify Missing Migrants Has Vanished",
+    "date": "2026-04-07T07:32:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "一个曾用来识别失踪移民遗骸的 DNA 档案，在持续十年后突然消失了。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/07/missing-migrants-dna-database/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-as-rocket-launches-increase-they-may-be-polluting-the-skies",
+    "contentType": "external",
+    "title": "As Rocket Launches Increase, They May Be Polluting the Skies",
+    "date": "2026-04-06T07:07:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "随着火箭发射变频繁，排放与碎片可能正缓慢侵蚀地球的臭氧保护层。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/06/as-rocket-launches-increase-they-may-be-polluting-the-skies/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-inside-the-effort-to-sequence-a-thousand-measles-genomes",
+    "contentType": "external",
+    "title": "Inside the Effort to Sequence a Thousand Measles Genomes",
+    "date": "2026-04-03T07:51:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "CDC 首次大批上线麻疹病毒基因数据，研究者正借此追踪病毒传播路径。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/03/measles-genomes-sequence/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-prediction-markets-make-a-bet-against-public-health",
+    "contentType": "external",
+    "title": "Prediction Markets Make a Bet Against Public Health",
+    "date": "2026-04-02T07:05:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "预测市场把选举、战争乃至公共卫生都变成下注对象，这种逻辑正冲击健康治理。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/02/opinion-prediction-markets-public-health/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-why-swedish-schools-are-bringing-back-books",
+    "contentType": "external",
+    "title": "Why Swedish Schools Are Bringing Back Books",
+    "date": "2026-04-01T07:21:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "瑞典曾是数字教育先锋，如今却转向重投纸质书与实体阅读。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/04/01/sweden-schools-books/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-the-nuclear-safety-protections-in-federal-crosshairs",
+    "contentType": "external",
+    "title": "The Nuclear Safety Protections in Federal Crosshairs",
+    "date": "2026-03-31T07:12:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "一系列联邦政策动作正在把原本的核安全保护机制推上风口浪尖。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/03/31/federal-nuclear-safety-protections/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-undark-the-future-of-sex-as-a-biological-variable-in-health-research",
+    "contentType": "external",
+    "title": "The Future of Sex as a Biological Variable in Health Research",
+    "date": "2026-03-30T07:02:00.000Z",
+    "topics": [
+      "科学",
+      "环境"
+    ],
+    "summary": "NIH 关于“在健康研究中把性别作为生物变量”的政策已执行十年，如今它的未来再度不确定。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "Undark Magazine",
+    "sourceUrl": "https://undark.org/2026/03/30/sex-biological-variable/",
+    "sourceDomain": "undark.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-broken-ground-the-fall-of-the-house-of-usher-1928",
+    "contentType": "external",
+    "title": "Broken Ground: The Fall of the House of Usher (1928)",
+    "date": "2026-04-09T13:39:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "这是一部改编自爱伦·坡的现代主义电影，也是美国最早的先锋电影之一。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/collection/fall-of-the-house-of-usher",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-songs-from-the-commons-a-q-and-a-with-simon-close-about-the-public-song-project",
+    "contentType": "external",
+    "title": "Songs from the Commons: A Q&A with Simon Close about the Public Song Project",
+    "date": "2026-04-08T19:02:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "WNYC“公共之歌计划”的发起人谈创作、版权与公共领域之间的关系。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/blog/2026/04/songs-from-the-commons",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-the-great-majority-body-snatching-and-burial-reform-in-19th-century-britain",
+    "contentType": "external",
+    "title": "The Great Majority: Body Snatching and Burial Reform in 19th-Century Britain",
+    "date": "2026-04-02T11:57:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "文章回顾 19 世纪英国城市墓地爆满、盗尸猖獗与埋葬改革并行的历史。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/essay/the-great-majority",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-elizabeth-i-s-manuscript-copy-of-pierre-boaistuau-s-histoires-prodigieuses-1559",
+    "contentType": "external",
+    "title": "Elizabeth I’s Manuscript Copy of Pierre Boaistuau’s Histoires Prodigieuses (1559)",
+    "date": "2026-04-01T13:15:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "这部 1559 年手稿在奇观、怪诞与出生缺陷之间，像一本介于中世纪兽谱与科学论著之间的书。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/collection/histoires-prodigieuses",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-wretches-speak-evil-of-me-goethe-and-schiller-s-xenions-1896-edition",
+    "contentType": "external",
+    "title": "“Wretches, Speak Evil of Me”: Goethe and Schiller’s Xenions (1896 edition)",
+    "date": "2026-03-26T14:07:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "这可能是文学史上最精巧繁复的一批讽刺短诗之一。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/collection/xenions",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-doing-impressions-monet-s-early-caricatures-ca-late-1850s",
+    "contentType": "external",
+    "title": "Doing Impressions: Monet’s Early Caricatures (ca. late 1850s)",
+    "date": "2026-03-25T13:37:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "这些早期漫画展示了少年莫奈在转向印象派之前如何靠讽刺肖像赚钱。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/collection/claude-monet-caricatures",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-public-domain-review-fear-and-fragility-the-glass-delusion-and-its-history",
+    "contentType": "external",
+    "title": "Fear and Fragility: The Glass Delusion and Its History",
+    "date": "2026-03-19T15:56:00.000Z",
+    "topics": [
+      "历史",
+      "文化"
+    ],
+    "summary": "文章回顾“玻璃妄想”这一病症如何在近代早期欧洲与新光学世界的诞生互相映照。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "The Public Domain Review",
+    "sourceUrl": "https://publicdomainreview.org/essay/fear-and-fragility-the-glass-delusion-and-its-history",
+    "sourceDomain": "publicdomainreview.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-we-need-you-our-privacy-cannot-afford-a-clean-extension-of-section-702",
+    "contentType": "external",
+    "title": "We Need You: Our Privacy Cannot Afford a Clean Extension of Section 702",
+    "date": "2026-04-10T13:50:32.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "EFF 呼吁不要在没有实质改革的情况下直接续期《外国情报监视法》第 702 条。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/we-need-you-our-privacy-cannot-afford-clean-extension-section-702",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-yikes-encryption-s-y2k-moment-is-coming-years-early",
+    "contentType": "external",
+    "title": "Yikes, Encryption’s Y2K Moment is Coming Years Early",
+    "date": "2026-04-09T21:32:03.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "谷歌把量子时代密码迁移的最后期限提前到 2029 年，说明加密界的准备窗口比想象更短。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/yikes-encryptions-y2k-moment-coming-years-early",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-comparison-shopping-is-not-a-computer-crime",
+    "contentType": "external",
+    "title": "Comparison Shopping Is Not a (Computer) Crime",
+    "date": "2026-04-09T17:20:38.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "比价购物本是消费者常识，不该被当作计算机犯罪来打击。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/comparison-shopping-not-computer-crime",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-eff-is-leaving-x",
+    "contentType": "external",
+    "title": "EFF is Leaving X",
+    "date": "2026-04-09T16:25:05.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "经营近二十年后，EFF 决定退出 X，认为这笔平台账早已算不平。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/eff-leaving-x",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-banning-new-foreign-routers-mistargets-products-to-fix-real-problem",
+    "contentType": "external",
+    "title": "Banning New Foreign Routers Mistargets Products to Fix Real Problem",
+    "date": "2026-04-08T19:24:39.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "一刀切禁售外国路由器，可能只是在拿产品开刀，却没真正解决底层安全问题。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/banning-new-foreign-routers-mistargets-products-fix-real-problem",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-another-court-rules-copyright-can-t-stop-people-from-reading-and-speaking-the-la",
+    "contentType": "external",
+    "title": "Another Court Rules Copyright Can’t Stop People From Reading and Speaking the Law",
+    "date": "2026-04-08T18:13:58.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "又一项法院裁决确认，版权不能被用来阻止公众阅读和传播法律文本。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/another-court-rules-copyright-cant-stop-people-reading-and-speaking-law",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-selling-mass-surveillance-effector-38-7",
+    "contentType": "external",
+    "title": "👁 Selling Mass Surveillance | EFFector 38.7",
+    "date": "2026-04-08T16:24:35.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "这期 EFFector 讨论警务监控如何在“防重罪”的名义下不断发生用途蔓延。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/selling-mass-surveillance-effector-387",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-digital-hopes-real-power-how-the-arab-spring-fueled-a-global-surveillance-boom",
+    "contentType": "external",
+    "title": "Digital Hopes, Real Power: How the Arab Spring Fueled a Global Surveillance Boom",
+    "date": "2026-04-08T08:22:26.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "这篇系列文章回顾 2011 年阿拉伯之春之后，全球数字监控产业如何被进一步催化。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/digital-hopes-real-power-how-arab-spring-fueled-global-surveillance-boom",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-eu-parliament-blocks-mass-scanning-of-our-chats-what-and-039-s-next",
+    "contentType": "external",
+    "title": "EU Parliament Blocks Mass-Scanning of Our Chats—What&#039;s Next?",
+    "date": "2026-04-07T19:24:13.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "欧盟议会挡下了大规模聊天扫描计划，但围绕“聊天控制”的争论还远未结束。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/eu-parliament-blocks-mass-scanning-our-chats-whats-next",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-triple-header-for-privacy-s-defender-in-new-york",
+    "contentType": "external",
+    "title": "Triple Header for Privacy’s Defender in New York",
+    "date": "2026-04-03T23:15:14.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "这场纽约活动将回看那些塑造互联网隐私战线的关键案件与争论。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/triple-header-privacys-defender-new-york",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-the-faa-s-temporary-flight-restriction-for-drones-is-a-blatant-attempt-to-crimin",
+    "contentType": "external",
+    "title": "The FAA’s “Temporary” Flight Restriction for Drones is a Blatant Attempt to Criminalize Filming ICE",
+    "date": "2026-04-03T22:25:21.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "FAA 所谓针对无人机的“临时禁飞”被批评为试图把记录 ICE 执法影像的行为刑事化。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/faas-temporary-flight-restriction-drones-blatant-attempt-criminalize-filming-ice",
+    "sourceDomain": "www.eff.org",
+    "importance": 1,
+    "noveltyScore": 1,
+    "cover": {
+      "style": "gradient"
+    }
+  },
+  {
+    "slug": "ext-eff-updates-tech-nonprofits-to-feds-don-t-weaponize-procurement-to-undermine-ai-trust-and-sa",
+    "contentType": "external",
+    "title": "Tech Nonprofits to Feds: Don’t Weaponize Procurement to Undermine AI Trust and Safety",
+    "date": "2026-04-03T17:37:01.000Z",
+    "topics": [
+      "法律",
+      "技术"
+    ],
+    "summary": "多家科技公益组织警告联邦政府，不要把采购权当成削弱 AI 信任与安全标准的武器。",
+    "whyWorthReading": "它把一个你平时未必会主动进入的话题，变成了一个低门槛的探索入口。",
+    "sourceName": "EFF Updates",
+    "sourceUrl": "https://www.eff.org/deeplinks/2026/04/tech-nonprofits-feds-dont-weaponize-procurement-undermine-ai-trust-and-safety",
+    "sourceDomain": "www.eff.org",
     "importance": 1,
     "noveltyScore": 1,
     "cover": {

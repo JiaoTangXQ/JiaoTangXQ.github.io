@@ -53,6 +53,13 @@ npm run build:data   # 重新生成 cosmos.json + search-index.json
 npm run build        # 完整生产构建（数据 + Vite）
 ```
 
+## 外部内容规则
+
+- 更新 `content/external/items.json` 时，所有外部内容 `summary` 必须是中文。
+- 不允许直接发布英文 RSS 摘录，也不允许保留 `XXX 的外部内容摘要。` 这种占位句。
+- 执行这次刷新的 AI 需要自己阅读标题和摘录，自己完成归纳与中文改写，再进入发布流程。
+- 详细规范见 [docs/external-content-localization.md](docs/external-content-localization.md)。
+
 ## 发布流程
 
 代码改动后发布到 https://jiaotangxq.github.io 只需要 push 到 master：

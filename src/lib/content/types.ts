@@ -17,6 +17,7 @@ export type ExternalSource = {
   siteUrl: string;
   feedUrl: string;
   defaultTopics: string[];
+  maxItems?: number;
   enabled: boolean;
 };
 
@@ -135,6 +136,51 @@ export const CLUSTER_PALETTES: Record<
     core: ["#d8ff57", "#a8e600"],
     glow: "rgba(216,255,87,0.5)",
     accent: "#e2ff7a",
+  },
+  科学: {
+    core: ["#4dd0e1", "#2b90d9"],
+    glow: "rgba(77,208,225,0.45)",
+    accent: "#84e4ef",
+  },
+  社会: {
+    core: ["#ff7a90", "#ff5f6d"],
+    glow: "rgba(255,122,144,0.45)",
+    accent: "#ff9eb0",
+  },
+  环境: {
+    core: ["#3fd18a", "#1ea672"],
+    glow: "rgba(63,209,138,0.45)",
+    accent: "#6ee5aa",
+  },
+  健康: {
+    core: ["#73d9a7", "#43b581"],
+    glow: "rgba(115,217,167,0.45)",
+    accent: "#97e8bf",
+  },
+  历史: {
+    core: ["#caa65c", "#8f6d2d"],
+    glow: "rgba(202,166,92,0.42)",
+    accent: "#dbbe82",
+  },
+  文化: {
+    core: ["#f28cc8", "#d860aa"],
+    glow: "rgba(242,140,200,0.42)",
+    accent: "#f6aedb",
+  },
+  哲学: {
+    core: ["#9d8cff", "#6f61d8"],
+    glow: "rgba(157,140,255,0.45)",
+    accent: "#b3a7ff",
+  },
+  经济: {
+    core: ["#f2c14e", "#d4951d"],
+    glow: "rgba(242,193,78,0.42)",
+    accent: "#f7d27a",
+  },
+  法律: {
+    core: ["#6f86ff", "#4d5fd1"],
+    glow: "rgba(111,134,255,0.42)",
+    accent: "#93a5ff",
   },
   工作台架构: { core: ["#5cc8ff", "#3a7fff"], glow: "rgba(92,200,255,0.5)", accent: "#7dd8ff" },
   启动: { core: ["#3a9fff", "#2070dd"], glow: "rgba(58,159,255,0.5)", accent: "#5cb0ff" },

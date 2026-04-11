@@ -1,10 +1,191 @@
 [
   {
-    "id": "sample-source",
-    "name": "Sample Source",
-    "siteUrl": "https://example.com",
-    "feedUrl": "https://example.com/feed.xml",
-    "defaultTopics": ["技术", "思考"],
+    "id": "mit-news",
+    "name": "MIT News",
+    "siteUrl": "https://news.mit.edu",
+    "feedUrl": "https://news.mit.edu/rss/feed",
+    "defaultTopics": ["技术", "科学"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "harvard-gazette",
+    "name": "Harvard Gazette",
+    "siteUrl": "https://news.harvard.edu/gazette",
+    "feedUrl": "https://news.harvard.edu/gazette/feed/",
+    "defaultTopics": ["社会", "文化"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "nasa-earth-observatory",
+    "name": "NASA Earth Observatory",
+    "siteUrl": "https://science.nasa.gov/earth/earth-observatory",
+    "feedUrl": "https://science.nasa.gov/feed/?science_org=19791%2C22453",
+    "defaultTopics": ["科学", "环境"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "nasa-natural-events",
+    "name": "NASA Natural Events",
+    "siteUrl": "https://science.nasa.gov/earth/earth-observatory/natural-events",
+    "feedUrl": "https://science.nasa.gov/feed/?science_org=22414%2C19791",
+    "defaultTopics": ["环境", "科学"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "noaa-ocean-facts",
+    "name": "NOAA Ocean Facts",
+    "siteUrl": "https://oceanservice.noaa.gov/facts",
+    "feedUrl": "https://oceanservice.noaa.gov/rss/oceanfacts.xml",
+    "defaultTopics": ["科学", "环境"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "noaa-nos-news",
+    "name": "NOAA NOS News",
+    "siteUrl": "https://oceanservice.noaa.gov/news",
+    "feedUrl": "https://oceanservice.noaa.gov/rss/nosnews.xml",
+    "defaultTopics": ["环境", "科学"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "nih-research-matters",
+    "name": "NIH Research Matters",
+    "siteUrl": "https://www.nih.gov/news-events/nih-research-matters",
+    "feedUrl": "https://www.nih.gov/nih-research-matters/feed.xml",
+    "defaultTopics": ["健康", "科学"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "yale-news",
+    "name": "Yale News",
+    "siteUrl": "https://news.yale.edu",
+    "feedUrl": "https://news.yale.edu/news-rss",
+    "defaultTopics": ["社会", "科学"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "smithsonian-history",
+    "name": "Smithsonian History",
+    "siteUrl": "https://www.smithsonianmag.com/history",
+    "feedUrl": "https://www.smithsonianmag.com/rss/history/",
+    "defaultTopics": ["历史", "文化"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "smithsonian-latest",
+    "name": "Smithsonian Latest",
+    "siteUrl": "https://www.smithsonianmag.com",
+    "feedUrl": "https://www.smithsonianmag.com/rss/latest_articles/",
+    "defaultTopics": ["文化", "科学"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "smithsonian-arts-culture",
+    "name": "Smithsonian Arts & Culture",
+    "siteUrl": "https://www.smithsonianmag.com/arts-culture",
+    "feedUrl": "https://www.smithsonianmag.com/rss/arts-culture/",
+    "defaultTopics": ["文化", "历史"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "smithsonian-science-nature",
+    "name": "Smithsonian Science & Nature",
+    "siteUrl": "https://www.smithsonianmag.com/science-nature",
+    "feedUrl": "https://www.smithsonianmag.com/rss/science-nature/",
+    "defaultTopics": ["科学", "环境"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "smithsonian-travel",
+    "name": "Smithsonian Travel",
+    "siteUrl": "https://www.smithsonianmag.com/travel",
+    "feedUrl": "https://www.smithsonianmag.com/rss/travel/",
+    "defaultTopics": ["文化", "社会"],
+    "maxItems": 6,
+    "enabled": true
+  },
+  {
+    "id": "jstor-daily",
+    "name": "JSTOR Daily",
+    "siteUrl": "https://daily.jstor.org",
+    "feedUrl": "https://daily.jstor.org/feed/",
+    "defaultTopics": ["历史", "思考"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "aeon",
+    "name": "Aeon",
+    "siteUrl": "https://aeon.co",
+    "feedUrl": "https://aeon.co/feed.rss",
+    "defaultTopics": ["哲学", "社会"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "noema",
+    "name": "Noema",
+    "siteUrl": "https://www.noemamag.com",
+    "feedUrl": "https://www.noemamag.com/?feed=noemarss",
+    "defaultTopics": ["经济", "哲学"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "pew-research",
+    "name": "Pew Research Center",
+    "siteUrl": "https://www.pewresearch.org",
+    "feedUrl": "https://www.pewresearch.org/feed/",
+    "defaultTopics": ["社会", "思考"],
+    "maxItems": 15,
+    "enabled": true
+  },
+  {
+    "id": "quanta",
+    "name": "Quanta Magazine",
+    "siteUrl": "https://www.quantamagazine.org",
+    "feedUrl": "https://www.quantamagazine.org/feed/",
+    "defaultTopics": ["科学", "技术"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "undark",
+    "name": "Undark Magazine",
+    "siteUrl": "https://undark.org",
+    "feedUrl": "https://undark.org/feed/",
+    "defaultTopics": ["科学", "环境"],
+    "maxItems": 12,
+    "enabled": true
+  },
+  {
+    "id": "public-domain-review",
+    "name": "The Public Domain Review",
+    "siteUrl": "https://publicdomainreview.org",
+    "feedUrl": "https://publicdomainreview.org/rss.xml",
+    "defaultTopics": ["历史", "文化"],
+    "maxItems": 8,
+    "enabled": true
+  },
+  {
+    "id": "eff-updates",
+    "name": "EFF Updates",
+    "siteUrl": "https://www.eff.org",
+    "feedUrl": "https://www.eff.org/rss/updates.xml",
+    "defaultTopics": ["法律", "技术"],
+    "maxItems": 12,
     "enabled": true
   }
 ]

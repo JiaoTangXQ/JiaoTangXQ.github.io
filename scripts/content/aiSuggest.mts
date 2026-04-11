@@ -17,7 +17,22 @@ import path from "path";
 import matter from "gray-matter";
 
 const ARTICLES_DIR = path.resolve("content/articles");
-const KNOWN_TOPICS = ["技术", "AI", "思考", "骑行", "健身"];
+const KNOWN_TOPICS = [
+  "技术",
+  "AI",
+  "思考",
+  "骑行",
+  "健身",
+  "科学",
+  "社会",
+  "环境",
+  "健康",
+  "历史",
+  "文化",
+  "哲学",
+  "经济",
+  "法律",
+];
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const API_URL = "https://api.anthropic.com/v1/messages";

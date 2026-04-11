@@ -9,6 +9,7 @@ import matter from "gray-matter";
 const ARTICLES_DIR = path.resolve("content/articles");
 const KNOWN_TOPICS = [
   "技术", "AI", "思考", "骑行", "健身",
+  "科学", "社会", "环境", "健康", "历史", "文化", "哲学", "经济", "法律",
   "工作台架构", "启动", "输入与路由", "主循环",
   "任务与分派", "治理与权限", "扩展系统", "远端与边界",
   "多Agent协作", "上下文管理", "终端界面", "外延执行",

@@ -90,5 +90,6 @@ export function normalizeFeedItems({
     (left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
   );
 
-  return items;
+  const maxItems = source.maxItems ?? items.length;
+  return items.slice(0, Math.max(maxItems, 0));
 }

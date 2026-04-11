@@ -12,6 +12,7 @@ import { scoreExternalItems } from "./external/scoreExternalItems.mjs";
 const OUT_PATH = path.resolve("content/external/items.json");
 const API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-haiku-4-5-20251001";
+const DEFAULT_MAX_ITEM_AGE_DAYS = 30;
 
 type CliArgs = {
   fixturePath?: string;
@@ -109,6 +110,24 @@ async function loadSourceXml(feedUrl: string, fixturePath?: string): Promise<str
   return await response.text();
 }
 
+export function filterRecentCandidates(
+  candidates: ExternalContentCandidate[],
+  maxAgeDays: number,
+  now: Date = new Date(),
+): ExternalContentCandidate[] {
+  const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
+  const nowMs = now.getTime();
+
+  return candidates.filter((candidate) => {
+    const publishedMs = new Date(candidate.date).getTime();
+    if (Number.isNaN(publishedMs)) {
+      return false;
+    }
+
+    return nowMs - publishedMs <= maxAgeMs;
+  });
+}
+
 export async function refreshExternalContent(args: CliArgs = {}): Promise<ExternalContentRecord[]> {
   const sources = readSourceRegistry();
   const candidates: ExternalContentCandidate[] = [];
@@ -123,7 +142,12 @@ export async function refreshExternalContent(args: CliArgs = {}): Promise<Extern
     }
   }
 
-  const summarized = await summarizeExternalItems(candidates, {
+  const freshCandidates = filterRecentCandidates(
+    candidates,
+    DEFAULT_MAX_ITEM_AGE_DAYS,
+  );
+
+  const summarized = await summarizeExternalItems(freshCandidates, {
     summarizeCandidate: callClaude,
   });
   const approved = scoreExternalItems(summarized, { existingTitles: [] });
