@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type {
   ExternalContentCandidate,
   ExternalSource,
@@ -46,6 +47,10 @@ function normalizeDate(value: string): string {
   return parsed.toISOString();
 }
 
+function shortUrlHash(value: string): string {
+  return createHash("sha1").update(value).digest("hex").slice(0, 8);
+}
+
 export function normalizeFeedItems({
   xml,
   source,
@@ -71,10 +76,10 @@ export function normalizeFeedItems({
         return null;
       }
 
-      const slugBase = slugify(title) || "external-item";
+      const slugBase = `ext-${source.id}-${slugify(title) || "external-item"}`;
 
       return {
-        slug: `ext-${source.id}-${slugBase}`,
+        slug: slugBase,
         title,
         date: normalizeDate(date),
         topics: source.defaultTopics,
@@ -86,10 +91,26 @@ export function normalizeFeedItems({
     })
     .filter((item): item is ExternalContentCandidate => item !== null);
 
-  items.sort(
+  const slugCounts = new Map<string, number>();
+  for (const item of items) {
+    slugCounts.set(item.slug, (slugCounts.get(item.slug) ?? 0) + 1);
+  }
+
+  const dedupedItems = items.map((item) => {
+    if ((slugCounts.get(item.slug) ?? 0) === 1) {
+      return item;
+    }
+
+    return {
+      ...item,
+      slug: `${item.slug}-${shortUrlHash(item.sourceUrl)}`,
+    };
+  });
+
+  dedupedItems.sort(
     (left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
   );
 
-  const maxItems = source.maxItems ?? items.length;
-  return items.slice(0, Math.max(maxItems, 0));
+  const maxItems = source.maxItems ?? dedupedItems.length;
+  return dedupedItems.slice(0, Math.max(maxItems, 0));
 }

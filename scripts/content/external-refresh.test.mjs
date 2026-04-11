@@ -94,3 +94,36 @@ test("recentness filter keeps only candidates from the last 30 days", () => {
     ["recent-item"],
   );
 });
+
+test("same-source repeated titles get stable unique slugs", () => {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0">
+    <channel>
+      <item>
+        <title>Methodology</title>
+        <link>https://example.com/global/2026/04/07/methodology-us-views-of-iran/</link>
+        <pubDate>Fri, 10 Apr 2026 08:00:00 GMT</pubDate>
+        <description>First methodology article.</description>
+      </item>
+      <item>
+        <title>Methodology</title>
+        <link>https://example.com/science/2026/04/07/health-information-methodology/</link>
+        <pubDate>Fri, 10 Apr 2026 07:00:00 GMT</pubDate>
+        <description>Second methodology article.</description>
+      </item>
+    </channel>
+  </rss>`;
+
+  const candidates = normalizeFeedItems({
+    xml,
+    source: {
+      ...TEST_SOURCE,
+      id: "repeated-title-source",
+    },
+  });
+
+  assert.equal(candidates.length, 2);
+  assert.notEqual(candidates[0].slug, candidates[1].slug);
+  assert.match(candidates[0].slug, /^ext-repeated-title-source-methodology/);
+  assert.match(candidates[1].slug, /^ext-repeated-title-source-methodology/);
+});

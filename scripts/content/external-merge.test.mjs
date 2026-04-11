@@ -47,3 +47,25 @@ test("cached external summaries are localized to Chinese", () => {
     );
   }
 });
+
+test("merged cosmos and search outputs do not contain duplicate slugs", () => {
+  const externalItems = readExternalContent();
+  const cosmos = buildCosmosData();
+  const searchEntries = buildSearchIndexEntries();
+
+  assert.equal(
+    new Set(externalItems.map((item) => item.slug)).size,
+    externalItems.length,
+    "expected unique external item slugs",
+  );
+  assert.equal(
+    new Set(cosmos.nodes.map((node) => node.slug)).size,
+    cosmos.nodes.length,
+    "expected unique cosmos node slugs",
+  );
+  assert.equal(
+    new Set(searchEntries.map((entry) => entry.slug)).size,
+    searchEntries.length,
+    "expected unique search entry slugs",
+  );
+});
