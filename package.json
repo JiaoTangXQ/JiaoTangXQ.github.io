@@ -12,7 +12,9 @@
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
     "ai:suggest": "tsx scripts/content/aiSuggest.mts",
-    "refresh:external": "node --import tsx scripts/content/refreshExternalContent.mts"
+    "refresh:external": "node --import tsx scripts/content/refreshExternalContent.mts",
+    "fetch:candidates": "node --import tsx scripts/content/external/fetchCandidates.mts",
+    "apply:summaries": "node --import tsx scripts/content/external/applySummaries.mts"
   },
   "dependencies": {
     "@react-three/fiber": "^9.1.2",

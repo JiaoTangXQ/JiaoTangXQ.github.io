@@ -88,7 +88,7 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
           >
             ✕
           </button>
-          <h2 className="summary-card__cover-title">{node.title}</h2>
+          <h2 className="summary-card__cover-title">{node.titleZh || node.title}</h2>
         </div>
 
         {/* Body */}

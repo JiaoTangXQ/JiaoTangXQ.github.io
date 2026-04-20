@@ -245,7 +245,7 @@ export function SearchPalette({
                   />
                     <div className="search-palette__result-info">
                       <div className="search-palette__result-title">
-                        {result.node.title}
+                        {result.node.titleZh || result.node.title}
                       </div>
                       <div className="search-palette__result-meta">
                         {result.node.contentType === "external" &&

@@ -5,3 +5,8 @@ dist/
 public/data/
 *.local
 .DS_Store
+
+# 内容刷新管线的中间产物
+content/external/candidates.json
+content/external/pending-summaries/*.json
+content/external/pending-summaries/_applied/

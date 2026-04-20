@@ -36,6 +36,9 @@ type VisibleNode = {
 
 const MARGIN = 200;
 
+/** 与 NodeLayer.dynamicSize 保持一致：该日期之前的 legacy 内容退化为背景星星，不展示标签。 */
+const LEGACY_CUTOFF_MS = new Date("2026-04-20T00:00:00Z").getTime();
+
 /** 预设偏移方向，交替分配避免重叠 */
 const OFFSET_PRESETS = [
   { dx: 60, dy: 40 },   // 右下
@@ -72,6 +75,13 @@ export function NodeLabels({
 
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
+
+      // 冷启动分界线前的 legacy 内容不展示标签，避免遮挡新内容
+      const nodeTime = new Date(node.date).getTime();
+      if (!Number.isNaN(nodeTime) && nodeTime < LEGACY_CUTOFF_MS) {
+        continue;
+      }
+
       const screenX = halfW + (node.x - camera.x) * scaleX;
       const screenY = halfH - (node.y - camera.y) * scaleY;
 
@@ -178,7 +188,7 @@ export function NodeLabels({
                   }}
                 />
                 <div className="node-labels__card-body">
-                  <div className="node-labels__card-title">{node.title}</div>
+                  <div className="node-labels__card-title">{node.titleZh || node.title}</div>
                   <div className="node-labels__card-cluster">
                     <span
                       className="node-labels__card-dot"
@@ -196,7 +206,7 @@ export function NodeLabels({
                 className="node-labels__title"
                 style={{ color: textColor }}
               >
-                {node.title}
+                {node.titleZh || node.title}
               </span>
             )}
           </div>

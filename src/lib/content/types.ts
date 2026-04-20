@@ -11,6 +11,25 @@ export type CoverConfig = {
 
 export type ContentType = "local" | "external";
 
+/**
+ * 信息源类型：
+ * - "rss" / "atom"：原生 feed，直接用 feedUrl
+ * - "rsshub"：走 RSSHub 桥接，需要 rsshubRoute，抓取时用 RSSHUB_INSTANCES 做 failover
+ */
+export type FeedType = "rss" | "atom" | "rsshub";
+
+export type SourceStance =
+  | "mainstream"
+  | "independent"
+  | "critical"
+  | "progressive"
+  | "conservative"
+  | "academic"
+  | "non-western"
+  | "speculative"
+  | "technical"
+  | "indie";
+
 export type ExternalSource = {
   id: string;
   name: string;
@@ -19,6 +38,14 @@ export type ExternalSource = {
   defaultTopics: string[];
   maxItems?: number;
   enabled: boolean;
+  /** 抓取方式；默认直接用 feedUrl（rss/atom 自动识别）。"rsshub" 会走 failover 实例。 */
+  type?: FeedType;
+  /** 仅 type="rsshub" 时用：形如 "/zhihu/daily"，抓取时自动拼 instance。 */
+  rsshubRoute?: string;
+  /** 源语言，影响下游 LLM 摘要策略：zh 的源跳过翻译。 */
+  language?: string;
+  /** 源立场，用于"今日三题"对立观点聚类。 */
+  stance?: SourceStance;
 };
 
 export type ExternalContentCandidate = {
@@ -32,25 +59,43 @@ export type ExternalContentCandidate = {
   rawExcerpt: string;
 };
 
+export type ContentCategory =
+  | "research"
+  | "analysis"
+  | "opinion"
+  | "tutorial"
+  | "news"
+  | "announcement"
+  | "obituary"
+  | "event";
+
 export type ExternalContentRecord = {
   slug: string;
   contentType: "external";
   title: string;
+  titleZh?: string;
   date: string;
   topics: string[];
   summary: string;
+  body?: string;
   whyWorthReading: string;
   sourceName: string;
   sourceUrl: string;
   sourceDomain: string;
   importance: number;
   noveltyScore: number;
+  contentCategory?: ContentCategory;
   cover?: CoverConfig;
+  /** 源语言，从 ExternalSource 继承。zh 源走不同的摘要策略。 */
+  language?: string;
+  /** 立场标签，用于每日三题对立聚类。由 LLM 根据内容推断，或从源继承。 */
+  stance?: SourceStance;
 };
 
 export type CosmosNode = {
   slug: string;
   title: string;
+  titleZh?: string;
   summary: string;
   topics: string[];
   date: string;
@@ -81,6 +126,7 @@ export type CosmosData = {
 export type SearchIndexEntry = {
   slug: string;
   title: string;
+  titleZh?: string;
   summary: string;
   topics: string[];
   date: string;

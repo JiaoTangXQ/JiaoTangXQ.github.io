@@ -103,6 +103,119 @@
   opacity: 0.6;
 }
 
+/* ---- Jump button (异星跃迁)：破茧入口，视觉上比普通按钮更"召唤" ---- */
+.cosmos-chrome__btn--jump {
+  color: #e4ecff;
+  background: linear-gradient(
+    135deg,
+    rgba(125, 216, 255, 0.16) 0%,
+    rgba(184, 122, 255, 0.16) 100%
+  );
+  border-color: rgba(155, 180, 255, 0.35);
+  box-shadow:
+    0 0 14px rgba(125, 216, 255, 0.2),
+    inset 0 0 10px rgba(184, 122, 255, 0.08);
+  animation: jump-btn-breathe 3.4s ease-in-out infinite;
+}
+
+.cosmos-chrome__btn--jump:hover {
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    rgba(125, 216, 255, 0.28) 0%,
+    rgba(184, 122, 255, 0.28) 100%
+  );
+  border-color: rgba(200, 215, 255, 0.65);
+  box-shadow:
+    0 0 22px rgba(125, 216, 255, 0.45),
+    inset 0 0 14px rgba(184, 122, 255, 0.18);
+}
+
+.cosmos-chrome__btn--jump:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  animation: none;
+}
+
+.cosmos-chrome__btn--jump .cosmos-chrome__btn-icon {
+  opacity: 0.95;
+  text-shadow: 0 0 6px rgba(180, 210, 255, 0.7);
+}
+
+@keyframes jump-btn-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 12px rgba(125, 216, 255, 0.18),
+      inset 0 0 8px rgba(184, 122, 255, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 18px rgba(125, 216, 255, 0.32),
+      inset 0 0 12px rgba(184, 122, 255, 0.14);
+  }
+}
+
+/* ---- Jump toast：跃迁中提示 ---- */
+.jump-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  padding: 1.2rem 2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(155, 180, 255, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 18, 32, 0.82),
+    rgba(22, 18, 40, 0.82)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-align: center;
+  color: #e4ecff;
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease;
+  box-shadow:
+    0 0 30px rgba(125, 216, 255, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.5);
+  min-width: 240px;
+  max-width: 80vw;
+}
+
+.jump-toast--visible {
+  opacity: 1;
+}
+
+.jump-toast__phase {
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 255, 0.75);
+  margin-bottom: 0.5rem;
+}
+
+.jump-toast__reason {
+  font-size: 1rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.jump-toast__cluster {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  border-radius: 999px;
+  border: 1px solid rgba(155, 180, 255, 0.35);
+  color: rgba(200, 220, 255, 0.9);
+}
+
 /* ---- SummaryCard ---- */
 
 .summary-card-overlay {

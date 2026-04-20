@@ -19,11 +19,12 @@ export function buildSearchIndexEntries(): SearchIndexEntry[] {
   const externalItems = readExternalContent().map((item) => ({
     slug: item.slug,
     title: item.title,
+    titleZh: item.titleZh,
     summary: item.summary,
     topics: item.topics,
     date: item.date,
     cluster: item.topics[0] ?? "其他",
-    body: `${item.summary} ${item.whyWorthReading}`.trim(),
+    body: `${item.titleZh ?? ""} ${item.summary} ${item.whyWorthReading}`.trim(),
     contentType: item.contentType,
     sourceName: item.sourceName,
     sourceUrl: item.sourceUrl,

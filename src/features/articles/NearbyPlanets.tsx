@@ -62,7 +62,7 @@ export function NearbyPlanets({ currentSlug, nodes }: Props) {
                 className="nearby-planet-card__orb"
                 style={{ background: gradient }}
               />
-              <div className="nearby-planet-card__title">{node.title}</div>
+              <div className="nearby-planet-card__title">{node.titleZh || node.title}</div>
               {node.contentType === "external" && node.sourceName && (
                 <div className="nearby-planet-card__meta">
                   外部来源 · {node.sourceName}

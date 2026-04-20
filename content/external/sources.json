@@ -4,8 +4,10 @@
     "name": "MIT News",
     "siteUrl": "https://news.mit.edu",
     "feedUrl": "https://news.mit.edu/rss/feed",
-    "defaultTopics": ["技术", "科学"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "技术",
+      "科学"
+    ],
     "enabled": true
   },
   {
@@ -13,8 +15,10 @@
     "name": "Harvard Gazette",
     "siteUrl": "https://news.harvard.edu/gazette",
     "feedUrl": "https://news.harvard.edu/gazette/feed/",
-    "defaultTopics": ["社会", "文化"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "社会",
+      "文化"
+    ],
     "enabled": true
   },
   {
@@ -22,17 +26,10 @@
     "name": "NASA Earth Observatory",
     "siteUrl": "https://science.nasa.gov/earth/earth-observatory",
     "feedUrl": "https://science.nasa.gov/feed/?science_org=19791%2C22453",
-    "defaultTopics": ["科学", "环境"],
-    "maxItems": 8,
-    "enabled": true
-  },
-  {
-    "id": "nasa-natural-events",
-    "name": "NASA Natural Events",
-    "siteUrl": "https://science.nasa.gov/earth/earth-observatory/natural-events",
-    "feedUrl": "https://science.nasa.gov/feed/?science_org=22414%2C19791",
-    "defaultTopics": ["环境", "科学"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "科学",
+      "环境"
+    ],
     "enabled": true
   },
   {
@@ -40,17 +37,10 @@
     "name": "NOAA Ocean Facts",
     "siteUrl": "https://oceanservice.noaa.gov/facts",
     "feedUrl": "https://oceanservice.noaa.gov/rss/oceanfacts.xml",
-    "defaultTopics": ["科学", "环境"],
-    "maxItems": 8,
-    "enabled": true
-  },
-  {
-    "id": "noaa-nos-news",
-    "name": "NOAA NOS News",
-    "siteUrl": "https://oceanservice.noaa.gov/news",
-    "feedUrl": "https://oceanservice.noaa.gov/rss/nosnews.xml",
-    "defaultTopics": ["环境", "科学"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "科学",
+      "环境"
+    ],
     "enabled": true
   },
   {
@@ -58,8 +48,10 @@
     "name": "NIH Research Matters",
     "siteUrl": "https://www.nih.gov/news-events/nih-research-matters",
     "feedUrl": "https://www.nih.gov/nih-research-matters/feed.xml",
-    "defaultTopics": ["健康", "科学"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "健康",
+      "科学"
+    ],
     "enabled": true
   },
   {
@@ -67,17 +59,10 @@
     "name": "Yale News",
     "siteUrl": "https://news.yale.edu",
     "feedUrl": "https://news.yale.edu/news-rss",
-    "defaultTopics": ["社会", "科学"],
-    "maxItems": 12,
-    "enabled": true
-  },
-  {
-    "id": "smithsonian-history",
-    "name": "Smithsonian History",
-    "siteUrl": "https://www.smithsonianmag.com/history",
-    "feedUrl": "https://www.smithsonianmag.com/rss/history/",
-    "defaultTopics": ["历史", "文化"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "社会",
+      "科学"
+    ],
     "enabled": true
   },
   {
@@ -85,17 +70,10 @@
     "name": "Smithsonian Latest",
     "siteUrl": "https://www.smithsonianmag.com",
     "feedUrl": "https://www.smithsonianmag.com/rss/latest_articles/",
-    "defaultTopics": ["文化", "科学"],
-    "maxItems": 8,
-    "enabled": true
-  },
-  {
-    "id": "smithsonian-arts-culture",
-    "name": "Smithsonian Arts & Culture",
-    "siteUrl": "https://www.smithsonianmag.com/arts-culture",
-    "feedUrl": "https://www.smithsonianmag.com/rss/arts-culture/",
-    "defaultTopics": ["文化", "历史"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "文化",
+      "科学"
+    ],
     "enabled": true
   },
   {
@@ -103,17 +81,10 @@
     "name": "Smithsonian Science & Nature",
     "siteUrl": "https://www.smithsonianmag.com/science-nature",
     "feedUrl": "https://www.smithsonianmag.com/rss/science-nature/",
-    "defaultTopics": ["科学", "环境"],
-    "maxItems": 8,
-    "enabled": true
-  },
-  {
-    "id": "smithsonian-travel",
-    "name": "Smithsonian Travel",
-    "siteUrl": "https://www.smithsonianmag.com/travel",
-    "feedUrl": "https://www.smithsonianmag.com/rss/travel/",
-    "defaultTopics": ["文化", "社会"],
-    "maxItems": 6,
+    "defaultTopics": [
+      "科学",
+      "环境"
+    ],
     "enabled": true
   },
   {
@@ -121,8 +92,10 @@
     "name": "JSTOR Daily",
     "siteUrl": "https://daily.jstor.org",
     "feedUrl": "https://daily.jstor.org/feed/",
-    "defaultTopics": ["历史", "思考"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "历史",
+      "思考"
+    ],
     "enabled": true
   },
   {
@@ -130,8 +103,10 @@
     "name": "Aeon",
     "siteUrl": "https://aeon.co",
     "feedUrl": "https://aeon.co/feed.rss",
-    "defaultTopics": ["哲学", "社会"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "哲学",
+      "社会"
+    ],
     "enabled": true
   },
   {
@@ -139,8 +114,10 @@
     "name": "Noema",
     "siteUrl": "https://www.noemamag.com",
     "feedUrl": "https://www.noemamag.com/?feed=noemarss",
-    "defaultTopics": ["经济", "哲学"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "经济",
+      "哲学"
+    ],
     "enabled": true
   },
   {
@@ -148,8 +125,10 @@
     "name": "Pew Research Center",
     "siteUrl": "https://www.pewresearch.org",
     "feedUrl": "https://www.pewresearch.org/feed/",
-    "defaultTopics": ["社会", "思考"],
-    "maxItems": 15,
+    "defaultTopics": [
+      "社会",
+      "思考"
+    ],
     "enabled": true
   },
   {
@@ -157,8 +136,10 @@
     "name": "Quanta Magazine",
     "siteUrl": "https://www.quantamagazine.org",
     "feedUrl": "https://www.quantamagazine.org/feed/",
-    "defaultTopics": ["科学", "技术"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "科学",
+      "技术"
+    ],
     "enabled": true
   },
   {
@@ -166,8 +147,10 @@
     "name": "Undark Magazine",
     "siteUrl": "https://undark.org",
     "feedUrl": "https://undark.org/feed/",
-    "defaultTopics": ["科学", "环境"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "科学",
+      "环境"
+    ],
     "enabled": true
   },
   {
@@ -175,8 +158,10 @@
     "name": "The Public Domain Review",
     "siteUrl": "https://publicdomainreview.org",
     "feedUrl": "https://publicdomainreview.org/rss.xml",
-    "defaultTopics": ["历史", "文化"],
-    "maxItems": 8,
+    "defaultTopics": [
+      "历史",
+      "文化"
+    ],
     "enabled": true
   },
   {
@@ -184,8 +169,1896 @@
     "name": "EFF Updates",
     "siteUrl": "https://www.eff.org",
     "feedUrl": "https://www.eff.org/rss/updates.xml",
-    "defaultTopics": ["法律", "技术"],
-    "maxItems": 12,
+    "defaultTopics": [
+      "法律",
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "simonwillison",
+    "name": "Simon Willison",
+    "siteUrl": "https://simonwillison.net",
+    "feedUrl": "https://simonwillison.net/atom/everything/",
+    "defaultTopics": [
+      "技术",
+      "AI"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "jeffgeerling",
+    "name": "Jeff Geerling",
+    "siteUrl": "https://jeffgeerling.com",
+    "feedUrl": "https://www.jeffgeerling.com/blog.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "seangoedecke",
+    "name": "Sean Goedecke",
+    "siteUrl": "https://seangoedecke.com",
+    "feedUrl": "https://www.seangoedecke.com/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "krebsonsecurity",
+    "name": "Krebs on Security",
+    "siteUrl": "https://krebsonsecurity.com",
+    "feedUrl": "https://krebsonsecurity.com/feed/",
+    "defaultTopics": [
+      "技术",
+      "法律"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "daringfireball",
+    "name": "Daring Fireball",
+    "siteUrl": "https://daringfireball.net",
+    "feedUrl": "https://daringfireball.net/feeds/main",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "ericmigi",
+    "name": "Eric Migicovsky",
+    "siteUrl": "https://ericmigi.com",
+    "feedUrl": "https://ericmigi.com/rss.xml",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "antirez",
+    "name": "antirez",
+    "siteUrl": "http://antirez.com",
+    "feedUrl": "http://antirez.com/rss",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "idiallo",
+    "name": "Ibrahim Diallo",
+    "siteUrl": "https://idiallo.com",
+    "feedUrl": "https://idiallo.com/feed.rss",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "maurycyz",
+    "name": "Maurycy Zarzycki",
+    "siteUrl": "https://maurycyz.com",
+    "feedUrl": "https://maurycyz.com/index.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "pluralistic",
+    "name": "Cory Doctorow",
+    "siteUrl": "https://pluralistic.net",
+    "feedUrl": "https://pluralistic.net/feed/",
+    "defaultTopics": [
+      "技术",
+      "社会"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "shkspr",
+    "name": "Terence Eden",
+    "siteUrl": "https://shkspr.mobi",
+    "feedUrl": "https://shkspr.mobi/blog/feed/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "lcamtuf",
+    "name": "lcamtuf",
+    "siteUrl": "https://lcamtuf.substack.com",
+    "feedUrl": "https://lcamtuf.substack.com/feed",
+    "defaultTopics": [
+      "技术",
+      "科学"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "mitchellh",
+    "name": "Mitchell Hashimoto",
+    "siteUrl": "https://mitchellh.com",
+    "feedUrl": "https://mitchellh.com/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "dynomight",
+    "name": "Dynomight",
+    "siteUrl": "https://dynomight.net",
+    "feedUrl": "https://dynomight.net/feed.xml",
+    "defaultTopics": [
+      "科学",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "cks-utoronto",
+    "name": "Chris Siebenmann",
+    "siteUrl": "https://utcc.utoronto.ca/~cks",
+    "feedUrl": "https://utcc.utoronto.ca/~cks/space/blog/?atom",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "xeiaso",
+    "name": "Xe Iaso",
+    "siteUrl": "https://xeiaso.net",
+    "feedUrl": "https://xeiaso.net/blog.rss",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "oldnewthing",
+    "name": "The Old New Thing",
+    "siteUrl": "https://devblogs.microsoft.com/oldnewthing",
+    "feedUrl": "https://devblogs.microsoft.com/oldnewthing/feed",
+    "defaultTopics": [
+      "技术",
+      "历史"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "righto",
+    "name": "Ken Shirriff",
+    "siteUrl": "https://righto.com",
+    "feedUrl": "https://www.righto.com/feeds/posts/default",
+    "defaultTopics": [
+      "技术",
+      "科学"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "lucumr",
+    "name": "Armin Ronacher",
+    "siteUrl": "https://lucumr.pocoo.org",
+    "feedUrl": "https://lucumr.pocoo.org/feed.atom",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "skyfall",
+    "name": "Skyfall",
+    "siteUrl": "https://skyfall.dev",
+    "feedUrl": "https://skyfall.dev/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "garymarcus",
+    "name": "Gary Marcus",
+    "siteUrl": "https://garymarcus.substack.com",
+    "feedUrl": "https://garymarcus.substack.com/feed",
+    "defaultTopics": [
+      "AI",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rachelbythebay",
+    "name": "Rachel by the Bay",
+    "siteUrl": "https://rachelbythebay.com",
+    "feedUrl": "https://rachelbythebay.com/w/atom.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "overreacted",
+    "name": "Dan Abramov",
+    "siteUrl": "https://overreacted.io",
+    "feedUrl": "https://overreacted.io/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "timsh",
+    "name": "Tim Sheard",
+    "siteUrl": "https://timsh.org",
+    "feedUrl": "https://timsh.org/rss/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "johndcook",
+    "name": "John D. Cook",
+    "siteUrl": "https://johndcook.com",
+    "feedUrl": "https://www.johndcook.com/blog/feed/",
+    "defaultTopics": [
+      "科学",
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "gilesthomas",
+    "name": "Giles Thomas",
+    "siteUrl": "https://gilesthomas.com",
+    "feedUrl": "https://gilesthomas.com/feed/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "matklad",
+    "name": "matklad",
+    "siteUrl": "https://matklad.github.io",
+    "feedUrl": "https://matklad.github.io/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "derekthompson",
+    "name": "Derek Thompson",
+    "siteUrl": "https://derekthompson.org",
+    "feedUrl": "https://www.theatlantic.com/feed/author/derek-thompson/",
+    "defaultTopics": [
+      "社会",
+      "经济"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "evanhahn",
+    "name": "Evan Hahn",
+    "siteUrl": "https://evanhahn.com",
+    "feedUrl": "https://evanhahn.com/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "terriblesoftware",
+    "name": "Terrible Software",
+    "siteUrl": "https://terriblesoftware.org",
+    "feedUrl": "https://terriblesoftware.org/feed/",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rakhim",
+    "name": "Rakhim",
+    "siteUrl": "https://rakhim.exotext.com",
+    "feedUrl": "https://rakhim.exotext.com/rss.xml",
+    "defaultTopics": [
+      "技术",
+      "哲学"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "joanwestenberg",
+    "name": "Joan Westenberg",
+    "siteUrl": "https://joanwestenberg.com",
+    "feedUrl": "https://joanwestenberg.com/rss",
+    "defaultTopics": [
+      "技术",
+      "社会"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "xania",
+    "name": "Matt Godbolt",
+    "siteUrl": "https://xania.org",
+    "feedUrl": "https://xania.org/feed",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "micahflee",
+    "name": "Micah Lee",
+    "siteUrl": "https://micahflee.com",
+    "feedUrl": "https://micahflee.com/feed/",
+    "defaultTopics": [
+      "技术",
+      "法律"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "nesbitt",
+    "name": "Andrew Nesbitt",
+    "siteUrl": "https://nesbitt.io",
+    "feedUrl": "https://nesbitt.io/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "construction-physics",
+    "name": "Construction Physics",
+    "siteUrl": "https://construction-physics.com",
+    "feedUrl": "https://www.construction-physics.com/feed",
+    "defaultTopics": [
+      "科学",
+      "经济"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "tedium",
+    "name": "Tedium",
+    "siteUrl": "https://tedium.co",
+    "feedUrl": "https://feed.tedium.co/",
+    "defaultTopics": [
+      "历史",
+      "文化"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "susam",
+    "name": "Susam Pal",
+    "siteUrl": "https://susam.net",
+    "feedUrl": "https://susam.net/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "科学"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "entropicthoughts",
+    "name": "Entropic Thoughts",
+    "siteUrl": "https://entropicthoughts.com",
+    "feedUrl": "https://entropicthoughts.com/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "hillelwayne",
+    "name": "Hillel Wayne",
+    "siteUrl": "https://buttondown.com/hillelwayne",
+    "feedUrl": "https://buttondown.com/hillelwayne/rss",
+    "defaultTopics": [
+      "技术",
+      "科学"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "dwarkesh",
+    "name": "Dwarkesh Patel",
+    "siteUrl": "https://dwarkesh.com",
+    "feedUrl": "https://www.dwarkeshpatel.com/feed",
+    "defaultTopics": [
+      "AI",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "borretti",
+    "name": "Fernando Borretti",
+    "siteUrl": "https://borretti.me",
+    "feedUrl": "https://borretti.me/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "wheresyoured",
+    "name": "Ed Zitron",
+    "siteUrl": "https://wheresyoured.at",
+    "feedUrl": "https://www.wheresyoured.at/rss/",
+    "defaultTopics": [
+      "技术",
+      "社会"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "jayd",
+    "name": "Jay D",
+    "siteUrl": "https://jayd.ml",
+    "feedUrl": "https://jayd.ml/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "AI"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "minimaxir",
+    "name": "Max Woolf",
+    "siteUrl": "https://minimaxir.com",
+    "feedUrl": "https://minimaxir.com/index.xml",
+    "defaultTopics": [
+      "技术",
+      "AI"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "geohot",
+    "name": "George Hotz",
+    "siteUrl": "https://geohot.github.io",
+    "feedUrl": "https://geohot.github.io/blog/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "AI"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "paulgraham",
+    "name": "Paul Graham",
+    "siteUrl": "https://paulgraham.com",
+    "feedUrl": "http://www.aaronsw.com/2002/feeds/pgessays.rss",
+    "defaultTopics": [
+      "思考",
+      "经济"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "filfre",
+    "name": "The Digital Antiquarian",
+    "siteUrl": "https://filfre.net",
+    "feedUrl": "https://www.filfre.net/feed/",
+    "defaultTopics": [
+      "历史",
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "jimnielsen",
+    "name": "Jim Nielsen",
+    "siteUrl": "https://blog.jim-nielsen.com",
+    "feedUrl": "https://blog.jim-nielsen.com/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "文化"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "dfarq",
+    "name": "Dave Farquhar",
+    "siteUrl": "https://dfarq.homeip.net",
+    "feedUrl": "https://dfarq.homeip.net/feed/",
+    "defaultTopics": [
+      "技术",
+      "历史"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "jyn",
+    "name": "jyn",
+    "siteUrl": "https://jyn.dev",
+    "feedUrl": "https://jyn.dev/atom.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "geoffreylitt",
+    "name": "Geoffrey Litt",
+    "siteUrl": "https://www.geoffreylitt.com",
+    "feedUrl": "https://www.geoffreylitt.com/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "downtowndougbrown",
+    "name": "Doug Brown",
+    "siteUrl": "https://downtowndougbrown.com",
+    "feedUrl": "https://www.downtowndougbrown.com/feed/",
+    "defaultTopics": [
+      "技术",
+      "历史"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "brutecat",
+    "name": "Brute Cat",
+    "siteUrl": "https://brutecat.com",
+    "feedUrl": "https://brutecat.com/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "elibendersky",
+    "name": "Eli Bendersky",
+    "siteUrl": "https://eli.thegreenplace.net",
+    "feedUrl": "https://eli.thegreenplace.net/feeds/all.atom.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "abortretryfail",
+    "name": "Abort, Retry, Fail?",
+    "siteUrl": "https://abortretry.fail",
+    "feedUrl": "https://www.abortretry.fail/feed",
+    "defaultTopics": [
+      "历史",
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "fabiensanglard",
+    "name": "Fabien Sanglard",
+    "siteUrl": "https://fabiensanglard.net",
+    "feedUrl": "https://fabiensanglard.net/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "oldvcr",
+    "name": "Old VCR",
+    "siteUrl": "https://oldvcr.blogspot.com",
+    "feedUrl": "https://oldvcr.blogspot.com/feeds/posts/default",
+    "defaultTopics": [
+      "技术",
+      "历史"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "bogdanthegeek",
+    "name": "Bogdan",
+    "siteUrl": "https://bogdanthegeek.github.io",
+    "feedUrl": "https://bogdanthegeek.github.io/blog/index.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "hugotunius",
+    "name": "Hugo Tunius",
+    "siteUrl": "https://hugotunius.se",
+    "feedUrl": "https://hugotunius.se/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "gwern",
+    "name": "Gwern Branwen",
+    "siteUrl": "https://gwern.net",
+    "feedUrl": "https://gwern.substack.com/feed",
+    "defaultTopics": [
+      "科学",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "berthub",
+    "name": "Bert Hubert",
+    "siteUrl": "https://berthub.eu",
+    "feedUrl": "https://berthub.eu/articles/index.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "chadnauseam",
+    "name": "Chad Nauseam",
+    "siteUrl": "https://chadnauseam.com",
+    "feedUrl": "https://chadnauseam.com/rss.xml",
+    "defaultTopics": [
+      "哲学",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "simone",
+    "name": "Simone",
+    "siteUrl": "https://simone.org",
+    "feedUrl": "https://simone.org/feed/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "it-notes-dragas",
+    "name": "IT Notes",
+    "siteUrl": "https://it-notes.dragas.net",
+    "feedUrl": "https://it-notes.dragas.net/feed/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "beej",
+    "name": "Beej",
+    "siteUrl": "https://beej.us",
+    "feedUrl": "https://beej.us/blog/rss.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "heyparis",
+    "name": "Hey Paris",
+    "siteUrl": "https://hey.paris",
+    "feedUrl": "https://hey.paris/index.xml",
+    "defaultTopics": [
+      "技术",
+      "文化"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "danielwirtz",
+    "name": "Daniel Wirtz",
+    "siteUrl": "https://danielwirtz.com",
+    "feedUrl": "https://danielwirtz.com/rss.xml",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "matduggan",
+    "name": "Mat Duggan",
+    "siteUrl": "https://matduggan.com",
+    "feedUrl": "https://matduggan.com/rss/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "refactoringenglish",
+    "name": "Refactoring English",
+    "siteUrl": "https://refactoringenglish.com",
+    "feedUrl": "https://refactoringenglish.com/index.xml",
+    "defaultTopics": [
+      "文化",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "worksonmymachine",
+    "name": "Works On My Machine",
+    "siteUrl": "https://worksonmymachine.substack.com",
+    "feedUrl": "https://worksonmymachine.substack.com/feed",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "philiplaine",
+    "name": "Philip Laine",
+    "siteUrl": "https://philiplaine.com",
+    "feedUrl": "https://philiplaine.com/index.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "steveblank",
+    "name": "Steve Blank",
+    "siteUrl": "https://steveblank.com",
+    "feedUrl": "https://steveblank.com/feed/",
+    "defaultTopics": [
+      "经济",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "bernsteinbear",
+    "name": "Max Bernstein",
+    "siteUrl": "https://bernsteinbear.com",
+    "feedUrl": "https://bernsteinbear.com/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "danieldelaney",
+    "name": "Daniel Delaney",
+    "siteUrl": "https://danieldelaney.net",
+    "feedUrl": "https://danieldelaney.net/feed",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "troyhunt",
+    "name": "Troy Hunt",
+    "siteUrl": "https://troyhunt.com",
+    "feedUrl": "https://www.troyhunt.com/rss/",
+    "defaultTopics": [
+      "技术",
+      "法律"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "herman",
+    "name": "Herman",
+    "siteUrl": "https://herman.bearblog.dev",
+    "feedUrl": "https://herman.bearblog.dev/feed/",
+    "defaultTopics": [
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "tomrenner",
+    "name": "Tom Renner",
+    "siteUrl": "https://tomrenner.com",
+    "feedUrl": "https://tomrenner.com/index.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "pixelmelt",
+    "name": "Pixelmelt",
+    "siteUrl": "https://blog.pixelmelt.dev",
+    "feedUrl": "https://blog.pixelmelt.dev/rss/",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "martinalderson",
+    "name": "Martin Alderson",
+    "siteUrl": "https://martinalderson.com",
+    "feedUrl": "https://martinalderson.com/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "danielhooper",
+    "name": "Daniel Hooper",
+    "siteUrl": "https://danielchasehooper.com",
+    "feedUrl": "https://danielchasehooper.com/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "文化"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "simontatham",
+    "name": "Simon Tatham",
+    "siteUrl": "https://chiark.greenend.org.uk/~sgtatham",
+    "feedUrl": "https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "grantslatton",
+    "name": "Grant Slatton",
+    "siteUrl": "https://grantslatton.com",
+    "feedUrl": "https://grantslatton.com/rss.xml",
+    "defaultTopics": [
+      "技术",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "experimental-history",
+    "name": "Experimental History",
+    "siteUrl": "https://experimental-history.com",
+    "feedUrl": "https://www.experimental-history.com/feed",
+    "defaultTopics": [
+      "科学",
+      "思考"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "anildash",
+    "name": "Anil Dash",
+    "siteUrl": "https://anildash.com",
+    "feedUrl": "https://anildash.com/feed.xml",
+    "defaultTopics": [
+      "技术",
+      "社会"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "aresluna",
+    "name": "Marcin Wichary",
+    "siteUrl": "https://aresluna.org",
+    "feedUrl": "https://aresluna.org/main.rss",
+    "defaultTopics": [
+      "文化",
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "michael-stapelberg",
+    "name": "Michael Stapelberg",
+    "siteUrl": "https://michael.stapelberg.ch",
+    "feedUrl": "https://michael.stapelberg.ch/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "miguelgrinberg",
+    "name": "Miguel Grinberg",
+    "siteUrl": "https://miguelgrinberg.com",
+    "feedUrl": "https://blog.miguelgrinberg.com/feed",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "keygen",
+    "name": "Keygen",
+    "siteUrl": "https://keygen.sh",
+    "feedUrl": "https://keygen.sh/blog/feed.xml",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "mjg59",
+    "name": "Matthew Garrett",
+    "siteUrl": "https://mjg59.dreamwidth.org",
+    "feedUrl": "https://mjg59.dreamwidth.org/data/rss",
+    "defaultTopics": [
+      "技术",
+      "法律"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "computer-rip",
+    "name": "computer.rip",
+    "siteUrl": "https://computer.rip",
+    "feedUrl": "https://computer.rip/rss.xml",
+    "defaultTopics": [
+      "技术",
+      "历史"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "tedunangst",
+    "name": "Ted Unangst",
+    "siteUrl": "https://tedunangst.com",
+    "feedUrl": "https://www.tedunangst.com/flak/rss",
+    "defaultTopics": [
+      "技术"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "bbc-zh-simp",
+    "name": "BBC 中文网",
+    "siteUrl": "https://www.bbc.com/zhongwen/simp",
+    "feedUrl": "https://www.bbc.com/zhongwen/simp/index.xml",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "voa-zh",
+    "name": "美国之音 中文",
+    "siteUrl": "https://www.voachinese.com",
+    "feedUrl": "https://www.voachinese.com/api/epiqq",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "dw-zh",
+    "name": "德国之声 中文",
+    "siteUrl": "https://www.dw.com/zh",
+    "feedUrl": "https://rss.dw.com/xml/rss-chi-all",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "ftchinese",
+    "name": "FT 中文网",
+    "siteUrl": "https://www.ftchinese.com",
+    "feedUrl": "https://www.ftchinese.com/rss/feed",
+    "defaultTopics": ["经济", "思考"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "chinadialogue-zh",
+    "name": "中外对话",
+    "siteUrl": "https://chinadialogue.net/zh",
+    "feedUrl": "https://chinadialogue.net/zh/feed/",
+    "defaultTopics": ["环境", "科学"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "sspai-zh",
+    "name": "少数派",
+    "siteUrl": "https://sspai.com",
+    "feedUrl": "https://sspai.com/feed",
+    "defaultTopics": ["技术", "文化"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "gcores",
+    "name": "机核 GCORES",
+    "siteUrl": "https://www.gcores.com",
+    "feedUrl": "https://www.gcores.com/rss",
+    "defaultTopics": ["文化", "思考"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "pingwest",
+    "name": "PingWest 品玩",
+    "siteUrl": "https://www.pingwest.com",
+    "feedUrl": "https://www.pingwest.com/feed",
+    "defaultTopics": ["技术", "经济"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "solidot",
+    "name": "Solidot 奇客资讯",
+    "siteUrl": "https://www.solidot.org",
+    "feedUrl": "https://www.solidot.org/index.rss",
+    "defaultTopics": ["技术", "科学"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "linuxcn",
+    "name": "Linux 中国",
+    "siteUrl": "https://linux.cn",
+    "feedUrl": "https://linux.cn/rss.xml",
+    "defaultTopics": ["技术"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "songshuhui",
+    "name": "科学松鼠会",
+    "siteUrl": "https://songshuhui.net",
+    "feedUrl": "https://songshuhui.net/feed",
+    "defaultTopics": ["科学", "思考"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "cup-zh",
+    "name": "CUP 媒體",
+    "siteUrl": "https://www.cup.com.hk",
+    "feedUrl": "https://www.cup.com.hk/feed/",
+    "defaultTopics": ["文化", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "inmediahk",
+    "name": "香港獨立媒體網",
+    "siteUrl": "https://www.inmediahk.net",
+    "feedUrl": "https://www.inmediahk.net/rss.xml",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "storm-mg",
+    "name": "風傳媒",
+    "siteUrl": "https://www.storm.mg",
+    "feedUrl": "https://www.storm.mg/feeds/whole",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "thenewslens",
+    "name": "關鍵評論網",
+    "siteUrl": "https://www.thenewslens.com",
+    "feedUrl": "https://www.thenewslens.com/rss",
+    "defaultTopics": ["社会", "文化"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "mirrormedia",
+    "name": "鏡週刊",
+    "siteUrl": "https://www.mirrormedia.mg",
+    "feedUrl": "https://www.mirrormedia.mg/rss/whole.xml",
+    "defaultTopics": ["社会", "文化"],
+    "language": "zh",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "udn-global",
+    "name": "聯合新聞網 · 全球",
+    "siteUrl": "https://global.udn.com",
+    "feedUrl": "https://global.udn.com/feed/index/rss",
+    "defaultTopics": ["社会"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "rsshub-zhihu-daily",
+    "name": "知乎日报 · 精选",
+    "siteUrl": "https://daily.zhihu.com",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/zhihu/daily",
+    "defaultTopics": ["社会", "思考"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "rsshub-36kr-newsflashes",
+    "name": "36氪 · 快讯",
+    "siteUrl": "https://36kr.com",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/36kr/newsflashes",
+    "defaultTopics": ["技术", "经济"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "rsshub-sspai-matrix",
+    "name": "少数派 · Matrix 深度",
+    "siteUrl": "https://sspai.com/matrix",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/sspai/matrix",
+    "defaultTopics": ["技术", "思考"],
+    "language": "zh",
+    "stance": "indie",
+    "enabled": true
+  },
+  {
+    "id": "rsshub-thepaper-shishi",
+    "name": "澎湃新闻 · 时事",
+    "siteUrl": "https://www.thepaper.cn",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/thepaper/channel/25950",
+    "defaultTopics": ["社会"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "rsshub-wallstreetcn-global",
+    "name": "华尔街见闻 · 全球",
+    "siteUrl": "https://wallstreetcn.com",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/wallstreetcn/news/global",
+    "defaultTopics": ["经济", "社会"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "spiegel-intl",
+    "name": "Der Spiegel International",
+    "siteUrl": "https://www.spiegel.de/international",
+    "feedUrl": "https://www.spiegel.de/international/index.rss",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "mondediplo",
+    "name": "Le Monde diplomatique",
+    "siteUrl": "https://mondediplo.com",
+    "feedUrl": "https://mondediplo.com/spip.php?page=backend",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "progressive",
+    "enabled": true
+  },
+  {
+    "id": "aljazeera-all",
+    "name": "Al Jazeera",
+    "siteUrl": "https://www.aljazeera.com",
+    "feedUrl": "https://www.aljazeera.com/xml/rss/all.xml",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "project-syndicate",
+    "name": "Project Syndicate",
+    "siteUrl": "https://www.project-syndicate.org",
+    "feedUrl": "https://www.project-syndicate.org/rss",
+    "defaultTopics": ["经济", "社会"],
+    "language": "en",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "opendemocracy",
+    "name": "openDemocracy",
+    "siteUrl": "https://www.opendemocracy.net",
+    "feedUrl": "https://www.opendemocracy.net/en/feed/",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "progressive",
+    "enabled": true
+  },
+  {
+    "id": "social-europe",
+    "name": "Social Europe",
+    "siteUrl": "https://www.socialeurope.eu",
+    "feedUrl": "https://www.socialeurope.eu/feed",
+    "defaultTopics": ["社会", "经济"],
+    "language": "en",
+    "stance": "progressive",
+    "enabled": true
+  },
+  {
+    "id": "jacobin",
+    "name": "Jacobin",
+    "siteUrl": "https://jacobin.com",
+    "feedUrl": "https://jacobin.com/feed",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "progressive",
+    "enabled": true
+  },
+  {
+    "id": "amcon",
+    "name": "The American Conservative",
+    "siteUrl": "https://www.theamericanconservative.com",
+    "feedUrl": "https://www.theamericanconservative.com/feed/",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "conservative",
+    "enabled": true
+  },
+  {
+    "id": "compact",
+    "name": "Compact Magazine",
+    "siteUrl": "https://www.compactmag.com",
+    "feedUrl": "https://www.compactmag.com/feed/",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "conservative",
+    "enabled": true
+  },
+  {
+    "id": "palladium",
+    "name": "Palladium Magazine",
+    "siteUrl": "https://www.palladiummag.com",
+    "feedUrl": "https://www.palladiummag.com/feed",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "speculative",
+    "enabled": true
+  },
+  {
+    "id": "lrb",
+    "name": "London Review of Books",
+    "siteUrl": "https://www.lrb.co.uk",
+    "feedUrl": "https://www.lrb.co.uk/feeds/rss",
+    "defaultTopics": ["文化", "思考"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "nybooks",
+    "name": "The New York Review of Books",
+    "siteUrl": "https://www.nybooks.com",
+    "feedUrl": "https://www.nybooks.com/feed/",
+    "defaultTopics": ["文化", "思考"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "nplusone",
+    "name": "n+1",
+    "siteUrl": "https://www.nplusonemag.com",
+    "feedUrl": "https://www.nplusonemag.com/feed/",
+    "defaultTopics": ["文化", "思考"],
+    "language": "en",
+    "stance": "progressive",
+    "enabled": true
+  },
+  {
+    "id": "baffler",
+    "name": "The Baffler",
+    "siteUrl": "https://thebaffler.com",
+    "feedUrl": "https://thebaffler.com/feed",
+    "defaultTopics": ["文化", "社会"],
+    "language": "en",
+    "stance": "critical",
+    "enabled": true
+  },
+  {
+    "id": "thepoint",
+    "name": "The Point Magazine",
+    "siteUrl": "https://thepointmag.com",
+    "feedUrl": "https://thepointmag.com/feed/",
+    "defaultTopics": ["哲学", "文化"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "laphams-quarterly",
+    "name": "Lapham's Quarterly",
+    "siteUrl": "https://www.laphamsquarterly.org",
+    "feedUrl": "https://www.laphamsquarterly.org/rss.xml",
+    "defaultTopics": ["历史", "文化"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "nautilus",
+    "name": "Nautilus",
+    "siteUrl": "https://nautil.us",
+    "feedUrl": "http://nautil.us/rss",
+    "defaultTopics": ["科学", "思考"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "issues-sci-tech",
+    "name": "Issues in Science and Technology",
+    "siteUrl": "https://issues.org",
+    "feedUrl": "https://issues.org/feed/",
+    "defaultTopics": ["科学", "技术"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "rest-of-world",
+    "name": "Rest of World",
+    "siteUrl": "https://restofworld.org",
+    "feedUrl": "https://restofworld.org/feed/latest",
+    "defaultTopics": ["技术", "社会"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "global-voices",
+    "name": "Global Voices",
+    "siteUrl": "https://globalvoices.org",
+    "feedUrl": "https://globalvoices.org/feed/",
+    "defaultTopics": ["社会", "文化"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "wire-india",
+    "name": "The Wire (India)",
+    "siteUrl": "https://thewire.in",
+    "feedUrl": "https://thewire.in/feed",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "eastmojo",
+    "name": "EastMojo",
+    "siteUrl": "https://www.eastmojo.com",
+    "feedUrl": "https://www.eastmojo.com/feed/",
+    "defaultTopics": ["社会"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "meduza-en",
+    "name": "Meduza",
+    "siteUrl": "https://meduza.io/en",
+    "feedUrl": "https://meduza.io/rss/en/all",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "eurozine",
+    "name": "Eurozine",
+    "siteUrl": "https://www.eurozine.com",
+    "feedUrl": "https://www.eurozine.com/feed/",
+    "defaultTopics": ["文化", "思考"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "scmp-china",
+    "name": "South China Morning Post",
+    "siteUrl": "https://www.scmp.com",
+    "feedUrl": "https://www.scmp.com/rss/4/feed",
+    "defaultTopics": ["社会"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "japan-times",
+    "name": "The Japan Times",
+    "siteUrl": "https://www.japantimes.co.jp",
+    "feedUrl": "https://www.japantimes.co.jp/feed/",
+    "defaultTopics": ["社会"],
+    "language": "en",
+    "stance": "non-western",
+    "enabled": true
+  },
+  {
+    "id": "psyche",
+    "name": "Psyche",
+    "siteUrl": "https://psyche.co",
+    "feedUrl": "https://psyche.co/feed",
+    "defaultTopics": ["哲学", "思考"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "artforum",
+    "name": "Artforum",
+    "siteUrl": "https://www.artforum.com",
+    "feedUrl": "https://www.artforum.com/feed/",
+    "defaultTopics": ["文化"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "hn-best",
+    "name": "Hacker News · Best",
+    "siteUrl": "https://news.ycombinator.com",
+    "feedUrl": "https://hnrss.org/best",
+    "defaultTopics": ["技术", "思考"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "lobsters",
+    "name": "Lobsters",
+    "siteUrl": "https://lobste.rs",
+    "feedUrl": "https://lobste.rs/rss",
+    "defaultTopics": ["技术"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "lobsters-ai",
+    "name": "Lobsters · AI tag",
+    "siteUrl": "https://lobste.rs/t/ai",
+    "feedUrl": "https://lobste.rs/t/ai.rss",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "hn-newest",
+    "name": "Hacker News · Newest",
+    "siteUrl": "https://news.ycombinator.com/newest",
+    "feedUrl": "https://hnrss.org/newest",
+    "defaultTopics": ["技术"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 30,
+    "enabled": true
+  },
+  {
+    "id": "hn-show",
+    "name": "Hacker News · Show HN",
+    "siteUrl": "https://news.ycombinator.com/show",
+    "feedUrl": "https://hnrss.org/show",
+    "defaultTopics": ["技术"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 20,
+    "enabled": true
+  },
+  {
+    "id": "hn-ask",
+    "name": "Hacker News · Ask HN",
+    "siteUrl": "https://news.ycombinator.com/ask",
+    "feedUrl": "https://hnrss.org/ask",
+    "defaultTopics": ["技术", "思考"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 20,
+    "enabled": true
+  },
+  {
+    "id": "rsshub-gh-trending-daily",
+    "name": "GitHub Trending · Daily",
+    "siteUrl": "https://github.com/trending",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/github/trending/daily/any/en",
+    "defaultTopics": ["技术"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 25,
+    "enabled": true
+  },
+  {
+    "id": "rsshub-gh-trending-python",
+    "name": "GitHub Trending · Python",
+    "siteUrl": "https://github.com/trending/python",
+    "feedUrl": "",
+    "type": "rsshub",
+    "rsshubRoute": "/github/trending/weekly/python/en",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 15,
+    "enabled": true
+  },
+  {
+    "id": "arxiv-ai",
+    "name": "arXiv · Artificial Intelligence",
+    "siteUrl": "https://arxiv.org/list/cs.AI/recent",
+    "feedUrl": "http://export.arxiv.org/rss/cs.AI",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "academic",
+    "maxItems": 30,
+    "enabled": true
+  },
+  {
+    "id": "arxiv-cl",
+    "name": "arXiv · Computation and Language",
+    "siteUrl": "https://arxiv.org/list/cs.CL/recent",
+    "feedUrl": "http://export.arxiv.org/rss/cs.CL",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "academic",
+    "maxItems": 25,
+    "enabled": true
+  },
+  {
+    "id": "reddit-localllama",
+    "name": "r/LocalLLaMA",
+    "siteUrl": "https://www.reddit.com/r/LocalLLaMA",
+    "feedUrl": "https://www.reddit.com/r/LocalLLaMA/.rss",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "technical",
+    "maxItems": 25,
+    "enabled": true
+  },
+  {
+    "id": "reddit-machinelearning",
+    "name": "r/MachineLearning · Top",
+    "siteUrl": "https://www.reddit.com/r/MachineLearning",
+    "feedUrl": "https://www.reddit.com/r/MachineLearning/top/.rss?t=day",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "academic",
+    "maxItems": 20,
+    "enabled": true
+  },
+  {
+    "id": "reddit-singularity",
+    "name": "r/singularity",
+    "siteUrl": "https://www.reddit.com/r/singularity",
+    "feedUrl": "https://www.reddit.com/r/singularity/.rss",
+    "defaultTopics": ["AI", "思考"],
+    "language": "en",
+    "stance": "speculative",
+    "maxItems": 20,
+    "enabled": true
+  },
+  {
+    "id": "reddit-truereddit",
+    "name": "r/TrueReddit · Top weekly",
+    "siteUrl": "https://www.reddit.com/r/TrueReddit",
+    "feedUrl": "https://www.reddit.com/r/TrueReddit/top/.rss?t=week",
+    "defaultTopics": ["社会", "思考"],
+    "language": "en",
+    "stance": "independent",
+    "maxItems": 20,
+    "enabled": true
+  },
+  {
+    "id": "reddit-slatestarcodex",
+    "name": "r/slatestarcodex",
+    "siteUrl": "https://www.reddit.com/r/slatestarcodex",
+    "feedUrl": "https://www.reddit.com/r/slatestarcodex/.rss",
+    "defaultTopics": ["思考", "哲学"],
+    "language": "en",
+    "stance": "academic",
+    "maxItems": 15,
+    "enabled": true
+  },
+  {
+    "id": "reddit-askhistorians",
+    "name": "r/AskHistorians · Top weekly",
+    "siteUrl": "https://www.reddit.com/r/AskHistorians",
+    "feedUrl": "https://www.reddit.com/r/AskHistorians/top/.rss?t=week",
+    "defaultTopics": ["历史", "文化"],
+    "language": "en",
+    "stance": "academic",
+    "maxItems": 15,
+    "enabled": true
+  },
+  {
+    "id": "reddit-worldnews",
+    "name": "r/worldnews · Top daily",
+    "siteUrl": "https://www.reddit.com/r/worldnews",
+    "feedUrl": "https://www.reddit.com/r/worldnews/top/.rss?t=day",
+    "defaultTopics": ["社会"],
+    "language": "en",
+    "stance": "mainstream",
+    "maxItems": 15,
+    "enabled": true
+  },
+  {
+    "id": "lesswrong",
+    "name": "LessWrong",
+    "siteUrl": "https://www.lesswrong.com",
+    "feedUrl": "https://www.lesswrong.com/feed.xml",
+    "defaultTopics": ["思考", "哲学"],
+    "language": "en",
+    "stance": "speculative",
+    "enabled": true
+  },
+  {
+    "id": "astral-codex-ten",
+    "name": "Astral Codex Ten",
+    "siteUrl": "https://www.astralcodexten.com",
+    "feedUrl": "https://www.astralcodexten.com/feed",
+    "defaultTopics": ["思考", "社会"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "marginal-revolution",
+    "name": "Marginal Revolution",
+    "siteUrl": "https://marginalrevolution.com",
+    "feedUrl": "https://marginalrevolution.com/feed",
+    "defaultTopics": ["经济", "思考"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "stratechery",
+    "name": "Stratechery · Ben Thompson",
+    "siteUrl": "https://stratechery.com",
+    "feedUrl": "https://stratechery.com/feed/",
+    "defaultTopics": ["技术", "经济"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "ben-evans",
+    "name": "Benedict Evans",
+    "siteUrl": "https://www.ben-evans.com",
+    "feedUrl": "https://www.ben-evans.com/benedictevans?format=rss",
+    "defaultTopics": ["技术", "经济"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "openai-blog",
+    "name": "OpenAI Blog",
+    "siteUrl": "https://openai.com/blog",
+    "feedUrl": "https://openai.com/blog/rss.xml",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "hf-blog",
+    "name": "Hugging Face Blog",
+    "siteUrl": "https://huggingface.co/blog",
+    "feedUrl": "https://huggingface.co/blog/feed.xml",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "google-ai-blog",
+    "name": "Google AI",
+    "siteUrl": "https://blog.google/technology/ai",
+    "feedUrl": "https://blog.google/technology/ai/rss",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "google-research",
+    "name": "Google Research",
+    "siteUrl": "https://research.google/blog",
+    "feedUrl": "https://research.google/blog/rss",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "deepmind",
+    "name": "Google DeepMind",
+    "siteUrl": "https://deepmind.google/blog",
+    "feedUrl": "https://deepmind.google/blog/rss.xml",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "technical",
+    "enabled": true
+  },
+  {
+    "id": "import-ai",
+    "name": "Import AI · Jack Clark",
+    "siteUrl": "https://importai.substack.com",
+    "feedUrl": "https://jack-clark.net/feed/",
+    "defaultTopics": ["AI", "思考"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "ai-snake-oil",
+    "name": "AI Snake Oil",
+    "siteUrl": "https://www.aisnakeoil.com",
+    "feedUrl": "https://www.aisnakeoil.com/feed",
+    "defaultTopics": ["AI", "思考"],
+    "language": "en",
+    "stance": "critical",
+    "enabled": true
+  },
+  {
+    "id": "the-gradient",
+    "name": "The Gradient",
+    "siteUrl": "https://thegradient.pub",
+    "feedUrl": "https://thegradient.pub/rss",
+    "defaultTopics": ["AI", "科学"],
+    "language": "en",
+    "stance": "academic",
+    "enabled": true
+  },
+  {
+    "id": "interconnects",
+    "name": "Interconnects · Nathan Lambert",
+    "siteUrl": "https://www.interconnects.ai",
+    "feedUrl": "https://www.interconnects.ai/feed",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "latent-space",
+    "name": "Latent Space · swyx",
+    "siteUrl": "https://www.latent.space",
+    "feedUrl": "https://www.latent.space/feed",
+    "defaultTopics": ["AI", "技术"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "one-useful-thing",
+    "name": "One Useful Thing · Ethan Mollick",
+    "siteUrl": "https://www.oneusefulthing.org",
+    "feedUrl": "https://www.oneusefulthing.org/feed",
+    "defaultTopics": ["AI", "思考"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "chinatalk",
+    "name": "ChinaTalk",
+    "siteUrl": "https://www.chinatalk.media",
+    "feedUrl": "https://www.chinatalk.media/feed",
+    "defaultTopics": ["社会", "经济"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "last-week-in-ai",
+    "name": "Last Week in AI",
+    "siteUrl": "https://lastweekin.ai",
+    "feedUrl": "https://lastweekin.ai/feed",
+    "defaultTopics": ["AI"],
+    "language": "en",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "qbitai",
+    "name": "量子位 QbitAI",
+    "siteUrl": "https://www.qbitai.com",
+    "feedUrl": "https://www.qbitai.com/feed",
+    "defaultTopics": ["AI", "技术"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "leiphone",
+    "name": "雷峰网",
+    "siteUrl": "https://www.leiphone.com",
+    "feedUrl": "https://www.leiphone.com/feed",
+    "defaultTopics": ["AI", "技术"],
+    "language": "zh",
+    "stance": "mainstream",
+    "enabled": true
+  },
+  {
+    "id": "farnam-street",
+    "name": "Farnam Street",
+    "siteUrl": "https://fs.blog",
+    "feedUrl": "https://fs.blog/feed/",
+    "defaultTopics": ["思考", "哲学"],
+    "language": "en",
+    "stance": "independent",
+    "enabled": true
+  },
+  {
+    "id": "wait-but-why",
+    "name": "Wait But Why",
+    "siteUrl": "https://waitbutwhy.com",
+    "feedUrl": "https://waitbutwhy.com/feed",
+    "defaultTopics": ["思考", "科学"],
+    "language": "en",
+    "stance": "independent",
     "enabled": true
   }
 ]

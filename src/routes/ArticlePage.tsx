@@ -7,6 +7,7 @@ import rehypeStringify from "rehype-stringify";
 import type { CosmosData, CosmosNode } from "@/lib/content/types";
 import { ArticleLayout } from "@/features/articles/ArticleLayout";
 import { NearbyPlanets } from "@/features/articles/NearbyPlanets";
+import { recordVisit } from "@/features/cosmos/nodes/personalHistory";
 import "@/styles/article.css";
 
 type ArticleData = {
@@ -189,6 +190,11 @@ export function ArticlePage() {
     else window.scrollTo(0, 0);
   }, [slug]);
 
+  // 记录本地阅读历史，驱动"异星跃迁"和未来的"盲区地图"
+  useEffect(() => {
+    if (slug) recordVisit(slug);
+  }, [slug]);
+
   // ---- Loading state ----
   if (status === "loading") {
     return (
@@ -239,7 +245,7 @@ export function ArticlePage() {
         aria-hidden="true"
       />
       <ArticleLayout
-        title={node.title}
+        title={node.titleZh || node.title}
         date={node.date}
         topics={node.topics}
         cluster={node.cluster}

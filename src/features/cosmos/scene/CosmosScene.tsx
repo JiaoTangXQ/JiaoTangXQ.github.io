@@ -17,6 +17,8 @@ type Props = {
   hoveredSlug: string | null;
   activeSlug: string | null;
   activeTheme: string | null;
+  visitedSet?: Set<string>;
+  blindspotTarget?: number;
   onNodeHover: (slug: string | null) => void;
   onNodeClick: (slug: string) => void;
 };
@@ -43,6 +45,8 @@ export function CosmosScene({
   hoveredSlug,
   activeSlug,
   activeTheme,
+  visitedSet,
+  blindspotTarget = 0,
   onNodeHover,
   onNodeClick,
 }: Props) {
@@ -85,6 +89,8 @@ export function CosmosScene({
         hoveredSlug={hoveredSlug}
         activeSlug={activeSlug}
         activeTheme={activeTheme}
+        visitedSet={visitedSet}
+        blindspotTarget={blindspotTarget}
         onNodeHover={onNodeHover}
         onNodeClick={onNodeClick}
       />

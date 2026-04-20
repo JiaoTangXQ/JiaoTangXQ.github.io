@@ -19,14 +19,25 @@ import { SearchPalette } from "./SearchPalette";
 import { TransitionOverlay } from "./TransitionOverlay";
 import { GalaxyCompass } from "./GalaxyCompass";
 import { NodeLabels } from "./NodeLabels";
+import { DailyTopicsHUD } from "@/features/daily/DailyTopicsHUD";
+import type { DailyData } from "@/features/daily/DailyTopicsHUD";
+import { JumpToast } from "./JumpToast";
+import { pickStrangestNode } from "../nodes/pickStrangestNode";
+import { readVisited, recordVisit } from "../nodes/personalHistory";
+import { BlindspotHUD } from "@/features/blindspot/BlindspotHUD";
 import "@/styles/cosmos-ui.css";
 
 type Props = {
   dataset: CosmosData | null;
   searchIndex?: SearchIndexEntry[];
+  daily?: DailyData | null;
 };
 
-export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
+export function CosmosViewport({
+  dataset,
+  searchIndex = [],
+  daily = null,
+}: Props) {
   // --- Camera system (owned here, shared with Three.js + DOM) ---
   const initialCamera = loadCameraFromHash();
   const cam = useCamera(initialCamera ?? undefined);
@@ -45,6 +56,37 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [activeNode, setActiveNode] = useState<CosmosNode | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  // --- Jump (异星跃迁) state ---
+  const [jumpPhase, setJumpPhase] = useState<
+    "idle" | "locating" | "jumping"
+  >("idle");
+  const [jumpInfo, setJumpInfo] = useState<{
+    reason: string;
+    cluster: string;
+  } | null>(null);
+
+  // --- Blindspot (盲区地图) state ---
+  const [blindspotActive, setBlindspotActive] = useState(false);
+  const [visitedSet, setVisitedSet] = useState<Set<string>>(() => readVisited());
+
+  // 刷新本地阅读历史：组件 mount + 从文章返回后
+  const refreshVisited = useCallback(() => {
+    setVisitedSet(readVisited());
+  }, []);
+
+  useEffect(() => {
+    refreshVisited();
+    // storage 事件：跨标签同步
+    const onStorage = () => refreshVisited();
+    window.addEventListener("storage", onStorage);
+    // focus 事件：回到标签页时刷新（覆盖"在文章页读完再回来"的场景）
+    window.addEventListener("focus", refreshVisited);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("focus", refreshVisited);
+    };
+  }, [refreshVisited]);
 
   // --- DOM overlay camera state (updated via RAF for smooth labels) ---
   const [domCamera, setDomCamera] = useState({ x: 0, y: 0, zoom: 1 });
@@ -200,6 +242,7 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
   /** 从 SummaryCard 点击"阅读全文"：触发缩放过渡 */
   const handleNavigateToArticle = useCallback(
     (node: CosmosNode) => {
+      recordVisit(node.slug);
       setActiveNode(null);
       cruise.interrupt();
       transition.enterArticle(node);
@@ -211,6 +254,40 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
     cruise.interrupt();
     cam.reset();
   }, [cam, cruise]);
+
+  /** 异星跃迁：拉远 → 定位陌生目标 → 飞过去 → 展开摘要卡 */
+  const handleJump = useCallback(() => {
+    if (!dataset || jumpPhase !== "idle") return;
+
+    cruise.interrupt();
+    setActiveNode(null);
+    setJumpPhase("locating");
+
+    // Phase 1: 拉远 + "定位中"
+    const current = cam._stateRef.current;
+    const zoomOut = Math.max(0.5, current.zoom - 0.35);
+    cam.flyTo(current.x, current.y, zoomOut);
+
+    // Phase 2: 600ms 后计算目标并开跳
+    window.setTimeout(() => {
+      const visited = readVisited();
+      const result = pickStrangestNode(dataset.nodes, visited);
+      if (!result) {
+        setJumpPhase("idle");
+        return;
+      }
+      setJumpInfo({ reason: result.reason, cluster: result.node.cluster });
+      setJumpPhase("jumping");
+      cam.flyTo(result.node.x, result.node.y, 1.8);
+
+      // Phase 3: 到位后展开摘要卡并清理
+      window.setTimeout(() => {
+        setActiveNode(result.node);
+        setJumpPhase("idle");
+        window.setTimeout(() => setJumpInfo(null), 400);
+      }, 800);
+    }, 600);
+  }, [dataset, jumpPhase, cam, cruise]);
 
   // --- Loading state ---
   if (!dataset) {
@@ -257,6 +334,8 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         hoveredSlug={hoveredSlug}
         activeSlug={activeNode?.slug ?? null}
         activeTheme={null}
+        visitedSet={visitedSet}
+        blindspotTarget={blindspotActive ? 1 : 0}
         onNodeHover={handleNodeHover}
         onNodeClick={handleNodeClick}
       />
@@ -276,6 +355,16 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
       <CosmosChrome
         onSearchOpen={() => setSearchOpen(true)}
         onReset={handleReset}
+        onJump={handleJump}
+        jumping={jumpPhase !== "idle"}
+      />
+
+      {/* 异星跃迁提示 */}
+      <JumpToast
+        visible={jumpPhase !== "idle"}
+        phase={jumpPhase === "idle" ? "jumping" : jumpPhase}
+        reason={jumpInfo?.reason}
+        cluster={jumpInfo?.cluster}
       />
 
       {/* Bottom tools */}
@@ -325,6 +414,18 @@ export function CosmosViewport({ dataset, searchIndex = [] }: Props) {
         items={dataset.nodes}
         searchIndex={searchIndex}
         onSelect={handleSearchSelect}
+      />
+
+      {/* 今日三题 HUD */}
+      <DailyTopicsHUD data={daily} nodes={dataset.nodes} />
+
+      {/* 盲区地图 HUD */}
+      <BlindspotHUD
+        nodes={dataset.nodes}
+        visited={visitedSet}
+        active={blindspotActive}
+        onToggle={() => setBlindspotActive((v) => !v)}
+        onJumpToBlindspot={handleJump}
       />
     </div>
   );

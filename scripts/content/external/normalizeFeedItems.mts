@@ -16,7 +16,9 @@ function decodeXmlEntities(value: string): string {
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#(\d+);/g, (_m, code) => String.fromCharCode(Number(code)));
 }
 
 function compactWhitespace(value: string): string {
@@ -24,9 +26,29 @@ function compactWhitespace(value: string): string {
 }
 
 function extractTagValue(block: string, tag: string): string {
-  const pattern = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, "i");
+  const pattern = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i");
   const match = block.match(pattern);
   return match ? compactWhitespace(decodeXmlEntities(match[1])) : "";
+}
+
+/** Extract href from Atom <link> elements. */
+function extractAtomLink(block: string): string {
+  // Prefer rel="alternate", fall back to first <link> with href
+  const altMatch = block.match(
+    /<link[^>]*\brel\s*=\s*["']alternate["'][^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*\/?>/i,
+  );
+  if (altMatch) return decodeXmlEntities(altMatch[1]);
+
+  const altMatch2 = block.match(
+    /<link[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*\brel\s*=\s*["']alternate["'][^>]*\/?>/i,
+  );
+  if (altMatch2) return decodeXmlEntities(altMatch2[1]);
+
+  // Any <link href="...">
+  const hrefMatch = block.match(
+    /<link[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*\/?>/i,
+  );
+  return hrefMatch ? decodeXmlEntities(hrefMatch[1]) : "";
 }
 
 function slugify(value: string): string {
@@ -43,7 +65,6 @@ function normalizeDate(value: string): string {
   if (Number.isNaN(parsed.getTime())) {
     return value;
   }
-
   return parsed.toISOString();
 }
 
@@ -51,56 +72,96 @@ function shortUrlHash(value: string): string {
   return createHash("sha1").update(value).digest("hex").slice(0, 8);
 }
 
+function isAtomFeed(xml: string): boolean {
+  return /<feed[\s>]/i.test(xml) && /<entry[\s>]/i.test(xml);
+}
+
+/** Parse an RSS <item> block into a candidate. */
+function parseRssItem(
+  block: string,
+  source: ExternalSource,
+  sourceDomain: string,
+): ExternalContentCandidate | null {
+  const title = extractTagValue(block, "title");
+  const sourceUrl =
+    extractTagValue(block, "link") || extractTagValue(block, "guid");
+  const date =
+    extractTagValue(block, "pubDate") ||
+    extractTagValue(block, "published") ||
+    extractTagValue(block, "updated") ||
+    extractTagValue(block, "dc:date");
+  const description = extractTagValue(block, "description");
+  const contentEncoded = extractTagValue(block, "content:encoded");
+  const summary = extractTagValue(block, "summary");
+  // Prefer the longest available field — content:encoded usually has the full article
+  const rawExcerpt = [contentEncoded, description, summary].reduce(
+    (best, cur) => (cur.length > best.length ? cur : best),
+    "",
+  );
+
+  if (!title || !sourceUrl) return null;
+
+  const slugBase = `ext-${source.id}-${slugify(title) || "external-item"}`;
+  return { slug: slugBase, title, date: normalizeDate(date), topics: source.defaultTopics, sourceName: source.name, sourceUrl, sourceDomain, rawExcerpt };
+}
+
+/** Parse an Atom <entry> block into a candidate. */
+function parseAtomEntry(
+  block: string,
+  source: ExternalSource,
+  sourceDomain: string,
+): ExternalContentCandidate | null {
+  const title = extractTagValue(block, "title");
+  const sourceUrl = extractAtomLink(block) || extractTagValue(block, "id");
+  const date =
+    extractTagValue(block, "published") ||
+    extractTagValue(block, "updated");
+  const summary = extractTagValue(block, "summary");
+  const content = extractTagValue(block, "content");
+  // Prefer the longest available field
+  const rawExcerpt = content.length >= summary.length ? content : summary;
+
+  if (!title || !sourceUrl) return null;
+
+  const slugBase = `ext-${source.id}-${slugify(title) || "external-item"}`;
+  return { slug: slugBase, title, date: normalizeDate(date), topics: source.defaultTopics, sourceName: source.name, sourceUrl, sourceDomain, rawExcerpt };
+}
+
 export function normalizeFeedItems({
   xml,
   source,
 }: NormalizeFeedItemsArgs): ExternalContentCandidate[] {
-  const itemBlocks = xml.match(/<item\b[\s\S]*?<\/item>/gi) ?? [];
   const sourceDomain = new URL(source.siteUrl).hostname;
+  const useAtom = isAtomFeed(xml);
 
-  const items = itemBlocks
-    .map((block) => {
-      const title = extractTagValue(block, "title");
-      const sourceUrl =
-        extractTagValue(block, "link") || extractTagValue(block, "guid");
-      const date =
-        extractTagValue(block, "pubDate") ||
-        extractTagValue(block, "published") ||
-        extractTagValue(block, "updated");
-      const rawExcerpt =
-        extractTagValue(block, "description") ||
-        extractTagValue(block, "content:encoded") ||
-        extractTagValue(block, "summary");
+  let items: (ExternalContentCandidate | null)[];
 
-      if (!title || !sourceUrl) {
-        return null;
-      }
+  if (useAtom) {
+    const entryBlocks = xml.match(/<entry\b[\s\S]*?<\/entry>/gi) ?? [];
+    items = entryBlocks.map((block) =>
+      parseAtomEntry(block, source, sourceDomain),
+    );
+  } else {
+    const itemBlocks = xml.match(/<item\b[\s\S]*?<\/item>/gi) ?? [];
+    items = itemBlocks.map((block) =>
+      parseRssItem(block, source, sourceDomain),
+    );
+  }
 
-      const slugBase = `ext-${source.id}-${slugify(title) || "external-item"}`;
+  const validItems = items.filter(
+    (item): item is ExternalContentCandidate => item !== null,
+  );
 
-      return {
-        slug: slugBase,
-        title,
-        date: normalizeDate(date),
-        topics: source.defaultTopics,
-        sourceName: source.name,
-        sourceUrl,
-        sourceDomain,
-        rawExcerpt,
-      } satisfies ExternalContentCandidate;
-    })
-    .filter((item): item is ExternalContentCandidate => item !== null);
-
+  // Deduplicate by slug
   const slugCounts = new Map<string, number>();
-  for (const item of items) {
+  for (const item of validItems) {
     slugCounts.set(item.slug, (slugCounts.get(item.slug) ?? 0) + 1);
   }
 
-  const dedupedItems = items.map((item) => {
+  const dedupedItems = validItems.map((item) => {
     if ((slugCounts.get(item.slug) ?? 0) === 1) {
       return item;
     }
-
     return {
       ...item,
       slug: `${item.slug}-${shortUrlHash(item.sourceUrl)}`,
@@ -108,7 +169,8 @@ export function normalizeFeedItems({
   });
 
   dedupedItems.sort(
-    (left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
+    (left, right) =>
+      new Date(right.date).getTime() - new Date(left.date).getTime(),
   );
 
   const maxItems = source.maxItems ?? dedupedItems.length;

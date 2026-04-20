@@ -29,12 +29,18 @@ export function readExternalContent(): ExternalContentRecord[] {
   const items = JSON.parse(raw) as ExternalContentRecord[];
   assertUniqueSlugs(items);
 
+  const badItems: string[] = [];
   for (const item of items) {
     if (!isLocalizedChineseSummary(item.summary)) {
-      throw new Error(
-        `外部内容 ${item.slug} 的 summary 必须是 AI 自行归纳后的中文摘要，不能直接发布英文摘录或占位文本。`,
-      );
+      badItems.push(item.slug);
     }
+  }
+
+  if (badItems.length > 0) {
+    console.warn(
+      `⚠ ${badItems.length} 条外部内容的 summary 不是中文摘要，将在构建中跳过：\n  ${badItems.slice(0, 5).join("\n  ")}${badItems.length > 5 ? `\n  ...及其他 ${badItems.length - 5} 条` : ""}`,
+    );
+    return items.filter((item) => isLocalizedChineseSummary(item.summary));
   }
 
   return items;

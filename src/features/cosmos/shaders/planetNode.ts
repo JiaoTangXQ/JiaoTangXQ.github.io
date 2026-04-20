@@ -14,12 +14,14 @@ attribute vec3 aColorInner;
 attribute vec3 aColorOuter;
 attribute float aEmphasis;
 attribute float aNodeSize;
+attribute float aVisited;
 
 varying vec2 vUv;
 varying vec3 vColorInner;
 varying vec3 vColorOuter;
 varying float vEmphasis;
 varying float vNodeSize;
+varying float vVisited;
 
 void main() {
   vUv = uv;
@@ -27,6 +29,7 @@ void main() {
   vColorOuter = aColorOuter;
   vEmphasis = aEmphasis;
   vNodeSize = aNodeSize;
+  vVisited = aVisited;
 
   gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
 }
@@ -36,12 +39,14 @@ export const planetNodeFragment = /* glsl */ `
 precision highp float;
 
 uniform float uTime;
+uniform float uBlindspot; // 0 = off, 1 = full blindspot mode
 
 varying vec2 vUv;
 varying vec3 vColorInner;
 varying vec3 vColorOuter;
 varying float vEmphasis;
 varying float vNodeSize;
+varying float vVisited;
 
 // --- Noise ---
 float hash(vec2 p) {
@@ -159,7 +164,26 @@ void main() {
   float relatedBoost = smoothstep(0.6, 0.85, vEmphasis);
   surfaceColor *= 1.0 + relatedBoost * 0.3;
 
+  // === Blindspot 模式：未访问的星球整体去饱和 + 变暗 ===
+  if (uBlindspot > 0.001) {
+    float unvisited = 1.0 - vVisited;
+    // 去饱和：向灰度收敛
+    float lum = dot(surfaceColor, vec3(0.299, 0.587, 0.114));
+    vec3 desat = vec3(lum);
+    surfaceColor = mix(surfaceColor, desat, unvisited * uBlindspot * 0.82);
+    // 变暗
+    surfaceColor *= mix(1.0, mix(1.0, 0.35, unvisited), uBlindspot);
+    // 已访问给一点冷色 halo 加成，让亮点更明显
+    vec3 visitedTint = vec3(0.85, 0.95, 1.05);
+    surfaceColor *= mix(vec3(1.0), visitedTint, vVisited * uBlindspot * 0.25);
+  }
+
   float alpha = edgeAA * baseOpacity;
+  // 未访问的也淡化 alpha（但不消失）
+  if (uBlindspot > 0.001) {
+    float unvisited = 1.0 - vVisited;
+    alpha *= mix(1.0, mix(1.0, 0.55, unvisited), uBlindspot);
+  }
   if (alpha < 0.005) discard;
 
   gl_FragColor = vec4(surfaceColor, alpha);
