@@ -49,11 +49,11 @@ export function SearchPalette({
 
   // 构建 MiniSearch 索引（模糊搜索 + 前缀匹配 + 字段权重）
   const miniSearch = useMemo(() => {
-    const ms = new MiniSearch<{ id: string; title: string; summary: string; topics_text: string; body: string }>({
-      fields: ["title", "summary", "topics_text", "body"],
+    const ms = new MiniSearch<{ id: string; title: string; preview: string; topics_text: string; body: string }>({
+      fields: ["title", "preview", "topics_text", "body"],
       storeFields: ["id"],
       searchOptions: {
-        boost: { title: 5, summary: 2, topics_text: 3, body: 1 },
+        boost: { title: 5, preview: 2, topics_text: 3, body: 1 },
         fuzzy: 0.2,
         prefix: true,
       },
@@ -63,7 +63,7 @@ export function SearchPalette({
       searchIndex.map((entry) => ({
         id: entry.slug,
         title: entry.title,
-        summary: entry.summary,
+        preview: entry.preview,
         topics_text: entry.topics.join(" "),
         body: entry.body,
       })),
@@ -245,7 +245,7 @@ export function SearchPalette({
                   />
                     <div className="search-palette__result-info">
                       <div className="search-palette__result-title">
-                        {result.node.titleZh || result.node.title}
+                        {result.node.title}
                       </div>
                       <div className="search-palette__result-meta">
                         {result.node.contentType === "external" &&

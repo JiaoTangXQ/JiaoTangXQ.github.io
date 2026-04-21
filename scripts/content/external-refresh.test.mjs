@@ -3,10 +3,14 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import { filterRecentCandidates } from "./refreshExternalContent.mts";
 import { normalizeFeedItems } from "./external/normalizeFeedItems.mts";
-import { summarizeExternalItems } from "./external/summarizeExternalItems.mts";
-import { scoreExternalItems } from "./external/scoreExternalItems.mts";
+import { filterByQuality, scoreCandidate } from "./external/qualityFilter.mts";
+import {
+  sanitizeHtml,
+  htmlToPlainText,
+  extractPreview,
+  detectLanguage,
+} from "./external/sanitizeContent.mts";
 
 const TEST_SOURCE = {
   id: "test-source",
@@ -17,32 +21,27 @@ const TEST_SOURCE = {
   enabled: true,
 };
 
-test("fixture feed can become approved external discovery items", async () => {
-  const fixturePath = path.resolve("scripts/content/external/fixtures/sample-feed.xml");
+test("fixture feed normalizes into ExternalContentCandidate records", () => {
+  const fixturePath = path.resolve(
+    "scripts/content/external/fixtures/sample-feed.xml",
+  );
   const xml = fs.readFileSync(fixturePath, "utf8");
 
   const candidates = normalizeFeedItems({ xml, source: TEST_SOURCE });
-  const summarized = await summarizeExternalItems(candidates, {
-    summarizeCandidate: async (candidate) => ({
-      summary: `${candidate.title} 的摘要`,
-      whyWorthReading: `${candidate.title} 值得一读，因为它把陌生议题带进日常视野。`,
-    }),
-  });
-  const approved = scoreExternalItems(summarized, {
-    existingTitles: [],
-    minScore: 0,
-  });
 
-  assert.equal(approved.length, 2);
-  assert.equal(approved[0].contentType, "external");
-  assert.equal(approved[0].sourceName, TEST_SOURCE.name);
-  assert.equal(approved[0].sourceUrl, "https://example.com/library-climate-shelters");
-  assert.ok(approved[0].summary.length > 0);
-  assert.ok(approved[0].whyWorthReading.length > 0);
+  assert.equal(candidates.length, 2);
+  assert.equal(candidates[0].sourceName, TEST_SOURCE.name);
+  assert.equal(
+    candidates[0].sourceUrl,
+    "https://example.com/library-climate-shelters",
+  );
+  assert.ok(candidates[0].rawExcerpt.length > 0);
 });
 
 test("source maxItems keeps only the newest feed entries", () => {
-  const fixturePath = path.resolve("scripts/content/external/fixtures/sample-feed.xml");
+  const fixturePath = path.resolve(
+    "scripts/content/external/fixtures/sample-feed.xml",
+  );
   const xml = fs.readFileSync(fixturePath, "utf8");
 
   const candidates = normalizeFeedItems({
@@ -58,40 +57,6 @@ test("source maxItems keeps only the newest feed entries", () => {
   assert.equal(
     candidates[0].sourceUrl,
     "https://example.com/library-climate-shelters",
-  );
-});
-
-test("recentness filter keeps only candidates from the last 30 days", () => {
-  const recentCandidates = filterRecentCandidates(
-    [
-      {
-        slug: "recent-item",
-        title: "Recent item",
-        date: "2026-04-05T08:00:00.000Z",
-        topics: ["技术"],
-        sourceName: "Recent Source",
-        sourceUrl: "https://example.com/recent",
-        sourceDomain: "example.com",
-        rawExcerpt: "Recent content",
-      },
-      {
-        slug: "stale-item",
-        title: "Stale item",
-        date: "2026-02-20T08:00:00.000Z",
-        topics: ["技术"],
-        sourceName: "Recent Source",
-        sourceUrl: "https://example.com/stale",
-        sourceDomain: "example.com",
-        rawExcerpt: "Older content",
-      },
-    ],
-    30,
-    new Date("2026-04-10T08:00:00.000Z"),
-  );
-
-  assert.deepEqual(
-    recentCandidates.map((candidate) => candidate.slug),
-    ["recent-item"],
   );
 });
 
@@ -124,6 +89,71 @@ test("same-source repeated titles get stable unique slugs", () => {
 
   assert.equal(candidates.length, 2);
   assert.notEqual(candidates[0].slug, candidates[1].slug);
-  assert.match(candidates[0].slug, /^ext-repeated-title-source-methodology/);
-  assert.match(candidates[1].slug, /^ext-repeated-title-source-methodology/);
+});
+
+test("qualityFilter drops short placeholder Reddit posts", () => {
+  const junk = {
+    slug: "ext-reddit-foo",
+    title: "My awesome post",
+    date: "2026-04-20T00:00:00Z",
+    topics: ["技术"],
+    sourceName: "Reddit",
+    sourceUrl: "https://reddit.com/r/foo",
+    sourceDomain: "reddit.com",
+    rawExcerpt: "submitted by /u/foo [link] [comments]",
+  };
+  const good = {
+    slug: "ext-blog-foo",
+    title: "Reading about distributed systems",
+    date: "2026-04-20T00:00:00Z",
+    topics: ["技术"],
+    sourceName: "Blog",
+    sourceUrl: "https://example.com/post",
+    sourceDomain: "example.com",
+    rawExcerpt:
+      "<p>This is a longish article about distributed systems and how they handle partitioning under load. It goes into some detail on Raft and Paxos and what makes consensus protocols hard in practice. The author spends several paragraphs going through the tradeoffs with clear examples and references prior work in the field.</p>",
+  };
+  const { kept, dropped } = filterByQuality([junk, good]);
+  assert.equal(kept.length, 1);
+  assert.equal(kept[0].slug, "ext-blog-foo");
+  assert.equal(dropped.length, 1);
+});
+
+test("sanitizeHtml strips script and resolves relative urls", () => {
+  const raw = `<p>Hello <a href="/about">world</a></p><script>alert(1)</script>`;
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+  assert.ok(!cleaned.includes("<script"));
+  assert.ok(cleaned.includes("https://example.com/about"));
+});
+
+test("extractPreview caps length and trims on punctuation when possible", () => {
+  const plain = "这是第一句话。这是第二句话，应该更长一些，以测试截断逻辑的行为。第三句话。";
+  const preview = extractPreview(`<p>${plain}</p>`, 20);
+  assert.ok(preview.length <= 22);
+});
+
+test("detectLanguage returns zh when CJK dominates", () => {
+  assert.equal(detectLanguage("今天的天气真不错，我们去散步吧"), "zh");
+  assert.equal(detectLanguage("Hello world, this is an english post"), "en");
+});
+
+test("htmlToPlainText decodes entities and collapses whitespace", () => {
+  const raw = "<p>Hello&nbsp;world &amp; friends</p>";
+  assert.equal(htmlToPlainText(raw), "Hello world & friends");
+});
+
+test("scoreCandidate recognizes weekly round-up open threads as junk", () => {
+  const openThread = {
+    slug: "ext-lw-my-last-7-posts",
+    title: "My Last 7 Blog Posts: a weekly round-up",
+    date: "2026-04-20T00:00:00Z",
+    topics: ["思考"],
+    sourceName: "LessWrong",
+    sourceUrl: "https://lesswrong.com/x",
+    sourceDomain: "lesswrong.com",
+    rawExcerpt:
+      "This is a weekly round-up of things I've posted in the last week and a half on my blog. I hope you enjoy them.",
+  };
+  const { score } = scoreCandidate(openThread);
+  assert.ok(score < 0.45, `expected junk score, got ${score}`);
 });

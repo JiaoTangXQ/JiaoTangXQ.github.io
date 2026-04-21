@@ -128,7 +128,9 @@ async function buildArticlePages() {
 
 await buildArticlePages();
 
-function buildExternalSummaryBlock(item: ReturnType<typeof readExternalContent>[number]) {
+function buildExternalSummaryBlock(
+  item: ReturnType<typeof readExternalContent>[number],
+) {
   const dateStr = normalizeDate(item.date);
 
   return `
@@ -137,9 +139,8 @@ function buildExternalSummaryBlock(item: ReturnType<typeof readExternalContent>[
         <p style="margin-bottom:0.75rem;opacity:0.75">外部来源 · ${escapeHtml(item.sourceName)}</p>
         <h1>${escapeHtml(item.title)}</h1>
         <time datetime="${dateStr}">${dateStr}</time>
-        <p>${escapeHtml(item.summary)}</p>
-        <p>${escapeHtml(item.whyWorthReading)}</p>
-        <p><a href="${escapeHtml(item.sourceUrl)}" rel="noopener noreferrer">去看原文</a></p>
+        ${item.content ?? ""}
+        <p style="margin-top:2rem;opacity:0.75">本文原载于 ${escapeHtml(item.sourceName)}，<a href="${escapeHtml(item.sourceUrl)}" rel="noopener noreferrer">阅读原文</a></p>
       </article>
     </noscript>`;
 }
@@ -150,7 +151,7 @@ function buildExternalPages() {
     fs.mkdirSync(dir, { recursive: true });
 
     const title = `${escapeHtml(item.title)} — ${SITE_NAME}`;
-    const desc = escapeHtml(item.summary);
+    const desc = escapeHtml(item.preview);
     const localUrl = `${SITE_URL}/article/${item.slug}`;
     const dateStr = normalizeDate(item.date);
 

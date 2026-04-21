@@ -59,51 +59,47 @@ export type ExternalContentCandidate = {
   rawExcerpt: string;
 };
 
-export type ContentCategory =
-  | "research"
-  | "analysis"
-  | "opinion"
-  | "tutorial"
-  | "news"
-  | "announcement"
-  | "obituary"
-  | "event";
-
+/**
+ * 已入库的外部内容条目。
+ *
+ * 直接展示源标题和源正文 HTML，页面底部附原文链接声明——不再做中文化总结。
+ * 规则过滤在抓取阶段完成，入库的都是过关内容。
+ */
 export type ExternalContentRecord = {
   slug: string;
   contentType: "external";
+  /** 源语言：zh / en / 其他。首字符 CJK 占比自动判断。 */
+  language: "zh" | "en" | "other";
+  /** 原标题（保留源语言） */
   title: string;
-  titleZh?: string;
   date: string;
+  /** 继承自源的默认 topics，可不含中文分类（仍按 topics[0] 做 cluster） */
   topics: string[];
-  summary: string;
-  body?: string;
-  whyWorthReading: string;
+  /** 正文 HTML（已清洗），尽量是全文；抓不到全文时退回 RSS 摘录 */
+  content: string;
+  /** 纯文本预览（120 字以内），由 content 自动派生，用于 HUD 预览和搜索 */
+  preview: string;
   sourceName: string;
   sourceUrl: string;
   sourceDomain: string;
-  importance: number;
-  noveltyScore: number;
-  contentCategory?: ContentCategory;
-  cover?: CoverConfig;
-  /** 源语言，从 ExternalSource 继承。zh 源走不同的摘要策略。 */
-  language?: string;
-  /** 立场标签，用于每日三题对立聚类。由 LLM 根据内容推断，或从源继承。 */
+  /** 源立场标签，从 ExternalSource 继承（供可选的立场聚类用） */
   stance?: SourceStance;
+  cover?: CoverConfig;
 };
 
 export type CosmosNode = {
   slug: string;
   title: string;
-  titleZh?: string;
-  summary: string;
+  /** 120 字以内纯文本预览，用于悬停卡片和搜索摘要 */
+  preview: string;
   topics: string[];
   date: string;
   contentType?: ContentType;
+  /** 内容语言标签，驱动 UI 上的字体/字号差异 */
+  language?: "zh" | "en" | "other";
   sourceName?: string;
   sourceUrl?: string;
   sourceDomain?: string;
-  whyWorthReading?: string;
   x: number;
   y: number;
   size: number;
@@ -126,17 +122,16 @@ export type CosmosData = {
 export type SearchIndexEntry = {
   slug: string;
   title: string;
-  titleZh?: string;
-  summary: string;
+  preview: string;
   topics: string[];
   date: string;
   cluster: string;
   body: string;
   contentType?: ContentType;
+  language?: "zh" | "en" | "other";
   sourceName?: string;
   sourceUrl?: string;
   sourceDomain?: string;
-  whyWorthReading?: string;
 };
 
 export type ArticleFrontmatter = {

@@ -88,7 +88,7 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
           >
             ✕
           </button>
-          <h2 className="summary-card__cover-title">{node.titleZh || node.title}</h2>
+          <h2 className="summary-card__cover-title">{node.title}</h2>
         </div>
 
         {/* Body */}
@@ -109,14 +109,14 @@ export function SummaryCard({ node, onClose, onNavigate, cameraHash }: Props) {
             </div>
           </div>
 
-          <p className="summary-card__summary">{node.summary}</p>
+          <p className="summary-card__summary">{node.preview}</p>
 
           <button
             className="summary-card__cta"
             onClick={handleReadMore}
             style={{ background: ctaGradient }}
           >
-            {isExternal ? "查看摘要" : "阅读全文"}
+            阅读全文
             <span className="summary-card__cta-arrow" aria-hidden="true">
               →
             </span>

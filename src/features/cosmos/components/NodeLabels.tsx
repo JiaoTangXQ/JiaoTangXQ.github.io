@@ -188,7 +188,7 @@ export function NodeLabels({
                   }}
                 />
                 <div className="node-labels__card-body">
-                  <div className="node-labels__card-title">{node.titleZh || node.title}</div>
+                  <div className="node-labels__card-title">{node.title}</div>
                   <div className="node-labels__card-cluster">
                     <span
                       className="node-labels__card-dot"
@@ -197,7 +197,7 @@ export function NodeLabels({
                     {node.cluster}
                   </div>
                   <div className="node-labels__card-summary">
-                    {node.summary}
+                    {node.preview}
                   </div>
                 </div>
               </div>
@@ -206,7 +206,7 @@ export function NodeLabels({
                 className="node-labels__title"
                 style={{ color: textColor }}
               >
-                {node.titleZh || node.title}
+                {node.title}
               </span>
             )}
           </div>

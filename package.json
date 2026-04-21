@@ -6,17 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build:validate": "tsx scripts/content/validateArticles.mts",
-    "build:data": "npm run build:validate && tsx scripts/content/buildCosmosData.mts && tsx scripts/content/buildSearchIndex.mts",
+    "build:data": "npm run build:validate && tsx scripts/content/buildCosmosData.mts && tsx scripts/content/buildSearchIndex.mts && tsx scripts/content/buildExternalArticles.mts",
     "build:articles": "mkdir -p public/articles && cp content/articles/*.md public/articles/",
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
     "ai:suggest": "tsx scripts/content/aiSuggest.mts",
-    "refresh:external": "node --import tsx scripts/content/refreshExternalContent.mts",
-    "fetch:candidates": "node --import tsx scripts/content/external/fetchCandidates.mts",
-    "apply:summaries": "node --import tsx scripts/content/external/applySummaries.mts"
+    "refresh:content": "node --import tsx scripts/content/external/refresh.mts"
   },
   "dependencies": {
+    "@extractus/article-extractor": "^8.0.20",
     "@react-three/fiber": "^9.1.2",
     "@supabase/supabase-js": "^2.102.1",
     "d3-force": "^3.0.0",

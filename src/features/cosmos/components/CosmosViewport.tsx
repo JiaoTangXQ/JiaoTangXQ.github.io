@@ -19,8 +19,6 @@ import { SearchPalette } from "./SearchPalette";
 import { TransitionOverlay } from "./TransitionOverlay";
 import { GalaxyCompass } from "./GalaxyCompass";
 import { NodeLabels } from "./NodeLabels";
-import { DailyTopicsHUD } from "@/features/daily/DailyTopicsHUD";
-import type { DailyData } from "@/features/daily/DailyTopicsHUD";
 import { JumpToast } from "./JumpToast";
 import { pickStrangestNode } from "../nodes/pickStrangestNode";
 import { readVisited, recordVisit } from "../nodes/personalHistory";
@@ -30,13 +28,11 @@ import "@/styles/cosmos-ui.css";
 type Props = {
   dataset: CosmosData | null;
   searchIndex?: SearchIndexEntry[];
-  daily?: DailyData | null;
 };
 
 export function CosmosViewport({
   dataset,
   searchIndex = [],
-  daily = null,
 }: Props) {
   // --- Camera system (owned here, shared with Three.js + DOM) ---
   const initialCamera = loadCameraFromHash();
@@ -415,9 +411,6 @@ export function CosmosViewport({
         searchIndex={searchIndex}
         onSelect={handleSearchSelect}
       />
-
-      {/* 今日三题 HUD */}
-      <DailyTopicsHUD data={daily} nodes={dataset.nodes} />
 
       {/* 盲区地图 HUD */}
       <BlindspotHUD

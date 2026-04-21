@@ -43,17 +43,7 @@ const CLUSTER_COLORS: Record<string, string> = {
   参考: "#8899aa",
 };
 
-/**
- * 宇宙布局算法
- *
- * 抛弃 d3-force 的均匀布局，改用：
- * 1. 每个主题星系有一个随机的"母星"坐标，星系间距离很远
- * 2. 同星系的节点散落在母星周围，距离随机且差异大
- * 3. 整体空间非常大（~6000x4000），给用户"遨游发现"的感觉
- * 4. 仅保证节点不重叠
- */
-
-/** 确定性随机（基于 seed），让每次构建布局稳定 */
+/** Deterministic PRNG seeded by integer. */
 function seededRandom(seed: number) {
   let s = seed;
   return () => {
@@ -62,13 +52,17 @@ function seededRandom(seed: number) {
   };
 }
 
-/** 构建时大小 = 纯 importance 权重（时间衰减和点击热度由运行时动态计算） */
-function computeSize(article: { importance?: number }): number {
-  return article.importance ?? 1.0;
+function computeSize(record: CosmosBuildRecord): number {
+  if (record.contentType === "external") return 1.0;
+  return record.importance ?? 1.0;
 }
 
-/** 检查与已有节点的最小距离 */
-function tooClose(x: number, y: number, placed: Array<{ x: number; y: number }>, minDist: number): boolean {
+function tooClose(
+  x: number,
+  y: number,
+  placed: Array<{ x: number; y: number }>,
+  minDist: number,
+): boolean {
   for (const p of placed) {
     const dx = x - p.x;
     const dy = y - p.y;
@@ -93,51 +87,65 @@ function readAllContent(): CosmosBuildRecord[] {
   return [...articles, ...externalItems];
 }
 
+/** Universe sizing scales with item count so crowded data stays readable. */
+function computeUniverseDims(count: number): { width: number; height: number } {
+  // Base of 12000x8000 handles ~800 items comfortably
+  const baseArea = 12000 * 8000;
+  const targetArea = Math.max(baseArea, count * 12000);
+  const ratio = 12000 / 8000;
+  const h = Math.sqrt(targetArea / ratio);
+  return {
+    width: Math.round(h * ratio),
+    height: Math.round(h),
+  };
+}
+
 export function buildCosmosData(): CosmosData {
   const records = readAllContent();
   const rand = seededRandom(42);
 
-  // 所有星球完全随机散布在整个宇宙中，不按主题聚集
-  const UNIVERSE_W = 12000;
-  const UNIVERSE_H = 8000;
+  const { width: UNIVERSE_W, height: UNIVERSE_H } = computeUniverseDims(
+    records.length,
+  );
   const placed: Array<{ x: number; y: number }> = [];
   const nodePositions: Array<{ x: number; y: number }> = [];
-  const minNodeDist = 70;
+  const minNodeDist = records.length > 1500 ? 55 : 70;
 
   for (const _record of records) {
     let x: number, y: number;
     let tries = 0;
-
     do {
       x = (rand() - 0.5) * UNIVERSE_W;
       y = (rand() - 0.5) * UNIVERSE_H;
       tries++;
-    } while (tooClose(x, y, placed, minNodeDist) && tries < 300);
-
+    } while (tooClose(x, y, placed, minNodeDist) && tries < 200);
     placed.push({ x, y });
     nodePositions.push({ x: Math.round(x), y: Math.round(y) });
   }
 
-  // Build nodes
-  const nodes: CosmosNode[] = records.map((record, i) => ({
-    slug: record.slug,
-    title: record.title,
-    titleZh: record.contentType === "external" ? record.titleZh : undefined,
-    summary: record.summary,
-    topics: record.topics,
-    date: record.date,
-    contentType: record.contentType,
-    sourceName: record.contentType === "external" ? record.sourceName : undefined,
-    sourceUrl: record.contentType === "external" ? record.sourceUrl : undefined,
-    sourceDomain: record.contentType === "external" ? record.sourceDomain : undefined,
-    whyWorthReading:
-      record.contentType === "external" ? record.whyWorthReading : undefined,
-    x: nodePositions[i].x,
-    y: nodePositions[i].y,
-    size: computeSize(record),
-    cluster: record.topics[0] ?? "其他",
-    cover: (record.cover ?? { style: "gradient" }) as CoverConfig,
-  }));
+  const nodes: CosmosNode[] = records.map((record, i) => {
+    const isExternal = record.contentType === "external";
+    const preview = isExternal
+      ? record.preview
+      : (record.summary ?? "");
+    return {
+      slug: record.slug,
+      title: record.title,
+      preview,
+      topics: record.topics,
+      date: record.date,
+      contentType: record.contentType,
+      language: isExternal ? record.language : "zh",
+      sourceName: isExternal ? record.sourceName : undefined,
+      sourceUrl: isExternal ? record.sourceUrl : undefined,
+      sourceDomain: isExternal ? record.sourceDomain : undefined,
+      x: nodePositions[i].x,
+      y: nodePositions[i].y,
+      size: computeSize(record),
+      cluster: record.topics[0] ?? "其他",
+      cover: (record.cover ?? { style: "gradient" }) as CoverConfig,
+    };
+  });
 
   // Cluster centers 用实际节点的平均位置
   const clusterMap = new Map<string, { xs: number[]; ys: number[] }>();

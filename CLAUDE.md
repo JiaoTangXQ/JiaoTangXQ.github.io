@@ -48,17 +48,27 @@ src/routes/                     → CosmosPage, ArticlePage
 ## 常用命令
 
 ```bash
-npm run dev          # 开发服务器
-npm run build:data   # 重新生成 cosmos.json + search-index.json
-npm run build        # 完整生产构建（数据 + Vite）
+npm run dev              # 开发服务器
+npm run refresh:content  # 抓外部源 → 规则过滤 → 抓正文 → 写入 items.json（零 LLM）
+npm run build:data       # 重新生成 cosmos.json / search-index.json / 外部文章单文件
+npm run build            # 完整生产构建
 ```
 
 ## 外部内容规则
 
-- 更新 `content/external/items.json` 时，所有外部内容 `summary` 必须是中文。
-- 不允许直接发布英文 RSS 摘录，也不允许保留 `XXX 的外部内容摘要。` 这种占位句。
-- 执行这次刷新的 AI 需要自己阅读标题和摘录，自己完成归纳与中文改写，再进入发布流程。
-- 详细规范见 [docs/external-content-localization.md](docs/external-content-localization.md)。
+刷新外部内容是**纯代码管线**，不再调用 LLM：
+
+1. 并行抓 160 个 RSS/Atom 源 → `scripts/content/external/refresh.mts`
+2. 规则过滤（`qualityFilter.mts`）去掉快讯、空帖、占位符
+3. 对 RSS 摘录太短的条目尝试 `readability` 抓全文
+4. 清洗 HTML、派生 `preview` 和 `language`，写入 `content/external/items.json`
+
+**不做的事情**：
+- 不翻译标题、不生成中文摘要（中文源保持中文，英文源保持英文）
+- 不做立场标注、不生成"每日三题"
+- 不做 qualityScore 智能评分（纯规则打分）
+
+**必须遵守**：文章页底部必须展示 `本文原载于 {sourceName}` 和 `阅读原文` 链接。版权归原作者，我们只是内嵌阅读。`ArticleLayout.tsx` 已经内置这个版权区块，不要删。
 
 ## 发布流程
 

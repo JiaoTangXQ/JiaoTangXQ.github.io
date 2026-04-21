@@ -15,14 +15,6 @@ type ArticleData = {
   bodyHtml: string;
 };
 
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 /** Strip YAML front-matter (between opening and closing ---) from markdown. */
 function stripFrontmatter(md: string): string {
   const trimmed = md.trimStart();
@@ -42,19 +34,6 @@ async function renderMarkdown(md: string): Promise<string> {
   return String(result);
 }
 
-function renderExternalSummary(node: CosmosNode): string {
-  const summary = `<p>${escapeHtml(node.summary)}</p>`;
-  const whyWorthReading = node.whyWorthReading
-    ? `<h2>为什么值得看</h2><p>${escapeHtml(node.whyWorthReading)}</p>`
-    : "";
-
-  return [
-    "<h2>内容总结</h2>",
-    summary,
-    whyWorthReading,
-  ].join("");
-}
-
 export function ArticlePage() {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
@@ -71,20 +50,17 @@ export function ArticlePage() {
   const [fadeOut, setFadeOut] = useState(false);
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // 页面加载完成后淡入
   useEffect(() => {
     const timer = setTimeout(() => setFadeIn(false), 50);
     return () => clearTimeout(timer);
   }, []);
 
-  // 清理定时器
   useEffect(() => {
     return () => {
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     };
   }, []);
 
-  /** 返回宇宙：先淡出再导航 */
   const handleBack = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
@@ -96,7 +72,6 @@ export function ArticlePage() {
     [navigate, location.hash],
   );
 
-  // Compute back URL: return to cosmos root, preserving camera hash from URL
   const backUrl = `/${location.hash}`;
 
   const loadArticle = useCallback(
@@ -108,12 +83,26 @@ export function ArticlePage() {
       }
 
       if (node.contentType === "external") {
-        setArticle({ node, bodyHtml: renderExternalSummary(node) });
+        // External content: fetch per-slug JSON with full HTML content
+        try {
+          const res = await fetch(`/data/external/${targetSlug}.json`);
+          if (res.ok) {
+            const data = await res.json();
+            setArticle({ node, bodyHtml: data.content ?? "" });
+            setStatus("ready");
+            return;
+          }
+        } catch {
+          // fall through
+        }
+        // Fallback: render the short preview if per-slug file is missing
+        const fallback = `<p>${node.preview}</p>`;
+        setArticle({ node, bodyHtml: fallback });
         setStatus("ready");
         return;
       }
 
-      // Strategy 1: Try fetching a prebuilt article JSON
+      // Local articles
       try {
         const res = await fetch(`/data/articles/${targetSlug}.json`);
         if (res.ok) {
@@ -123,10 +112,9 @@ export function ArticlePage() {
           return;
         }
       } catch {
-        // Fall through to next strategy
+        // Fall through
       }
 
-      // Strategy 2: Fetch the raw markdown and render client-side
       try {
         const res = await fetch(`/articles/${targetSlug}.md`);
         if (res.ok) {
@@ -138,11 +126,10 @@ export function ArticlePage() {
           return;
         }
       } catch {
-        // Fall through to fallback
+        // Fall through
       }
 
-      // Strategy 3: Fallback to summary as body
-      const fallbackHtml = `<p>${node.summary}</p>`;
+      const fallbackHtml = `<p>${node.preview}</p>`;
       setArticle({ node, bodyHtml: fallbackHtml });
       setStatus("ready");
     },
@@ -160,7 +147,6 @@ export function ArticlePage() {
     (async () => {
       setStatus("loading");
 
-      // Fetch cosmos data
       let cosmosData = cosmos;
       if (!cosmosData) {
         try {
@@ -183,19 +169,16 @@ export function ArticlePage() {
     };
   }, [slug, cosmos, loadArticle]);
 
-  // Scroll to top on slug change
   useEffect(() => {
     const scrollEl = document.querySelector(".article-scroll");
     if (scrollEl) scrollEl.scrollTop = 0;
     else window.scrollTo(0, 0);
   }, [slug]);
 
-  // 记录本地阅读历史，驱动"异星跃迁"和未来的"盲区地图"
   useEffect(() => {
     if (slug) recordVisit(slug);
   }, [slug]);
 
-  // ---- Loading state ----
   if (status === "loading") {
     return (
       <div className="article-loading">
@@ -209,7 +192,6 @@ export function ArticlePage() {
     );
   }
 
-  // ---- 404 state ----
   if (status === "not-found" || !article) {
     return (
       <div className="article-not-found">
@@ -225,12 +207,10 @@ export function ArticlePage() {
     );
   }
 
-  // ---- Article ready ----
   const { node, bodyHtml } = article;
 
   return (
     <>
-      {/* 过渡遮罩 */}
       <div
         className="article-transition-overlay"
         style={{
@@ -245,13 +225,14 @@ export function ArticlePage() {
         aria-hidden="true"
       />
       <ArticleLayout
-        title={node.titleZh || node.title}
+        title={node.title}
         date={node.date}
         topics={node.topics}
         cluster={node.cluster}
         cover={node.cover}
         bodyHtml={bodyHtml}
         contentType={node.contentType}
+        language={node.language}
         sourceName={node.sourceName}
         sourceUrl={node.sourceUrl}
         sourceDomain={node.sourceDomain}

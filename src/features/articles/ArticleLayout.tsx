@@ -10,6 +10,7 @@ type Props = {
   cover: CoverConfig;
   bodyHtml: string;
   contentType?: ContentType;
+  language?: "zh" | "en" | "other";
   sourceName?: string;
   sourceUrl?: string;
   sourceDomain?: string;
@@ -20,7 +21,6 @@ type Props = {
 
 /**
  * Format an ISO-ish date string into a human-friendly Chinese date.
- * Handles both ISO dates ("2026-03-27") and JS Date toString() output.
  */
 function formatDate(raw: string): string {
   const d = new Date(raw);
@@ -32,11 +32,6 @@ function formatDate(raw: string): string {
   return `${year} 年 ${month} 月 ${day} 日`;
 }
 
-/**
- * The full reading surface for a single article.
- * Provides a cover hero, metadata bar, rendered prose, and a slot for
- * a footer (NearbyPlanets is rendered by the parent route).
- */
 export function ArticleLayout({
   title,
   date,
@@ -45,6 +40,7 @@ export function ArticleLayout({
   cover,
   bodyHtml,
   contentType,
+  language,
   sourceName,
   sourceUrl,
   sourceDomain,
@@ -55,13 +51,11 @@ export function ArticleLayout({
   const palette = getPalette(cluster);
   const accent = cover.accent ?? palette.accent;
 
-  // Build cover background
   const coverBg =
     cover.style === "image" && cover.imageUrl
       ? `url(${cover.imageUrl})`
       : buildCoverGradient(cover, cluster);
 
-  // Title positioning
   const titleJustify =
     cover.titlePosition === "top"
       ? "flex-start"
@@ -71,18 +65,19 @@ export function ArticleLayout({
   const titleTextAlign = cover.titleAlign ?? "left";
   const overlayOpacity = cover.overlayOpacity ?? 0.85;
 
+  const isExternal = contentType === "external" && !!sourceUrl;
+
   return (
     <div
       className="article-scroll"
       style={{ "--article-accent": accent } as React.CSSProperties}
+      lang={language === "en" ? "en" : "zh-CN"}
     >
-      {/* Back button */}
       <Link to={backUrl} className="article-back" onClick={onBack}>
         <span className="article-back__arrow">&larr;</span>
         <span>返回星图</span>
       </Link>
 
-      {/* Cover hero */}
       <header
         className="article-cover"
         style={{
@@ -100,7 +95,6 @@ export function ArticleLayout({
             opacity: overlayOpacity,
           }}
         />
-        {/* Gradient fade to deep space at bottom */}
         <div
           style={{
             position: "absolute",
@@ -124,11 +118,24 @@ export function ArticleLayout({
         </div>
       </header>
 
-      {/* Meta bar */}
       <div className="article-meta">
         <time className="article-meta__date" dateTime={date}>
           {formatDate(date)}
         </time>
+        {isExternal && sourceName && (
+          <>
+            <span className="article-meta__sep" />
+            <a
+              className="article-meta__source"
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={sourceUrl}
+            >
+              {sourceName}
+            </a>
+          </>
+        )}
         {topics.length > 0 && <span className="article-meta__sep" />}
         <div className="article-meta__topics">
           {topics.map((t) => (
@@ -139,12 +146,17 @@ export function ArticleLayout({
         </div>
       </div>
 
-      {contentType === "external" && sourceName && sourceUrl && (
-        <section className="article-source-card">
-          <div className="article-source-card__eyebrow">外部来源</div>
-          <div className="article-source-card__title-row">
+      <article
+        className={`article-body article-enter${language === "en" ? " article-body--en" : ""}`}
+        dangerouslySetInnerHTML={{ __html: bodyHtml }}
+      />
+
+      {isExternal && (
+        <aside className="article-attribution">
+          <div className="article-attribution__row">
+            <span className="article-attribution__label">本文原载于</span>
             <a
-              className="article-source-card__link"
+              className="article-attribution__source"
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -152,35 +164,25 @@ export function ArticleLayout({
               {sourceName}
             </a>
             {sourceDomain && (
-              <span className="article-source-card__domain">{sourceDomain}</span>
+              <span className="article-attribution__domain">
+                ({sourceDomain})
+              </span>
             )}
           </div>
-          <p className="article-source-card__note">
-            这是一条外部内容摘要页，用来帮你快速判断它值不值得继续看原文。
-          </p>
-        </section>
-      )}
-
-      {/* Prose body */}
-      <article
-        className="article-body article-enter"
-        dangerouslySetInnerHTML={{ __html: bodyHtml }}
-      />
-
-      {contentType === "external" && sourceUrl && (
-        <div className="article-outbound">
           <a
-            className="article-outbound__cta"
+            className="article-attribution__cta"
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
-            去看原文
+            阅读原文 →
           </a>
-        </div>
+          <p className="article-attribution__note">
+            版权归原作者所有。这里只是让你在不离开焦糖星球的情况下通读一遍。
+          </p>
+        </aside>
       )}
 
-      {/* Footer slot (NearbyPlanets, etc.) */}
       {children}
     </div>
   );
