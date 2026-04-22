@@ -7,7 +7,7 @@
     "dev": "vite",
     "build:validate": "tsx scripts/content/validateArticles.mts",
     "build:data": "npm run build:validate && tsx scripts/content/buildCosmosData.mts && tsx scripts/content/buildSearchIndex.mts && tsx scripts/content/buildExternalArticles.mts",
-    "build:articles": "mkdir -p public/articles && cp content/articles/*.md public/articles/",
+    "build:articles": "mkdir -p public/articles && rm -f public/articles/*.md && (ls content/articles/*.md >/dev/null 2>&1 && cp content/articles/*.md public/articles/ || true)",
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
