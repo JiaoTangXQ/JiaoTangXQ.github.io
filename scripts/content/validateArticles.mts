@@ -23,10 +23,12 @@ let errorCount = 0;
 let warnCount = 0;
 let passCount = 0;
 
-const files = fs
-  .readdirSync(ARTICLES_DIR)
-  .filter((f) => f.endsWith(".md"))
-  .sort();
+const files = fs.existsSync(ARTICLES_DIR)
+  ? fs
+      .readdirSync(ARTICLES_DIR)
+      .filter((f) => f.endsWith(".md"))
+      .sort()
+  : [];
 
 const slugsSeen = new Map<string, string>();
 

@@ -48,6 +48,7 @@ function derivePreview(body: string, maxLen = 120): string {
 }
 
 export function readArticles(): ArticleRecord[] {
+  if (!fs.existsSync(ARTICLES_DIR)) return [];
   const files = fs
     .readdirSync(ARTICLES_DIR)
     .filter((f) => f.endsWith(".md"))
