@@ -10,3 +10,5 @@ public/data/
 content/external/candidates.json
 content/external/pending-summaries/*.json
 content/external/pending-summaries/_applied/
+# 原始 HTML 抓取缓存（fetchRawHtml）
+content/external/.cache/

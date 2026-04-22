@@ -46,6 +46,11 @@ export type ExternalSource = {
   language?: string;
   /** 源立场，用于"今日三题"对立观点聚类。 */
   stance?: SourceStance;
+  /**
+   * RSS 本身就是全文吗？true 时跳过抓原文，直接用 RSS excerpt。
+   * 适合 Paul Graham / Overreacted / Julia Evans 这类把全文塞进 RSS 的博客。
+   */
+  rssIsFullText?: boolean;
 };
 
 export type ExternalContentCandidate = {

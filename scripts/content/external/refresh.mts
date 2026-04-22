@@ -4,7 +4,9 @@
  * 流程：
  *   1. 并行抓 RSS/Atom 所有源
  *   2. 规则过滤（qualityFilter）去掉快讯 / 空贴 / 占位符内容
- *   3. 对过关的新条目，尝试抓原文（readability）补齐正文，抓不到退回 RSS 摘录
+ *   3. 对过关的新条目尝试抓原文（readability → 启发式 fallback），抓不到退回 RSS
+ *      · source.rssIsFullText=true 的源跳过抓原文，直接用 RSS（PG、Overreacted 这类博客）
+ *      · 其余统一走 extractFullArticle，不再按 RSS 长度设阈值
  *   4. 清洗 HTML，派生 preview 和 language，写入 items.json
  *
  * 已存在 slug 不再抓取、不再修改。仅新增。
@@ -32,11 +34,11 @@ import {
 const ITEMS_PATH = path.resolve("content/external/items.json");
 const FEED_CONCURRENCY = 8;
 const EXTRACT_CONCURRENCY = 6;
-const FULL_TEXT_MIN_CHARS = 600; // RSS 原文超过这个长度就不再抓全文
 
 type CandidateWithSource = ExternalContentCandidate & {
   sourceLanguage?: string;
   sourceStance?: ExternalSource["stance"];
+  rssIsFullText?: boolean;
 };
 
 async function runPool<T, R>(
@@ -94,6 +96,7 @@ async function main() {
           ...it,
           sourceLanguage: source.language,
           sourceStance: source.stance,
+          rssIsFullText: source.rssIsFullText,
         });
       }
     } catch (error) {
@@ -127,24 +130,32 @@ async function main() {
 
   // ===== 3. 并行抓全文 =====
   console.log(
-    `📖 尝试抽取全文（并发 ${EXTRACT_CONCURRENCY}，短于 ${FULL_TEXT_MIN_CHARS} 字的条目才抓）...`,
+    `📖 抓全文（并发 ${EXTRACT_CONCURRENCY}；source.rssIsFullText 的源跳过，其余统一抓）...`,
   );
 
-  let fullTextHit = 0;
-  let fullTextMiss = 0;
+  let hitReadability = 0;
+  let hitHeuristic = 0;
+  let keptRss = 0;
+  let skipFullText = 0;
 
   const enriched = await runPool(kept, EXTRACT_CONCURRENCY, async (c, i) => {
+    const cand = c as CandidateWithSource;
     const rawLen = htmlToPlainText(c.rawExcerpt || "").length;
     let htmlContent = c.rawExcerpt || "";
 
-    if (rawLen < FULL_TEXT_MIN_CHARS && c.sourceUrl) {
+    if (cand.rssIsFullText) {
+      skipFullText++;
+    } else if (c.sourceUrl) {
       const fetched = await extractFullArticle(c.sourceUrl);
       if (fetched && htmlToPlainText(fetched.content).length > rawLen) {
         htmlContent = fetched.content;
-        fullTextHit++;
+        if (fetched.strategy === "readability") hitReadability++;
+        else hitHeuristic++;
       } else {
-        fullTextMiss++;
+        keptRss++;
       }
+    } else {
+      keptRss++;
     }
 
     if ((i + 1) % 50 === 0) {
@@ -155,7 +166,7 @@ async function main() {
   });
 
   console.log(
-    `✓ 全文抓取：成功 ${fullTextHit} · 退回 RSS ${fullTextMiss} · 源已足长 ${kept.length - fullTextHit - fullTextMiss}`,
+    `✓ 全文：readability ${hitReadability} · 启发式 ${hitHeuristic} · RSS 全文源 ${skipFullText} · 退回 RSS ${keptRss}`,
   );
 
   // ===== 4. 清洗 + 打包 =====
