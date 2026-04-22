@@ -3,7 +3,6 @@ title: "面试题：StatusLine 为什么不把整个 messages 数组放进 useEf
 slug: "11-05-12-setmessages"
 date: 2026-04-09
 topics: [终端界面]
-summary: "StatusLine 只盯 lastAssistantMessageId 而不是整个 messages 数组——这不只是性能优化，而是对\"什么变化才值得触发状态栏更新\"的精确建模。错误的依赖列表会制造无意义重算，即使每次结果都一样。"
 importance: 1
 ---
 

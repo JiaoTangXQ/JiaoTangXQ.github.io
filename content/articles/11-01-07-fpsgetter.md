@@ -3,7 +3,6 @@ title: "面试题：FPS 监控用 getter 而不是 state，这个设计规避了
 slug: "11-01-07-fpsgetter"
 date: 2026-04-09
 topics: [终端界面]
-summary: "把 FPS 放进 AppState 会制造一个悖论：为了观察界面性能，反而让界面变慢。FPS 的 getter 模式是规避 Observer Effect 的工程解法。理解这个模式，能加深对 React 渲染机制的认识。"
 importance: 1
 ---
 

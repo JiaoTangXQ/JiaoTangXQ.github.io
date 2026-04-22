@@ -3,7 +3,6 @@ title: "socket 地址的两层命名：用户级目录 + 进程级文件名"
 slug: "12-07-09-socketpid"
 date: 2026-04-09
 topics: [外延执行]
-summary: "getSocketDir() 把目录路径绑定到当前用户名，getSecureSocketPath() 再在目录下生成 pid.sock 文件名。先按用户隔离，再按进程区分，多用户多进程的场景下不会串话。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "一个 MCP server 接入时带来什么？工具、资源、prompts、sk
 slug: "07-08-01-mcp-server"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "MCP server 连接后，client.ts 不只建 MCPTool。它同时把资源列表、资源读取工具、prompts、MCP skills 一起纳入本地运行时。一个 server 代表的是一片能力簇，不是一个函数表。"
 importance: 1
 ---
 

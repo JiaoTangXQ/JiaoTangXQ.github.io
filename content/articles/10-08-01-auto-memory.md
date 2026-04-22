@@ -3,7 +3,6 @@ title: "auto-memory 记什么、不记什么？四类记忆类型的设计逻辑
 slug: "10-08-01-auto-memory"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "auto-memory 只记无法从代码状态派生的知识：user、feedback、project、reference 四类。代码模式、架构、git 历史不在记忆范围内，因为它们随时可以 grep 到。"
 importance: 1
 ---
 

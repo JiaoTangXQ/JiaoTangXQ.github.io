@@ -3,7 +3,6 @@ title: "面试题：解释 PaneBackendExecutor 的缓存策略，以及为什么
 slug: "09-08-08-pane-executor"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "PaneBackendExecutor 在 registry.ts 里首次创建后就被缓存，而不是每次调用 spawn/sendMessage/terminate 时重建。这个决定揭示了执行器和临时包装器的本质差异。"
 importance: 1
 ---
 

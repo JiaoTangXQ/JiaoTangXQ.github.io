@@ -3,7 +3,6 @@ title: "createChromeContext：制度先于线路，两条路共用一部宪法"
 slug: "12-07-03-bridgenative-socketcontext"
 date: 2026-04-09
 topics: [外延执行]
-summary: "createChromeContext() 在决定走 bridge 还是 native socket 之前，先把身份、日志、socket 路径、配对记忆、权限模式、遥测边界统一钉成一个 context。线路可以分叉，制度不能分裂。"
 importance: 1
 ---
 

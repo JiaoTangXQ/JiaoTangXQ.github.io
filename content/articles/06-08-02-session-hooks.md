@@ -3,7 +3,6 @@ title: “SessionHooksState 用 Map 而不是 Record：高并发 workflow 的性
 slug: "06-08-02-session-hooks"
 date: 2026-04-09
 topics: [治理与权限]
-summary: “session hooks 用 Map<string, SessionStore> 而不是 Record，原因是 parallel() 并发启动 N 个 agent 时，Record spread 是 O(N²) 而 Map.set 是 O(1)。”
 importance: 1
 ---
 

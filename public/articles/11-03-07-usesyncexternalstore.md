@@ -3,7 +3,6 @@ title: "面试题：useSyncExternalStore 和 useEffect+useState 订阅外部 sto
 slug: "11-03-07-usesyncexternalstore"
 date: 2026-04-09
 topics: [终端界面]
-summary: "React 18 引入 useSyncExternalStore 专门解决外部 store 订阅问题。Claude Code 用它而不是传统的 useEffect+setState，是因为后者有撕裂（tearing）问题。理解这个区别，能加深对 React 并发模式的认识。"
 importance: 1
 ---
 

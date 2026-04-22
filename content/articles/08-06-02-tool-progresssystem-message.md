@@ -3,7 +3,6 @@ title: "工程取舍：tool_progress 为什么被压成 system message 而不是
 slug: "08-06-02-tool-progresssystem-message"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "本地 ProgressMessage 依赖工具执行上下文（在本地才存在），远端 tool_progress 没有这个上下文——与其引入一个新类型让渲染、过滤、搜索都要学会额外规则，不如接受「进度显示朴素一点」的代价换取统一。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "面试题：pending 任务的排序逻辑是什么？blockedBy 是如何
 slug: "11-06-06-pending"
 date: 2026-04-09
 topics: [终端界面]
-summary: "pending 任务不是按创建时间排列的。能立刻开始的任务排前面，被依赖关系卡住的排后面，还会在行尾明确写出阻塞来源。列表的排序在替用户做一个判断：现在能推进什么。"
 importance: 1
 ---
 

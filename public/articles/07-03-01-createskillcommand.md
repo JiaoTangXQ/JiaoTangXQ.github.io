@@ -3,7 +3,6 @@ title: "createSkillCommand：Markdown 文件是怎么被编译成运行时对象
 slug: "07-03-01-createskillcommand"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "createSkillCommand 把解析好的 frontmatter、正文内容、来源标签和基目录组装成 Command 对象。这是技能系统里的'编译'步骤——输入是磁盘文件，输出是命令注册表能处理的稳定对象。"
 importance: 1
 ---
 

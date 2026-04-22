@@ -21,7 +21,7 @@ export function buildSearchIndexEntries(): SearchIndexEntry[] {
   const articles: SearchIndexEntry[] = readArticles().map((article) => ({
     slug: article.slug,
     title: article.title,
-    preview: article.summary ?? "",
+    preview: article.preview ?? "",
     topics: article.topics,
     date: article.date,
     cluster: article.topics[0] ?? "其他",

@@ -3,7 +3,6 @@ title: "协议设计：遇到不认识的 control 请求，为什么必须立刻
 slug: "08-07-04-controlerror"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "未知的 control_request subtype 立刻回 error，而不是静默忽略——这是「明确失败」vs「静默超时」的选择，背后是分布式系统里「让对方尽快知道失败原因」的基本原则。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "Claude Code hooks 机制地图"
 slug: "018-hooks"
 date: 2026-04-09
 topics: [参考]
-summary: "Claude Code 的 hooks 不是“执行几条 shell 脚本”那么简单。代码里能看到 command、prompt、agent、http、function 等多种 hook 形态，这说明它..."
 importance: 0.9
 ---
 

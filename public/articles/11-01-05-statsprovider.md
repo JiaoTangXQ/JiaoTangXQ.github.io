@@ -3,7 +3,6 @@ title: "可测试性设计：「自带电池」模式为什么比强制注入更
 slug: "11-01-05-statsprovider"
 date: 2026-04-09
 topics: [终端界面]
-summary: "StatsProvider 可以接受外部传入的 store，也可以自己创建。这个「可选注入」不是为了方便，而是一个精心设计的可测试性接口。它让生产代码不需要每次都传 store，测试代码可以精确控制统计行为。"
 importance: 1
 ---
 

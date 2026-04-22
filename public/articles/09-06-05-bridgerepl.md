@@ -3,7 +3,6 @@ title: "只注册不注销的全局桥会产生什么问题？从 stale closure 
 slug: "09-06-05-bridgerepl"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "leaderPermissionBridge 提供了对称的 register 和 unregister 函数，REPL 组件在 useEffect 的 cleanup 里调用 unregister。这看起来是小细节，但如果不做，stale closure、幽灵调用、内存泄漏会逐一出现。这篇分析'外溢接口必须有退出协议'背后的工程逻辑。"
 importance: 1
 ---
 

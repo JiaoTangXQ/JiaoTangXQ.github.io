@@ -3,7 +3,6 @@ title: "分界线是独立的兄弟节点，不是消息行的包装"
 slug: "11-07-14-divider"
 date: 2026-04-09
 topics: [终端界面]
-summary: "renderMessageRow() 用 flatMap 返回 [divider, wrappedRow] 这样的独立兄弟节点，而不是把 divider 塞进每一行的包装组件里。这样分界线的开关不会触发所有消息行的重建。"
 importance: 1
 ---
 

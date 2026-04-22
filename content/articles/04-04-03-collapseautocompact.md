@@ -3,7 +3,6 @@ title: "工程取舍：context collapse 和 autocompact 的设计边界在哪里
 slug: "04-04-03-collapseautocompact"
 date: 2026-04-09
 topics: [主循环]
-summary: "collapse 和 autocompact 都在「减少上下文」，但它们的设计目标和破坏性完全不同。理解这两个机制为什么要被分开、为什么 collapse 要先于 autocompact 执行，能让你看清 Claude Code 在「保留细节」和「保证系统不崩」之间的具体权衡。"
 importance: 1
 ---
 

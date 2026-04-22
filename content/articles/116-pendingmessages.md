@@ -3,7 +3,6 @@ title: "pendingMessages：后台任务的消息为什么需要先排队再过轮
 slug: "116-pendingmessages"
 date: 2026-04-09
 topics: [任务系统, 消息队列, 并发控制]
-summary: "Claude Code 后台任务产生的消息不是立刻注入主会话，而是先进入 pendingMessages 队列，等待合适的时机才过轮次边界。这个等待机制解决了什么并发问题？"
 importance: 0.9
 ---
 

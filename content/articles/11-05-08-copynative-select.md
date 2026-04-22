@@ -3,7 +3,6 @@ title: "面试题：用户选中文本时底部提示是怎么切换的？Claude
 slug: "11-05-08-copynative-select"
 date: 2026-04-09
 topics: [终端界面]
-summary: "选中文本时，底部区域的提示不是统一的'ctrl+c 复制'，而是根据终端环境（xterm.js、macOS、copyOnSelect 配置）动态切换成不同的操作指引。界面承认自己不垄断文本选择动作。"
 importance: 1
 ---
 

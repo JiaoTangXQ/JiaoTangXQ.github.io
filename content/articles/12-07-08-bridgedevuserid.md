@@ -3,7 +3,6 @@ title: "devUserId 只在本地 bridge 里存在：开发便利关在围栏里"
 slug: "12-07-08-bridgedevuserid"
 date: 2026-04-09
 topics: [外延执行]
-summary: "createChromeContext() 只有在 isLocalBridge() 时才给 bridgeConfig 附上 devUserId: 'dev_user_local'。这个开发期辅助标识不存在于任何生产路径里，确保开发期的便利不会污染真实用户身份。"
 importance: 1
 ---
 

@@ -5,7 +5,6 @@ title: >-
 slug: "11-05-11-assistant"
 date: 2026-04-09
 topics: [终端界面]
-summary: "在 KAIROS/assistant 模式下，状态栏里的字段代表的是 REPL 外壳，而不是真正执行的 agent。Claude Code 选择整条隐藏而不是继续显示。这个决定背后是一套值得深思的设计哲学。"
 importance: 1
 ---
 

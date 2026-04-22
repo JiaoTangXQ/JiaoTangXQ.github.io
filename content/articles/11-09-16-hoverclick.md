@@ -3,7 +3,6 @@ title: "VirtualItem 的 onClickK/onEnterK/onLeaveK 为什么不是 inline 箭头
 slug: "11-09-16-hoverclick"
 date: 2026-04-09
 topics: [终端界面]
-summary: "VirtualItem 的三个事件处理器通过 useCallback 稳定化，不在每次渲染时生成新闭包。源码注释里精确计算了不稳定版本的 GC 代价：3 个闭包 × 60 个挂载项 × 每秒 10 次渲染 = 每秒 1800 个短命闭包。"
 importance: 1
 ---
 

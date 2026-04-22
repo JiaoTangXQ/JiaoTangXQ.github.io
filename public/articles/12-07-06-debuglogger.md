@@ -3,7 +3,6 @@ title: "DebugLogger：把外部库的日志口音翻译回宿主语言"
 slug: "12-07-06-debuglogger"
 date: 2026-04-09
 topics: [外延执行]
-summary: "mcpServer.ts 里的 DebugLogger 实现了外部 MCP 包要求的 Logger 接口，但把 silly/debug/info/warn/error 各级别全部转发到内部的 logForDebugging()。新接入的浏览器世界说宿主语言，不另起一套观测语言。"
 importance: 1
 ---
 

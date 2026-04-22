@@ -3,7 +3,6 @@ title: "stdin 断开时先 flush 分析，再退出：收场有纪律"
 slug: "12-07-05-stdinflushmcp-server"
 date: 2026-04-09
 topics: [外延执行]
-summary: "runClaudeInChromeMcpServer() 在 stdin end/error 时，不直接 process.exit(0)，而是先运行 shutdown1PEventLogging() 和 shutdownDatadog()，再退出。浏览器 MCP server 的退出序列是正式工程问题，不是「关了就算」。"
 importance: 1
 ---
 

@@ -4,7 +4,6 @@ title: >-
 slug: "02-04-03-promise"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "Claude Code 在 init() 里调用 initializeRemoteManagedSettingsLoadingPromise() 和 initializePolicyLimitsLoadingPromise()——这两个函数只是建立 Promise，不等待结果。这种模式解决了什么问题？"
 importance: 1
 ---
 

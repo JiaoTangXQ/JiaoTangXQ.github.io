@@ -3,7 +3,6 @@ title: "checkHasTrustDialogAccepted() 这个函数名里藏着什么设计信息
 slug: "02-06-01-trustonboarding"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "Claude Code 里判断 trust 状态的函数叫 checkHasTrustDialogAccepted()，不叫 isUserTrusted() 或 hasPermission()。这个命名选择说明了什么？"
 importance: 1
 ---
 

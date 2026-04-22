@@ -3,7 +3,6 @@ title: "TeammateMessage 为什么有 summary 和 color 字段？看似 UI 装饰
 slug: "09-05-03-mailbox"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "TeammateMessage 的结构里有 from、text、timestamp、read、color 和 summary 六个字段。其中 color 和 summary 最容易被误读为'前端显示用的装饰字段'，但它们实际解决的是：在高噪音的多 agent 环境中，让接收方能快速判断消息优先级和来源。"
 importance: 1
 ---
 

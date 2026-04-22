@@ -3,7 +3,6 @@ title: "面试题：一个按钮组件只需要修改状态，为什么不该用
 slug: "11-03-03-usesetappstate"
 date: 2026-04-09
 topics: [终端界面]
-summary: "useSetAppState() 只返回 store.setState，不订阅任何状态。使用它的组件永远不会因为 AppState 变化而重渲染。这是读写分离原则的 hook 设计体现——纯写操作不应该被迫订阅状态。"
 importance: 1
 ---
 

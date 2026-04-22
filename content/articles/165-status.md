@@ -3,7 +3,6 @@ title: "TaskState 的 status 字段为什么是整个后台任务系统的生命
 slug: "165-status"
 date: 2026-04-09
 topics: [任务系统, 架构设计, 后台任务]
-summary: "在 Claude Code 的任务系统里，status 字段不是普通的状态标记——它是所有生命周期判断的入口：任务是否显示在后台列表、前台是否可以接管、通知是否发送、任务数据是否可以被 GC，全部依赖 status 先落地。"
 importance: 0.9
 ---
 

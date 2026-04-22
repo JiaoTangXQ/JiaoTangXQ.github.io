@@ -3,7 +3,6 @@ title: "pendingMessages 为什么要先排队再过轮次"
 slug: "232-pendingmessages"
 date: 2026-04-09
 topics: [消息队列, 并发控制, Claude Code 内核]
-summary: "Claude Code 里后台任务的完成通知、用户中途的新消息、系统注入的元消息，都要经过 pendingMessages 队列排序，在合适的轮次边界被合并进对话历史。这个排队机制保证了多消息来源不会打乱会话的推理节奏。"
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "Worker Badge：复用权限弹窗组件但不丢失组织上下文，怎
 slug: "09-06-02-worker-badge"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "Leader 的权限确认弹窗是复用的标准 ToolUseConfirm 组件，但当 Worker 发起请求时，弹窗里会额外显示 workerBadge——成员名字和颜色。这是一个'组件复用但不丢失语境'的经典工程取舍：UI 一致，但组织信息不消失。"
 importance: 1
 ---
 

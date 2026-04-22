@@ -3,7 +3,6 @@ title: "normalizeMessages：让每个消息块有且只有一个身份"
 slug: "11-07-02-normalizemessages"
 date: 2026-04-09
 topics: [终端界面]
-summary: "normalizeMessages() 把多内容块的消息拆成单块，用 deriveUUID() 为每块补稳定 ID，isNewChain 保持拆分后的块顺序。这是整个消息编排流水线的第一步：先建立一个统一形状的世界。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "Bash 工具失败为什么会触发 siblingAbortController？"
 slug: "220-bash"
 date: 2026-04-09
 topics: [Claude Code 源码, BashTool, 并发, 错误传播]
-summary: "StreamingToolExecutor 维护了一个 siblingAbortController，专门在 Bash 工具出错时向兄弟子进程发送取消信号。这个设计防止一个 Bash 失败后其他已启动的 Bash 继续跑到底，节省资源并防止副作用扩散。"
 importance: 0.9
 ---
 

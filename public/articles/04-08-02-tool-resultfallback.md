@@ -3,7 +3,6 @@ title: "边界条件：StreamingToolExecutor.discard() 和 getRemainingResults()
 slug: "04-08-02-tool-resultfallback"
 date: 2026-04-09
 topics: [主循环]
-summary: "当工具执行被中止时，StreamingToolExecutor 有两个看起来相似但语义完全不同的方法：discard() 和 getRemainingResults()。前者用于 fallback 模型切换，后者用于用户中断。搞混这两个，会让 transcript 出现孤儿 tool_use 或错误的合成结果。"
 importance: 1
 ---
 

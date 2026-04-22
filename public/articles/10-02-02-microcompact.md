@@ -3,7 +3,6 @@ title: "thinking block 为什么不能被 microcompact 清除？"
 slug: "10-02-02-microcompact"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "thinking block 有严格的 API 协议约束，必须在整个 assistant trajectory 中保持连贯，这个限制直接影响了 microcompact 的白名单设计。"
 importance: 1
 ---
 

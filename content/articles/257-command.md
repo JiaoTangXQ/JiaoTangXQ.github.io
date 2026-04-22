@@ -3,7 +3,6 @@ title: "第十三卷回收索引：前四卷里的不同来源最后收编成同
 slug: "257-command"
 date: 2026-04-09
 topics: [参考]
-summary: "内建命令、技能目录、插件和 MCP 最后都被翻成同一种 `Command` 形状，靠的是名字、类型、加载方式、可见性和执行上下文这一套共同身份，再由 `findCommand()`、`hasComma..."
 importance: 0.9
 ---
 

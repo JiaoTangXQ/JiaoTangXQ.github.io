@@ -3,7 +3,6 @@ title: "面试题：Claude Code 里有多少种命令来源？它们最后统一
 slug: "03-04-00-command"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "内建命令、skills 目录、插件、MCP 能力——四种来源，最后都统一成 Command 类型。这个统一不是抹平差异，而是先给所有能力一张「身份证」，再让它们按各自的物理机制执行。"
 importance: 1.4
 ---
 

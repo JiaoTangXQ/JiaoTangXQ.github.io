@@ -3,7 +3,6 @@ title: "team_created 事件为什么上报 resolved mode 而不是配置的 mode
 slug: "09-08-07-team-createdresolved-mode"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "创建团队时发出的分析事件里，teammateMode 字段记录的是 getResolvedTeammateMode() 的结果，不是用户配置的原始值。auto 模式在这里被解析成实际使用的后端类型。分析系统关心现实，不关心意图。"
 importance: 1
 ---
 

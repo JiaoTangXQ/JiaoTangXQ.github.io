@@ -3,7 +3,6 @@ title: "第十三卷回收索引：前四卷里的 collapse drain retry 与 reac
 slug: "253-collapse-drain-retryreactive-compact"
 date: 2026-04-09
 topics: [参考]
-summary: "`contextCollapse.recoverFromOverflow()` 先尝试把已经 staged 的 collapse 排干，顺利的话就把 `transition.reason` 设成 `c..."
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "dropTextInBriefTurns 只删模型的多余话，不删用户的证据"
 slug: "11-07-16-brief-turn"
 date: 2026-04-09
 topics: [终端界面]
-summary: "dropTextInBriefTurns() 在完整 transcript 里，只删掉「这一轮调用了 Brief 工具」的助手文本，不动用户输入和工具结果。它的边界很精确：冗余的铺陈可以去掉，但不影响理解这轮工作的骨架信息。"
 importance: 1
 ---
 

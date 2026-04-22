@@ -3,7 +3,6 @@ title: "工程细节：sentinelUuid 在历史分页中的作用是什么？"
 slug: "08-08-04-sentinelassistant"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "sentinelUuid 是一个稳定的占位消息，代表「正在加载更旧的消息」或「会话的起点」——它的稳定性让 React 能复用 DOM 节点，让滚动锚定能找到准确的基准点，而不是在 re-render 时随机漂移。"
 importance: 1
 ---
 

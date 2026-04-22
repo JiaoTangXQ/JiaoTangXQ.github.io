@@ -3,7 +3,6 @@ title: "backgroundSignalResolvers：一个 Map 是怎么实现有序转场协议
 slug: "05-07-01-backgroundsignal"
 date: 2026-04-09
 topics: [任务与分派]
-summary: "一个模块级的 Map<string, () => void> 存放着所有前台 Agent 的 Promise resolver。这个简单的数据结构是前后台无缝切换的关键。深入看它的创建、使用、清理。"
 importance: 1
 ---
 

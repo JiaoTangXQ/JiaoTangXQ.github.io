@@ -3,7 +3,6 @@ title: "为什么 tool_result 必须显式补全，不能悬空？"
 slug: "218-tool-resulttransition"
 date: 2026-04-09
 topics: [Claude Code 源码, tool_result, 主循环]
-summary: "Claude Code 的 query() 会显式检查每个 tool_use 后面有没有对应的 tool_result，中断、fallback 或异常路径会主动调用 yieldMissingToolResultBlocks() 补全。悬空的 tool_use 会让 transcript 和下一轮推理都出错。"
 importance: 0.9
 ---
 

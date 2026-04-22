@@ -3,10 +3,6 @@ title: "VirtualMessageList 为什么要从 Messages.tsx 拆出来？rules-of-hoo
 slug: "11-09-01-virtualmessagelist"
 date: 2026-04-09
 topics: [终端界面]
-summary: >-
-  VirtualMessageList 是从 Messages.tsx 分离出来的独立组件，原因不是"更好的代码组织"，而是
-  React 的 rules-of-hooks 禁止在条件语句里调用 Hook，而 useVirtualScroll
-  只在全屏模式下需要。
 importance: 1
 ---
 

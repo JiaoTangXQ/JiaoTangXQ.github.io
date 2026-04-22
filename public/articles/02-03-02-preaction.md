@@ -3,7 +3,6 @@ title: "preAction 钩子里按什么顺序执行了哪些操作？"
 slug: "02-03-02-preaction"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "逐步追踪：当用户执行 `claude` 进入 REPL，preAction 钩子触发后，代码按什么顺序执行了什么？每一步的前置依赖是什么？"
 importance: 1
 ---
 

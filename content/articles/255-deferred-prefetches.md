@@ -3,7 +3,6 @@ title: "第十三卷回收索引：前四卷里的 deferred prefetches 让首屏
 slug: "255-deferred-prefetches"
 date: 2026-04-09
 topics: [参考]
-summary: "`startDeferredPrefetches()` 会在首屏后继续拉起一串预热：用户信息、用户上下文、system context、提示信息、云厂商凭据、文件统计、分析开关、官方 MCP 列表、模..."
 importance: 0.9
 ---
 

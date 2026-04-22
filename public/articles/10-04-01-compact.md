@@ -3,7 +3,6 @@ title: "手动 /compact 和 autocompact 有什么本质区别？"
 slug: "10-04-01-compact"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "/compact 命令与 autocompact 走同一套 compactConversation 逻辑，但在 session memory 优先路径、自定义指令支持和触发时机上有关键差异。"
 importance: 1
 ---
 

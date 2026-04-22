@@ -3,7 +3,6 @@ title: "placeholder 文案是对当前对话对象的一次翻译"
 slug: "11-04-06-agentplaceholder"
 date: 2026-04-09
 topics: [终端界面]
-summary: "usePromptInputPlaceholder() 在检测到 viewingAgentName 时，会把占位词换成「Message @名字…」。这个改动很轻，但它在做一件实质性的工作：告诉用户现在在对谁说话。"
 importance: 1
 ---
 

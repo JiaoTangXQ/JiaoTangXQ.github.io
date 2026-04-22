@@ -3,7 +3,6 @@ title: "prompt 命令如何临时重摆人、模型、系统、工具的关系"
 slug: "228-prompt"
 date: 2026-04-09
 topics: [命令系统, 技能系统, Claude Code 内核]
-summary: "prompt 命令不只是注入一段文本，它会重新配置当前会话的协作框架：技能正文、工具许可、hooks、附件一起带进来，让接下来的会话在新的框架下运行。"
 importance: 0.9
 ---
 

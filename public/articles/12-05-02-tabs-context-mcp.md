@@ -3,7 +3,6 @@ title: "调试技巧：tabs_context_mcp 调用失败时怎么排查 Claude in Ch
 slug: "12-05-02-tabs-context-mcp"
 date: 2026-04-09
 topics: [外延执行]
-summary: "tabs_context_mcp 是 Claude in Chrome 每次会话的第一个工具调用。理解这个调用的设计意图，不只是能用好它，更重要的是：当它失败或返回意外结果时，能够快速定位问题是出在扩展连接层、标签页状态层还是权限层。"
 importance: 1
 ---
 

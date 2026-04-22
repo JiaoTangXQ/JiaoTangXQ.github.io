@@ -3,7 +3,6 @@ title: "leaderPermissionBridge.ts 全文只有 55 行，却是整套权限系统
 slug: "09-04-02-leader-ui"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "Claude Code 的权限桥只暴露两个 setter，整个文件 55 行。这种极简设计不是偷懒，而是刻意的接口收窄。React 组件树里的状态和非 React 的执行循环，靠这两个 setter 安全地打通。这篇分析这个桥的设计哲学：跨层耦合的最小接口原则。"
 importance: 1
 ---
 

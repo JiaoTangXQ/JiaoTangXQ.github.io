@@ -3,7 +3,6 @@ title: "任务系统管劳动闭环，Swarm 管组织秩序：为什么不能混
 slug: "204-swarm"
 date: 2026-04-09
 topics: [Swarm, 任务系统, 多Agent]
-summary: "Claude Code 里任务系统负责单个工作单元的完整生命周期，而 swarm 模式负责多个工作单元之间的组织关系。这两件事分开处理，是分层习惯先于技巧的直接体现。"
 importance: 0.9
 ---
 

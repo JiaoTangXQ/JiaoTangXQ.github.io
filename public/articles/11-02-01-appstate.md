@@ -3,7 +3,6 @@ title: "面试题：AppState 类型为什么用 DeepImmutable<{...}> & {...} 这
 slug: "11-02-01-appstate"
 date: 2026-04-09
 topics: [终端界面]
-summary: "AppState 的类型声明里，DeepImmutable 只包了一部分字段，tasks 和 Map 类型被故意排除在外。这个例外不是疏忽，而是因为函数类型和 DeepImmutable 不兼容，是对 TypeScript 限制的诚实承认。"
 importance: 1
 ---
 

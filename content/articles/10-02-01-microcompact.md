@@ -3,7 +3,6 @@ title: "microcompact 为什么只清工具结果，不动对话历史？"
 slug: "10-02-01-microcompact"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "microcompact 的精准边界：只清除已完成的工具结果，保留对话轨迹和思维块，是最小侵入的上下文减负方案。"
 importance: 1
 ---
 

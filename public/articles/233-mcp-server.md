@@ -3,7 +3,6 @@ title: "MCP server 进来的是一整套需要被制度接住的能力"
 slug: "233-mcp-server"
 date: 2026-04-09
 topics: [MCP, 扩展系统, Claude Code 内核]
-summary: "接入一个 MCP server 不等于安装几个新工具。MCP server 带来的是需要被权限系统、命名空间、任务系统一起接住的新能力集合。把它当成工具包来处理，会遗漏很多必要的制度边界。"
 importance: 0.9
 ---
 

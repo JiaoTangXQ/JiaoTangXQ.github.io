@@ -3,7 +3,6 @@ title: "为什么先写 transcript 再调 API，而不是调完 API 再写？"
 slug: "04-02-01-transcript"
 date: 2026-04-09
 topics: [主循环]
-summary: "这是一道经典的「顺序就是设计」题。大多数系统等模型回完再持久化，逻辑上更简洁。但 Claude Code 反过来，先把用户消息落盘，再进 API 调用。原因不是性能优化，而是「什么算作一个已经发生的事实」这个更深的问题。"
 importance: 1
 ---
 

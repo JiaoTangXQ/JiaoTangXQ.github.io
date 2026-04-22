@@ -3,7 +3,6 @@ title: "isIdleNotification()：过滤的不是数据，是噪音的定义"
 slug: "11-04-08-idle-notification"
 date: 2026-04-09
 topics: [终端界面]
-summary: "PromptInputQueuedCommands.tsx 在处理排队命令时，会先用 isIdleNotification() 识别 idle_notification 类型，再把它们直接过滤掉。这里的过滤不是技术决定，而是对「什么算有效信息」的定义。"
 importance: 1
 ---
 

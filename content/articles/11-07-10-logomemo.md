@@ -3,7 +3,6 @@ title: "为什么 Logo 也要 React.memo"
 slug: "11-07-10-logomemo"
 date: 2026-04-09
 topics: [终端界面]
-summary: "Messages.tsx 里的 LogoHeader 被 React.memo 包住，内部放 LogoV2 和 StatusNotices。Logo 看起来是静态装饰，但在长会话的重绘压力下，让它脱离消息更新的渲染周期有实际意义。"
 importance: 1
 ---
 

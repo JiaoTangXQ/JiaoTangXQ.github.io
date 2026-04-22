@@ -3,7 +3,6 @@ title: "面试题：为什么 Claude in Chrome 要接用户真实浏览器而不
 slug: "12-05-01-claude-in-chrome"
 date: 2026-04-09
 topics: [外延执行]
-summary: "浏览器自动化有两种主流方案：起一个受控的干净浏览器上下文（Puppeteer/Playwright 风格），或者接入用户正在使用的真实浏览器。Claude Code 选择了后者。这个选择不是随意的，它涉及对「AI 替人做什么」的根本判断，也带来了整整一套接入基础设施的工程复杂度。"
 importance: 1
 ---
 

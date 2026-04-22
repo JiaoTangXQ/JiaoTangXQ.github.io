@@ -3,7 +3,6 @@ title: "MessageActionsSelectedContext 放在 divider 分支外，确保选中态
 slug: "11-07-15-divider"
 date: 2026-04-09
 topics: [终端界面]
-summary: "Messages.tsx 把 MessageActionsSelectedContext.Provider 放在 divider 插入逻辑之外，确保选中态变化不会和分界线逻辑混在同一个更新路径里。Context provider 的位置决定了谁会因为 context 变化而重渲染。"
 importance: 1
 ---
 

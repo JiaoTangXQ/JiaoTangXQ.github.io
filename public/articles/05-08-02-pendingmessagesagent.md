@@ -3,7 +3,6 @@ title: "mid-turn 消息注入为什么必须等到轮次边界才交付？"
 slug: "05-08-02-pendingmessagesagent"
 date: 2026-04-09
 topics: [任务与分派]
-summary: "用户给正在运行的子 Agent 发消息，消息不会立刻送达，而是进入 pendingMessages 队列，等到工具调用轮次边界才被 drainPendingMessages 统一交付。为什么？"
 importance: 1
 ---
 

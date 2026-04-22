@@ -17,7 +17,7 @@ const KNOWN_TOPICS = [
 ];
 const SLUG_RE = /^[a-z0-9-]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const REQUIRED_FIELDS = ["title", "slug", "date", "topics", "summary"] as const;
+const REQUIRED_FIELDS = ["title", "slug", "date", "topics"] as const;
 
 let errorCount = 0;
 let warnCount = 0;
@@ -84,14 +84,6 @@ for (const file of files) {
       if (!KNOWN_TOPICS.includes(t)) {
         warnings.push(`主题 "${t}" 不在已知主题列表中`);
       }
-    }
-  }
-
-  // 摘要长度（warning）
-  if (typeof data.summary === "string") {
-    const len = data.summary.length;
-    if (len < 20 || len > 200) {
-      warnings.push(`摘要长度 ${len} 字符（建议 20-200）`);
     }
   }
 

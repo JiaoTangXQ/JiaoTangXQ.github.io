@@ -3,7 +3,6 @@ title: "needs-auth 缓存：MCP 认证失败为什么要缓存 15 分钟？"
 slug: "07-07-04-needs-auth"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "client.ts 把需要重新认证的 MCP 服务器记进 mcp-needs-auth-cache.json，设置 15 分钟 TTL。这个缓存的存在是为了防止认证失败后的无限重试噪音。"
 importance: 1
 ---
 

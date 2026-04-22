@@ -3,7 +3,6 @@ title: "同进程 Teammate 完成任务后为什么不自动把结果传给 Lead
 slug: "09-02-04-teammate"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "同进程 teammate 和 leader 在同一个 Node.js 进程里，从技术角度看，直接把结果写进 leader 的上下文是轻而易举的事。但 inProcessRunner.ts 明确不这么做。这个'明显可以走捷径但故意不走'的设计，揭示了 Claude Code 对一致团队语义的坚持。"
 importance: 1
 ---
 

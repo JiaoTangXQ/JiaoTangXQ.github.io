@@ -3,7 +3,6 @@ title: "代码考古：max output tokens 的三段恢复逻辑是怎么演化出
 slug: "04-07-03-max-output-tokenstoken-budget-continuation"
 date: 2026-04-09
 topics: [主循环]
-summary: "模型输出被截断（max_output_tokens）有三段恢复逻辑，顺序很关键：先升级输出限制，再注入续写提示，最多恢复 3 次。Token budget continuation 是完全不同的机制，处理的是「预算控制」而不是「输出截断」。两者很容易混淆。"
 importance: 1
 ---
 

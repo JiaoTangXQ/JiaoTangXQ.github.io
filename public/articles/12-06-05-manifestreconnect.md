@@ -3,7 +3,6 @@ title: "产品设计：为什么 manifest 更新后要主动触发 reconnect 而
 slug: "12-06-05-manifestreconnect"
 date: 2026-04-09
 topics: [外延执行]
-summary: "installChromeNativeHostManifest() 在检测到 manifest 真正改写后，会主动检查扩展是否安装，如果安装了就打开 reconnect 页面。这是一个「接入链不在 manifest 写好时结束，而是在扩展真正连上时才结束」的设计意识的具体体现。"
 importance: 1
 ---
 

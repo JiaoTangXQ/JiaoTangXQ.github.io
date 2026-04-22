@@ -3,7 +3,6 @@ title: "unseen divider 用 UUID 前缀，因为拆块后要认出同一条消息
 slug: "11-07-13-unseen-divideruuid"
 date: 2026-04-09
 topics: [终端界面]
-summary: "computeUnseenDivider() 找到的 firstUnseenUuid 在 Messages.tsx 里用前 24 位做匹配。这个约定和 deriveUUID() 配套：同一条原始消息拆出的块共享同一个 UUID 前缀，前缀才能认出「一家人」。"
 importance: 1
 ---
 

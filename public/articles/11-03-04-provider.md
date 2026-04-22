@@ -3,7 +3,6 @@ title: "面试追问：React 里 Provider 嵌套是合法的，为什么 AppStat
 slug: "11-03-04-provider"
 date: 2026-04-09
 topics: [终端界面]
-summary: "React Context 的 Provider 本来可以嵌套，内层覆盖外层。AppStateProvider 主动用 HasAppStateContext 检测嵌套并抛错，是因为应用的「事实世界」只能有一个版本。这是「单一真相来源」在运行时的强制执行。"
 importance: 1
 ---
 

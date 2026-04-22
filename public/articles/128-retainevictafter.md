@@ -3,7 +3,6 @@ title: "retain 与 evictAfter：为什么任务的退场也需要被系统设计
 slug: "128-retainevictafter"
 date: 2026-04-09
 topics: [任务系统, 生命周期管理, 资源管理]
-summary: "任务完成后不是立即消失的——Claude Code 有 retain 标志和 evictAfter 时间戳来控制任务在 AppState 里停留多久。为什么退场需要被设计，而不是简单地完成即删除？"
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "ToolSearch 和工具前缀：发现机制如何成为骨架的一部分"
 slug: "201-toolsearch"
 date: 2026-04-09
 topics: [工具发现, 扩展系统, Claude Code 内核]
-summary: "Claude Code 的工具发现不只靠提示词列出所有工具。ToolSearch 让技能工具可以按需加载，工具前缀维护命名空间，技能提示让用户知道如何触发工具。这三件事共同构成发现机制，而发现机制本身是系统骨架的一部分。"
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "context: fork 是命令世界通往任务世界的桥"
 slug: "226-context-fork"
 date: 2026-04-09
 topics: [任务系统, 命令系统, Claude Code 内核]
-summary: "context: fork 是 Claude Code 里从命令式操作切换到任务式操作的关键机制。一个命令触发的工作可以通过 fork 切换到任务上下文，获得任务系统的完整生命周期管理能力。"
 importance: 0.9
 ---
 

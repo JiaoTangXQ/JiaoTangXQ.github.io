@@ -3,7 +3,6 @@ title: "Commander 的 preAction 钩子在 Claude Code 里扮演什么角色？"
 slug: "02-03-00-preaction"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "大多数 CLI 工具会在命令处理函数里直接调用初始化代码。Claude Code 选择把重初始化挂在 Commander 的 preAction 钩子里——这个区别为什么重要？"
 importance: 1.4
 ---
 

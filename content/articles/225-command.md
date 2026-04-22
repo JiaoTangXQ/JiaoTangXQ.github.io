@@ -3,7 +3,6 @@ title: "不同来源的命令如何收编成同一种 Command 语言"
 slug: "225-command"
 date: 2026-04-09
 topics: [命令系统, 架构设计, Claude Code 内核]
-summary: "Claude Code 的命令来自内建实现、技能目录、插件、MCP——这些来源的原始格式完全不同，但最终都被表达成同一种 Command 结构。统一外观和内部机制的分离，是这套命令系统可扩展的基础。"
 importance: 0.9
 ---
 

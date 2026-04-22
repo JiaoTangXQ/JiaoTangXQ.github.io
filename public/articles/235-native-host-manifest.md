@@ -3,7 +3,6 @@ title: "Native Host 和 manifest：浏览器接入链的产品级底座"
 slug: "235-native-host-manifest"
 date: 2026-04-09
 topics: [浏览器扩展, 产品接入, Claude Code 内核]
-summary: "Native Host 程序、manifest 文件、不同浏览器的目录结构、Windows 注册表条目——这些不是可选的配置步骤，而是浏览器安全模型要求的产品接入链底座。把它们做成自动安装而不是手册步骤，是产品成熟度的体现。"
 importance: 0.9
 ---
 

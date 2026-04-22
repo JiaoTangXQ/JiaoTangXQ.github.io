@@ -3,7 +3,6 @@ title: "post-sampling hooks 是什么？和 stop hooks 有什么区别？"
 slug: "10-09-02-postsamplinghooks"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "post-sampling hooks 在每次 API 采样完成后触发，是细粒度的观察接口；stop hooks 在整个 user turn 结束时触发，可以阻塞继续。两者覆盖不同的时机和用例。"
 importance: 1
 ---
 

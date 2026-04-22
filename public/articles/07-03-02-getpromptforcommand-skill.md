@@ -3,7 +3,6 @@ title: "getPromptForCommand 执行链：一个技能的 prompt 是怎么'现算'
 slug: "07-03-02-getpromptforcommand-skill"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "技能被调用时，prompt 不是直接从磁盘读回来的——它要经过参数替换、特殊变量展开、可选的 shell 命令执行，最终才生成模型真正看到的文本。这个过程在 getPromptForCommand 闭包里完成。"
 importance: 1
 ---
 

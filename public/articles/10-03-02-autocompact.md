@@ -3,7 +3,6 @@ title: "autocompact 的执行流程：从 shouldAutoCompact 到 buildPostCompact
 slug: "10-03-02-autocompact"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "一次完整的 autocompact 执行链：阈值判断、session memory 优先路径、forked agent 摘要生成、CompactionResult 重组，以及 task_budget 的跨 compact 追踪。"
 importance: 1
 ---
 

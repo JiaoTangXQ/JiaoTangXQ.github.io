@@ -3,7 +3,6 @@ title: "第十三卷回收索引：团队世界里的颜色和 pane 与团队辨
 slug: "097-pane"
 date: 2026-04-09
 topics: [参考]
-summary: "这页具体回收的判断是“团队世界—颜色和pane与团队辨识”。 这页真正回收的是 `utils/swarm/reconnection.ts`、`utils/swarm/permissionSync.ts..."
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "retain 和 evictAfter：Claude Code 如何把人的阅读节奏纳入任
 slug: "05-08-03-retainevictafter"
 date: 2026-04-09
 topics: [任务与分派]
-summary: "任务完成后立刻从内存删除最省事，但用户还没读完怎么办？retain 和 evictAfter 是 Claude Code 把'用户阅读时间'建模进任务生命周期的具体方式。"
 importance: 1
 ---
 

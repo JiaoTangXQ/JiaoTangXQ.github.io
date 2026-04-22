@@ -3,7 +3,6 @@ title: "AppState 是如何成为跨子系统事实的唯一落点的？"
 slug: "214-appstate"
 date: 2026-04-09
 topics: [Claude Code 源码, AppState, 状态管理]
-summary: "Claude Code 的 AppState 不是一个普通的全局变量，而是跨子系统事实必须先汇聚的共同世界。bootstrap/state.ts 里的 State 类型承载了 cwd、modelUsage、toolPermissionContext 等几十个字段，DisplayLayer 只从这里读数据。拆解 AppState 为何这么设计、它替代了什么。"
 importance: 0.9
 ---
 

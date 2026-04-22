@@ -3,7 +3,6 @@ title: "Claude Code swarm 团队机制地图"
 slug: "020-swarm"
 date: 2026-04-09
 topics: [参考]
-summary: "很多多 agent 系统真正做到的只有“并发更多”。Claude Code 的 swarm 想做的是更难的事：让多个 agent 之间长出身份、通信、审批和空间秩序。 从 teammate 提示和相关..."
 importance: 0.9
 ---
 

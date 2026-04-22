@@ -3,7 +3,6 @@ title: "安全分析：shouldAutoEnableClaudeInChrome() 的三道门控是如何
 slug: "12-06-09-feature-flag"
 date: 2026-04-09
 topics: [外延执行]
-summary: "shouldAutoEnableClaudeInChrome() 要求同时满足：交互式会话、扩展已安装、以及 ant 用户身份或 feature flag 放行。这三道门控不是多余的，而是一套针对高风险能力的渐进式发布机制：先在内部用户中验证，再通过 feature flag 逐步向外部用户推开。"
 importance: 1
 ---
 

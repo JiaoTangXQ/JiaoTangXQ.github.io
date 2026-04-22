@@ -3,7 +3,6 @@ title: "面试题：「内容不变就不重写」——为什么这条原则在
 slug: "12-06-04-manifest"
 date: 2026-04-09
 topics: [外延执行]
-summary: "installChromeNativeHostManifest() 在写入 manifest 前会先读取现有内容，只有内容真的改变了才重写文件。createWrapperScript() 也遵循同样的原则。这不是微小的性能优化，而是避免「不必要的 manifest 改变触发不必要的浏览器侧扰动」的关键设计。"
 importance: 1
 ---
 

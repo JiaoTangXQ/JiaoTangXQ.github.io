@@ -3,7 +3,6 @@ title: "跨平台分析：Windows 为什么用 Registry 而不是文件目录来
 slug: "12-06-10-windowsmanifestregistry"
 date: 2026-04-09
 topics: [外延执行]
-summary: "在 macOS 和 Linux 上，native host manifest 放在文件系统目录里，一个浏览器一个目录。在 Windows 上，manifest 放在一个公共位置，然后通过每个浏览器对应的 Registry key 指向它。这不是 Claude Code 的设计选择，而是 Windows 版 Chromium 浏览器协议的规定。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "面试题：in-process MCP server 为什么要保持 stdio 外观？"
 slug: "12-04-01-stdio-server"
 date: 2026-04-09
 topics: [外延执行]
-summary: "setupComputerUseMCP() 返回的是标准 stdio MCP 配置，但注释明确说明这些 command/args 永远不会被真正 spawn——客户端按 server name 识别后走进程内路径。外观 MCP，内核进程内：这是一种同时保住协议兼容性和运行效率的双层设计，也是成熟系统里常见的「接口稳定，实现可变」模式。"
 importance: 1
 ---
 

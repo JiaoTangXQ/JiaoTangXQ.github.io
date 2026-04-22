@@ -62,15 +62,6 @@ function makeSlug(filePath: string): string {
     .replace(/^-|-$/g, "") || `article-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** 生成摘要：取正文前 100 字 */
-function extractSummary(content: string): string {
-  // 跳过标题行
-  const lines = content.split("\n").filter((l) => !l.startsWith("#") && l.trim().length > 0);
-  const text = lines.join(" ").replace(/\s+/g, " ").trim();
-  const summary = text.slice(0, 100);
-  return summary + (text.length > 100 ? "..." : "");
-}
-
 /** 判断 importance */
 function getImportance(filePath: string): number {
   const base = path.basename(filePath);
@@ -132,7 +123,6 @@ for (const file of allFiles) {
   const baseSlug = makeSlug(file);
   const slug = uniqueSlug(baseSlug);
   const topics = getTopics(file);
-  const summary = extractSummary(raw);
   const importance = getImportance(file);
 
   const frontmatter = `---
@@ -140,7 +130,6 @@ title: "${title.replace(/"/g, '\\"')}"
 slug: "${slug}"
 date: ${today}
 topics: [${topics.join(", ")}]
-summary: "${summary.replace(/"/g, '\\"')}"
 importance: ${importance}
 ---
 

@@ -3,7 +3,6 @@ title: "故障恢复分析：模型切换后如何防止孤儿工具结果污染
 slug: "04-07-01-fallback-model"
 date: 2026-04-09
 topics: [主循环]
-summary: "当主模型不可用触发 fallback 时，问题不只是「换个模型重试」。更难处理的是：流式执行期间已经积累的半截 assistant 消息、进行中的工具调用、模型绑定的 thinking signature——这些都必须被正确处理，否则新模型会拿到一段损坏的历史。"
 importance: 1
 ---
 

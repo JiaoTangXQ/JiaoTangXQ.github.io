@@ -3,7 +3,6 @@ title: "画图讲解：stop hooks 的执行流程和阻塞状态机"
 slug: "04-07-04-stop-hooks"
 date: 2026-04-09
 topics: [主循环]
-summary: "stop hooks 在 Claude Code 里不是简单的「回调函数」，而是主循环状态机的一个关口。它们可以产生阻塞错误（让模型重新来过）、可以阻止 continuation（强制停止）、可以静默通过。理解这个三向分叉，才能真正理解 stop hooks 为什么这么设计。"
 importance: 1
 ---
 

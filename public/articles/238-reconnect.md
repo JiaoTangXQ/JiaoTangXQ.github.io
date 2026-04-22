@@ -3,7 +3,6 @@ title: "reconnect 设计说明：失败不是尾声，而是下一步的前提"
 slug: "238-reconnect"
 date: 2026-04-09
 topics: [浏览器扩展, 容错设计, Claude Code 内核]
-summary: "Claude Code bridge 的 reconnect 逻辑把连接失败当成需要被处理的正常事件，而不是异常情况。设计了重试策略、退避机制、用户感知级别——这些说明失败和重连是接入链设计的一部分，不是补丁。"
 importance: 0.9
 ---
 

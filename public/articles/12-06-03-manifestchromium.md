@@ -3,7 +3,6 @@ title: "跨平台分析：Chromium 生态为什么是碎的，以及接入它需
 slug: "12-06-03-manifestchromium"
 date: 2026-04-09
 topics: [外延执行]
-summary: "CHROMIUM_BROWSERS 这个配置对象定义了 7 种浏览器在 macOS、Linux、Windows 三个平台上的数据路径和 NativeMessagingHosts 目录。这份巨大的配置表不是过度工程，而是真实世界里 Chromium 生态的碎片化现实的直接映射。"
 importance: 1
 ---
 

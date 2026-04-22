@@ -3,7 +3,6 @@ title: "面试题：RemoteSessionManager 为什么同时管 WebSocket、HTTP 和
 slug: "08-05-01-remotesessionmanagerremote"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "WebSocket 订阅、HTTP 发送、权限请求映射三件事不能拆开，因为它们共享同一个「会话活着」的前提——断线时需要同时清理订阅、取消 pending 的权限请求、重置发送队列，分开管理意味着这三者的生命周期会静默漂移。"
 importance: 1
 ---
 

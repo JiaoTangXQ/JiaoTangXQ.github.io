@@ -3,7 +3,6 @@ title: "serverName、socket 路径和 MCP 名字为什么要保持一致"
 slug: "12-07-04-servernamesocket"
 date: 2026-04-09
 topics: [外延执行]
-summary: "createChromeContext() 固定 serverName 为「Claude in Chrome」，common.ts 统一了 CLAUDE_IN_CHROME_MCP_SERVER_NAME 和 socket 路径构造。显示名、MCP 协议名和连接地址三者一致，是让 reconnect、日志和 UI 能互相认出来的基础。"
 importance: 1
 ---
 

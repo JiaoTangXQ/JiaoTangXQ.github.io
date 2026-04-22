@@ -11,7 +11,6 @@
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
-    "ai:suggest": "tsx scripts/content/aiSuggest.mts",
     "refresh:content": "node --import tsx scripts/content/external/refresh.mts"
   },
   "dependencies": {

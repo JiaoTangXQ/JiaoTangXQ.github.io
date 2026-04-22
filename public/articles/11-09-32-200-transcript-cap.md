@@ -3,7 +3,6 @@ title: "虚拟滚动上线后，200 条 cap 退化成兜底"
 slug: "11-09-32-200-transcript-cap"
 date: 2026-04-09
 topics: [终端界面]
-summary: "Messages.tsx 里的 MAX_MESSAGES_TO_SHOW_IN_TRANSCRIPT_MODE 在 virtualScrollRuntimeGate 打开时不再主导主路径。真正控制可见范围的变成了视口和虚拟滚动，旧上限只剩兜底角色。"
 importance: 1
 ---
 

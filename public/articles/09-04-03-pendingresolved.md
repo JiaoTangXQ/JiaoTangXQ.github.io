@@ -3,7 +3,6 @@ title: "为什么权限请求要落盘到 pending/resolved 目录，而不是只
 slug: "09-04-03-pendingresolved"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "permissionSync.ts 把每个权限请求写到 ~/.claude/teams/{team}/permissions/pending/ 目录，审批后移到 resolved/。这不是过度设计——它在回答一个具体问题：跨进程的 agent 怎么和 leader 协调权限，以及如何保证权限审批的可追溯性。"
 importance: 1
 ---
 

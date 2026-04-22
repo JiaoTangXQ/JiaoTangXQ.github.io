@@ -3,7 +3,6 @@ title: "bridge 的功力：知道什么绝不能被带上路"
 slug: "156-bridge"
 date: 2026-04-09
 topics: [远端执行, 桥接设计, 安全边界]
-summary: "remotePermissionBridge.ts 是一个不到 100 行的文件，但它实现了远端边界世界里最关键的判断：哪些东西可以跨边界传递，哪些必须在边界处停下来。bridge 的设计哲学不是'最大化传递'，而是'知道什么不该传'。"
 importance: 0.9
 ---
 

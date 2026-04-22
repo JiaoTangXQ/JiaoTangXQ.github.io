@@ -3,8 +3,6 @@ title: "为什么创建 worktree 之后要调用 clearMemoryFileCaches() 和 upd
 slug: "02-05-02-cwd-worktreesession"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: >-
-  面试追问：worktree 创建完成后，Claude Code 做了 clearMemoryFileCaches()、updateHooksConfigSnapshot() 等一系列"重置"操作。为什么这些缓存需要在 worktree 创建后失效？
 importance: 1
 ---
 

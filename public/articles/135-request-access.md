@@ -3,7 +3,6 @@ title: "request_access：会话级许可为什么比逐步求情效率更高"
 slug: "135-request-access"
 date: 2026-04-09
 topics: [外延执行, 权限系统, 用户体验]
-summary: "Claude Code 的 Claude in Chrome 集成用 request_access 在会话开始时一次性获取所有必要权限，而不是在每次操作前单独请求。这个设计选择在用户体验和安全性上有什么具体影响？"
 importance: 0.9
 ---
 

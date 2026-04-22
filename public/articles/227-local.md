@@ -3,7 +3,6 @@ title: "local 命令：有些事就不该绕模型一圈"
 slug: "227-local"
 date: 2026-04-09
 topics: [命令系统, 性能优化, Claude Code 内核]
-summary: "Claude Code 里 type: local 的命令直接调用本地模块返回结果，不经过模型推理。清空历史、压缩上下文、列出文件——这类有确定答案的操作，由程序直接做比让模型推理更快、更稳定。"
 importance: 0.9
 ---
 

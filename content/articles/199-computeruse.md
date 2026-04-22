@@ -3,7 +3,6 @@ title: "computerUse 为什么是能力簇而不是零散动作的集合"
 slug: "199-computeruse"
 date: 2026-04-09
 topics: [computerUse, 架构设计, Claude Code 内核]
-summary: "computerUse 在 Claude Code 里不是一堆截图工具加鼠标工具加键盘工具的随意组合，而是一套有内在逻辑的能力簇。这个区别决定了模型能否正确推理何时和如何使用这些能力。"
 importance: 0.9
 ---
 

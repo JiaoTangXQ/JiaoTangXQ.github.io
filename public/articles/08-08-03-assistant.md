@@ -3,7 +3,6 @@ title: "工程细节：翻页加载历史时，如何保持滚动位置不被打
 slug: "08-08-03-assistant"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "前插历史消息会让所有现有消息向下位移，导致用户视口跳跃——useAssistantHistory.ts 用 layout effect 在 DOM 更新后、浏览器绘制前，精确补偿滚动偏移量，让阅读位置保持不动。"
 importance: 1
 ---
 

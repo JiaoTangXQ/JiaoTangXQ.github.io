@@ -3,7 +3,6 @@ title: "面试题：为什么只缓存正向检测而不缓存负向结果？一
 slug: "12-06-12-stale-truefalse"
 date: 2026-04-09
 topics: [外延执行]
-summary: "isChromeExtensionInstalled_CACHED_MAY_BE_STALE() 只持久化正向检测（已安装），从不持久化负向结果（未安装）。这个不对称设计来自对两种缓存错误代价的分析：stale false 可能永久毒死一台机器的自动启用；stale true 最多带来一次静默连接尝试。在共享配置文件的环境里，这个不对称尤为重要。"
 importance: 1
 ---
 

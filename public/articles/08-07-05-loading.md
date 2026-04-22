@@ -3,7 +3,6 @@ title: "工程取舍：等待权限审批时，为什么要停止 loading 状态
 slug: "08-07-05-loading"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "权限审批是真实的暂停点：远端工具在等待授权，本地继续显示 loading 是在向用户撒谎。setIsLoading(false) 是 UI 在诚实地反映「现在需要你做决定，不是在等机器」这一事实。"
 importance: 1
 ---
 

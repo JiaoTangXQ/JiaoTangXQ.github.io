@@ -3,7 +3,6 @@ title: "session memory 为什么只在阈值和停顿点更新"
 slug: "206-session-memory"
 date: 2026-04-09
 topics: [Session Memory, 连续性, Claude Code 内核]
-summary: "Claude Code 的 session memory 不是每轮都更新，而是只在 token 阈值触发或自然停顿点（比如用户主动要求保存）时才写入。这个限制防止记忆更新干扰主回合的节奏。"
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "面试题：为什么历史分页只在 viewerOnly 模式下启用？"
 slug: "08-08-05-vieweronly"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "live 远端控制模式同时处理 echo 过滤、权限审批、工具状态、实时 diff——加入历史前插会让去重逻辑和滚动锚定互相干扰。viewerOnly 用功能隔离换来了两种模式各自的清晰度。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: “ToolPermissionContext 的权限快照会过期吗？刷新时机有多
 slug: "06-03-02-toolpermissioncontext"
 date: 2026-04-09
 topics: [治理与权限]
-summary: “ToolPermissionContext 是快照不是实时查询。settings 文件变化后最多 1.5 秒才触发刷新，这个窗口期会造成什么问题？系统如何应对？”
 importance: 1
 ---
 

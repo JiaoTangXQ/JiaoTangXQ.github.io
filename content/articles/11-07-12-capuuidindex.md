@@ -3,7 +3,6 @@ title: "位置锚点要同时存 UUID 和 index，两个坐标互相校正"
 slug: "11-07-12-capuuidindex"
 date: 2026-04-09
 topics: [终端界面]
-summary: "computeSliceStart() 里的 sliceAnchorRef 同时存 uuid 和 idx。优先用 uuid 找，找不到用 idx 兜底。消息列表被重组后，单独一个坐标都不够可靠，两个合用才能扛住漂移。"
 importance: 1
 ---
 

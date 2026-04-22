@@ -3,7 +3,6 @@ title: "autocompact 的首要目标是让会话活下来，不是让它看起来
 slug: "212-autocompact"
 date: 2026-04-09
 topics: [autocompact, 上下文管理, Claude Code 内核]
-summary: "Claude Code 的 autocompact 在检测到上下文即将超限时触发，目标是保住会话的可继续性，而不是产生一份漂亮的对话摘要。这个优先级决定了 autocompact 的实现和触发策略。"
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: “policySettings 凭什么覆盖 userSettings？settings 来源的权力
 slug: "06-07-01-settings"
 date: 2026-04-09
 topics: [治理与权限]
-summary: “Claude Code 的五层 settings 来源为什么不是平等的？policySettings 的管理员特权从哪来？allowManagedPermissionRulesOnly 如何锁定用户的自定义能力？”
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "startDeferredPrefetches() 里的 14 个操作——你能说出它们的
 slug: "02-07-03-deferred-prefetch"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "性能优化分析：首屏渲染后，startDeferredPrefetches() 启动了十几个后台操作。这些操作有什么共同特征？它们的执行顺序重要吗？在 bare 模式下为什么全部跳过？"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "Buddy 的稀有度是怎么算出来的？userId 哈希背后的设计"
 slug: "buddy-pet"
 date: 2026-04-09
 topics: [终端界面]
-summary: "彩蛋设计：Buddy 的种类、眼睛、帽子和稀有度，全部由 userId 哈希确定性地生成。这个设计解决了三个具体的工程问题：防作弊、跨设备一致、可改种类。"
 importance: 1
 ---
 

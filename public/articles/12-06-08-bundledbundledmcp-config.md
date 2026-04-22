@@ -3,7 +3,6 @@ title: "架构分析：bundled 和非 bundled 模式为什么要输出同一套 
 slug: "12-06-08-bundledbundledmcp-config"
 date: 2026-04-09
 topics: [外延执行]
-summary: "setupClaudeInChrome() 对 bundled 和非 bundled 两种打包形态的处理方式不同，但最终返回的 MCP 配置、allowedTools 和 systemPrompt 的结构完全相同。这是「产品形态差异不应该污染运行时协议」原则的具体实现。"
 importance: 1
 ---
 

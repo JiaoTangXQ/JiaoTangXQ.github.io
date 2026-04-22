@@ -3,7 +3,6 @@ title: "getAllSocketPaths 扫现役 sock 也保 legacy fallback"
 slug: "12-07-10-socklegacy-fallback"
 date: 2026-04-09
 topics: [外延执行]
-summary: "getAllSocketPaths() 不只扫当前目录下的 *.sock 文件，还把旧版本留下的 legacy tmp 路径一起加进候选列表。升级后老 socket 路径仍然在恢复列表里，减少「安装了但连不上」的现场事故。"
 importance: 1
 ---
 

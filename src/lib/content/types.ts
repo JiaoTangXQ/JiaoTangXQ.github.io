@@ -139,13 +139,14 @@ export type ArticleFrontmatter = {
   slug: string;
   date: string;
   topics: string[];
-  summary: string;
   cover?: CoverConfig;
   importance?: number;
 };
 
 export type ArticleRecord = ArticleFrontmatter & {
   body: string;
+  /** 纯文本预览（120 字以内），由正文自动派生 */
+  preview: string;
   htmlContent?: string;
 };
 

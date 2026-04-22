@@ -3,7 +3,6 @@ title: "接口能开多宽就开多宽？Claude Code 为什么刻意把权限桥
 slug: "09-06-04-bridgesetter"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "leaderPermissionBridge 只暴露两个 setter，不是因为技术上无法多暴露，而是刻意的接口收窄。这背后是'最小权限原则'在架构设计上的应用：只给调用方确实需要的能力，防止'能力暴露'随时间演变成'行为依赖'。"
 importance: 1
 ---
 

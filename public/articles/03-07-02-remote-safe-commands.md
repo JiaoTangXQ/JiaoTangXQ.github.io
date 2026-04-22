@@ -3,7 +3,6 @@ title: "安全分析：REMOTE_SAFE_COMMANDS 里有哪些命令？为什么这些
 slug: "03-07-02-remote-safe-commands"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "远端模式下只有 REMOTE_SAFE_COMMANDS 里的命令是可见的。这不是「安全」和「不安全」的对立，而是「在远端有稳定语义」和「依赖本地环境前提」的区别。理解这个白名单的选择标准，比背诵名单内容更重要。"
 importance: 1
 ---
 

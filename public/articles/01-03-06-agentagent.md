@@ -3,7 +3,6 @@ title: "对比分析：GitHub Copilot 的工具调用和 Claude Code 的子 agen
 slug: "01-03-06-agentagent"
 date: 2026-04-09
 topics: [工作台架构]
-summary: "从外面看，GitHub Copilot Workspace 和 Claude Code 都能'让 AI 帮你改代码'。但 Claude Code 里的子 agent 同时是一次工具调用、一个登记在案的任务、一个持有独立会话状态的 agent。这三重身份的设计选择，让它和 Copilot 式的单次调用模型走向了完全不同的方向。本文通过对比分析，说明为什么少任何一重身份都会有具体的工程代价。"
 importance: 1
 ---
 

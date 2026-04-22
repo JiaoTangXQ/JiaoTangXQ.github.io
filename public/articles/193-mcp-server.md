@@ -3,7 +3,6 @@ title: "MCP Server 进来的不只是工具：新世界如何先过原制度"
 slug: "193-mcp-server"
 date: 2026-04-09
 topics: [MCP, 扩展系统, Claude Code 内核]
-summary: "接入一个 MCP server 不是安装一批新工具那么简单。它带来的是一套需要被权限系统、任务系统、安全边界一起接住的新世界。Claude Code 让这个新世界在展开能力之前先过原来的制度。"
 importance: 0.9
 ---
 

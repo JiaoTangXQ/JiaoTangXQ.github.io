@@ -3,7 +3,6 @@ title: "getCommands 装配流水线：动态技能是怎么插入命令列表的
 slug: "07-04-02-getcommands"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "getCommands 不只是合并数组。它要处理 memoize 缓存、动态技能去重、可用性过滤，以及把动态技能插入到正确位置。这些细节揭示了命令注册表的真实复杂度。"
 importance: 1
 ---
 

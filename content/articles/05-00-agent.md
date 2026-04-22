@@ -3,7 +3,6 @@ title: "面试题：为什么子 Agent 不是函数调用而是一个对象？"
 slug: "05-00-agent"
 date: 2026-04-09
 topics: [任务与分派]
-summary: "一道经典架构面试题：你设计了一套多 Agent 系统，子 Agent 是临时调用还是正式对象？Claude Code 的答案藏在 Task.ts 第一行。"
 importance: 1.4
 ---
 

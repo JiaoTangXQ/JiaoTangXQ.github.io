@@ -3,7 +3,6 @@ title: "fallback model 切换前为什么要先清空 assistantMessages？"
 slug: "221-fallback-model"
 date: 2026-04-09
 topics: [Claude Code 源码, fallback, 错误恢复]
-summary: "Claude Code 在触发 fallback model 时，不是简单地换个模型重试。它必须先调用 yieldMissingToolResultBlocks 补全悬空的 tool_result，再清空 assistantMessages、discard executor，确保 fallback 模型拿到的是干净的历史。"
 importance: 0.9
 ---
 

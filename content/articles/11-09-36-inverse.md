@@ -3,7 +3,6 @@ title: "手动滚动退出时只清当前高亮，inverse 痕迹留着"
 slug: "11-09-36-inverse"
 date: 2026-04-09
 topics: [终端界面]
-summary: "disarmSearch 只调用 setPositions(null) 清掉黄色 current，不清 query 本身。inverse 样式的全体命中仍然留在屏幕上。手动滚动是退出当前搜索导航模式，不是宣布放弃搜索结果。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "面试题：为什么 tool_use 没有对应的 tool_result 会导致 API
 slug: "04-08-01-tool-result"
 date: 2026-04-09
 topics: [主循环]
-summary: "这不只是 API 规范问题。Claude Code 源码里专门有一个 yieldMissingToolResultBlocks() 函数，在中断、fallback、异常等路径上主动补齐缺失的 tool_result。理解「为什么必须补」背后的逻辑，能让你看清 transcript 完整性的工程价值。"
 importance: 1
 ---
 

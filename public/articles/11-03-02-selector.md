@@ -3,7 +3,6 @@ title: "面试陷阱：useAppState(s => ({ text: s.text })) 有什么问题？"
 slug: "11-03-02-selector"
 date: 2026-04-09
 topics: [终端界面]
-summary: "useAppState(s => ({ text: s.promptSuggestion.text, id: s.promptSuggestion.promptId })) 每次都返回新对象，每次 AppState 任何字段变化都触发重渲染。这不是 bug，是 Object.is 比较语义的必然结果，也是 selector 最常见的误用方式。"
 importance: 1
 ---
 

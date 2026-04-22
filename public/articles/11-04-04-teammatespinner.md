@@ -3,7 +3,6 @@ title: "查看已完成队友时，spinner 提示会主动退场"
 slug: "11-04-04-teammatespinner"
 date: 2026-04-09
 topics: [终端界面]
-summary: "isViewingCompletedTeammate 为 true 时，底部区不再追加 spinner 和 interrupt 提示，只保留关系提示。这条判断很小，但体现了一种优先级：当前关系状态比系统忙碌状态更重要。"
 importance: 1
 ---
 

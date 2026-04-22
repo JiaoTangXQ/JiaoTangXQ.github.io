@@ -3,7 +3,6 @@ title: "副作用为什么要挂到 preAction 之后：副作用的层次归属"
 slug: "243-preaction"
 date: 2026-04-09
 topics: [Hooks, 副作用管理, Claude Code 内核]
-summary: "Claude Code 里副作用操作（文件写入、外部 API 调用、状态修改）被明确放在 preAction hooks 之后执行。这个设计保证了所有前置验证在副作用发生之前完成，让系统的状态变化是可预期的。"
 importance: 0.9
 ---
 

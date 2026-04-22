@@ -3,7 +3,6 @@ title: "session memory 是什么？它和 compact 的区别在哪里？"
 slug: "10-06-01-session-memory"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "session memory 是对当前工作状态的外置笔记，它不摘要整段历史，而是维护'现在做到哪里了'的工作台快照，在 compact 前作为轻量替代路径。"
 importance: 1
 ---
 

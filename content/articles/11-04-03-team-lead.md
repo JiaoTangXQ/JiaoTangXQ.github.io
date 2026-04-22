@@ -3,7 +3,6 @@ title: "当你钻进队友线程，底部提示就换成了另一种语气"
 slug: "11-04-03-team-lead"
 date: 2026-04-09
 topics: [终端界面]
-summary: "正在查看某个 teammate 内容时，输入区底部的提示不再是通用文案，而是换成「esc to return to team lead」。这条文案背后，是 UI 对当前协作层级的主动感知。"
 importance: 1
 ---
 

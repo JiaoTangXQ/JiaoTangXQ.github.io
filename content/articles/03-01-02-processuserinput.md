@@ -3,7 +3,6 @@ title: "面试题：processUserInput 站在哪里？它和 QueryEngine 是什么
 slug: "03-01-02-processuserinput"
 date: 2026-04-09
 topics: [输入与路由]
-summary: "processUserInput 不是工具函数，不是 UI 层，也不是主循环——它是输入世界和会话世界之间的翻译边界。理解它在整条链上的位置，是读懂 Claude Code 会话架构的前提。"
 importance: 1
 ---
 

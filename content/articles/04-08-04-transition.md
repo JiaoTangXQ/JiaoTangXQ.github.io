@@ -3,7 +3,6 @@ title: "系统设计：如何让一个复杂状态机的「为什么继续」始
 slug: "04-08-04-transition"
 date: 2026-04-09
 topics: [主循环]
-summary: "query() 是一个 while(true) 循环，有十几个 continue 点。大多数系统用 boolean flag 或直接 continue 来控制跳转——这在简单场景里够用，但当循环有十几种继续理由时，boolean flag 会变成一团难以调试的状态糊。transition.reason 是 Claude Code 对这个问题的系统性答案。"
 importance: 1
 ---
 

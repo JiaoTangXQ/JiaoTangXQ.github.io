@@ -3,7 +3,6 @@ title: "StickyTracker 用 useSyncExternalStore 订阅滚动事件，不是 useEf
 slug: "11-09-17-stickytracker"
 date: 2026-04-09
 topics: [终端界面]
-summary: "StickyTracker 是 VirtualMessageList 尾部挂的独立子组件，用 useSyncExternalStore 订阅 scrollRef 的滚动事件。useSyncExternalStore 而不是 useEffect 的选择，是为了避免 tearing（撕裂），在每次 scroll tick 里同步读取最新滚动位置。"
 importance: 1
 ---
 

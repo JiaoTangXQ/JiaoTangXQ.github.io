@@ -3,7 +3,6 @@ title: "stop hooks 阻塞时如何改写主循环去向？"
 slug: "217-stop-hooks"
 date: 2026-04-09
 topics: [Claude Code 源码, hooks, 主循环]
-summary: "stop hooks 不是普通的后置插件。当它返回 blocking error 时，系统会把错误追加进 messages 并把 transition.reason 设为 stop_hook_blocking，触发下一轮——而不是退出。面试中被问到这个设计，答对了说明你真正读过主循环。"
 importance: 0.9
 ---
 

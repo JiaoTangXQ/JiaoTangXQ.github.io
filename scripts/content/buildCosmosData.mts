@@ -125,9 +125,7 @@ export function buildCosmosData(): CosmosData {
 
   const nodes: CosmosNode[] = records.map((record, i) => {
     const isExternal = record.contentType === "external";
-    const preview = isExternal
-      ? record.preview
-      : (record.summary ?? "");
+    const preview = record.preview ?? "";
     return {
       slug: record.slug,
       title: record.title,

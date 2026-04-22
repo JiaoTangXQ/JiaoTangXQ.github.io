@@ -3,7 +3,6 @@ title: "工程取舍：seed bundle 的三级降级策略是怎么设计的？"
 slug: "08-09-02-seed-bundle"
 date: 2026-04-09
 topics: [远端与边界]
-summary: "git bundle 有大小上限（默认 100MB），超出时依次尝试 --all → HEAD-only → squashed-root——三级降级是「能传多少上下文就传多少」的工程化实现，每一级都有明确的取舍说明。"
 importance: 1
 ---
 

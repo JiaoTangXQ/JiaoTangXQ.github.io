@@ -3,7 +3,6 @@ title: "runWithTeammateContext 套 runWithAgentContext：为什么需要两层 A
 slug: "09-03-03-runwithteammatecontextrunwithagentcontext"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "Claude Code 给同进程 teammate 套了两层 AsyncLocalStorage 上下文：外层 TeammateContext 管团队身份，内层 AgentContext 管执行归因。两层不是冗余，而是分开回答'你在哪个团队'和'这次执行是谁发起的'两个不同问题。这篇从原理到取舍，解释双层上下文的设计理由。"
 importance: 1
 ---
 

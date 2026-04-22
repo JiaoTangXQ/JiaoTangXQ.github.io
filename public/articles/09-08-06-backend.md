@@ -3,7 +3,6 @@ title: "注册 backend 和探测环境是两件不同的事，为什么 Claude C
 slug: "09-08-06-backend"
 date: 2026-04-09
 topics: [多Agent协作]
-summary: "registry.ts 里 ensureBackendsRegistered() 只做轻量的模块导入，detectAndGetBackend() 才真正执行 shell 命令探测环境。两件事刻意分开：注册是低成本的准备工作，探测是高成本的环境读取，懒加载边界恰好在这两件事之间。"
 importance: 1
 ---
 

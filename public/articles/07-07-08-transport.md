@@ -3,8 +3,6 @@ title: "MCP transport 层为什么需要六种实现？stdio、SSE、HTTP、WebS
 slug: "07-07-08-transport"
 date: 2026-04-09
 topics: [扩展系统]
-summary: >-
-  MCP types.ts 定义了 6 种 transport：stdio、sse、sse-ide、http、ws、sdk。每种 transport 对应一种不同的通信场景，不是"六种方式做同一件事"，而是"六种不同的连接约束"。
 importance: 1
 ---
 

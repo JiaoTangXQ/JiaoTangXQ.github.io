@@ -3,7 +3,6 @@ title: "为什么 AppWrapperProps 里有 getFpsMetrics 这么奇怪的东西？"
 slug: "02-07-01-launchrepl"
 date: 2026-04-09
 topics: [工作台架构, 启动]
-summary: "launchRepl() 接受一个 AppWrapperProps 参数，里面有 getFpsMetrics、stats、initialState。为什么这些东西要在启动时传入？它们解决了什么问题？"
 importance: 1
 ---
 

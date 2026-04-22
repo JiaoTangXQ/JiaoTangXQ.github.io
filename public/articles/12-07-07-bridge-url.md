@@ -3,7 +3,6 @@ title: "bridge URL 分层解算：谁能走哪座桥，代码说清楚"
 slug: "12-07-07-bridge-url"
 date: 2026-04-09
 topics: [外延执行]
-summary: "getChromeBridgeUrl() 按用户类型（ant 内部/外部）、feature flag（本地 bridge、staging OAuth）逐层判断，返回对应环境的 bridge 地址。桥地址不是写死的，也不是随机的，而是按「你是谁、你在哪里」有序解算的。"
 importance: 1
 ---
 

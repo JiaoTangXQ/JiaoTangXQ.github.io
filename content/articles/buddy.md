@@ -3,7 +3,6 @@ title: "Buddy 的动画状态机怎么根据 Agent 状态切换？"
 slug: "buddy"
 date: 2026-04-09
 topics: [终端界面]
-summary: "彩蛋设计：Buddy 不只是一个会动的像素小动物。它的动画帧、气泡颜色、宽窄布局和输入框染色，都有明确的触发逻辑，而且全部接在已有的状态机上。"
 importance: 1
 ---
 

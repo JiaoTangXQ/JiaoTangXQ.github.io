@@ -3,7 +3,6 @@ title: "leader UI：团队里的主导界面为什么是收口混乱，而不是
 slug: "151-leader-ui"
 date: 2026-04-09
 topics: [团队协作, 权限系统, UI设计]
-summary: "在 Claude Code 的多 agent 团队模式里，leader agent 有一个专属的 UI 状态。这个 leader UI 不是用来给 leader 更多权力的，而是用来在有多个 agent 同时工作时，把混乱的权限请求和决策归口到一处。这个设计解决了什么具体问题？"
 importance: 0.9
 ---
 

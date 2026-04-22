@@ -3,7 +3,6 @@ title: "第十三卷回收索引：前四卷里的 `tool_result` 让每次动作
 slug: "251-tool-result"
 date: 2026-04-09
 topics: [参考]
-summary: "`query()` 会显式检查 `tool_use` 后面有没有对应的 `tool_result`，中断、fallback 或异常路径还会主动补 `yieldMissingToolResultBloc..."
 importance: 0.9
 ---
 

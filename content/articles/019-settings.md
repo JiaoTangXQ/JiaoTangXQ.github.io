@@ -3,7 +3,6 @@ title: "Claude Code settings 治理地图"
 slug: "019-settings"
 date: 2026-04-09
 topics: [参考]
-summary: "Claude Code 不是读一份 `settings.json` 就结束。它的 settings 系统在做的是真正的治理工作：多来源叠加、优先级、校验、监听、缓存、变更前拦截、对运行时的制度回写。 ..."
 importance: 0.9
 ---
 

@@ -3,7 +3,6 @@ title: "autocompact 的触发阈值是怎么算的？为什么不是一个固定
 slug: "10-03-01-autocompact"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "autocompact 的触发阈值不是固定值，而是根据模型上下文窗口、摘要输出预算、安全 buffer 动态计算的，这个设计背后有工程理由。"
 importance: 1
 ---
 

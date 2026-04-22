@@ -3,7 +3,6 @@ title: "MCP prompts 和 MCP skills 看起来一样，但来源完全不同——
 slug: "07-08-04-promptsskills"
 date: 2026-04-09
 topics: [扩展系统]
-summary: "MCP prompts 来自 listPrompts，是服务器直接提供的运行时模板。MCP skills 通过 mcpSkillBuilders 翻译成 Command 对象，纳入 Claude Code 的命令制度。两者外表相似，但血缘和生命周期完全不同。"
 importance: 1
 ---
 

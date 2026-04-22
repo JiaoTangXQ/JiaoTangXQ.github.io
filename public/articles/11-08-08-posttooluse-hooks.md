@@ -3,7 +3,6 @@ title: "tool_result 到了，PostToolUse hook 还在跑——shouldRenderStatica
 slug: "11-08-08-posttooluse-hooks"
 date: 2026-04-09
 topics: [终端界面]
-summary: "Claude Code 的消息行在工具结果到达后并不立即静态化，而是要等 PostToolUse hook 也结清。buildMessageLookups 里的 inProgressHookCounts 和 resolvedHookCounts 提供了这个判断所需的数据。"
 importance: 1
 ---
 

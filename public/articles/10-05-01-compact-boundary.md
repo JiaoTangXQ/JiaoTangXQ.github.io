@@ -3,7 +3,6 @@ title: "compact boundary 是什么？压缩后的消息流怎么被切片？"
 slug: "10-05-01-compact-boundary"
 date: 2026-04-09
 topics: [上下文管理]
-summary: "compact boundary marker 是压缩历史和活跃上下文之间的分割线，getMessagesAfterCompactBoundary 依赖它保证模型每次只看到压缩后的消息视图。"
 importance: 1
 ---
 

@@ -3,7 +3,6 @@ title: "expandKey 用 tool_use_id：工具调用和结果是一个展开单元"
 slug: "11-09-33-tool-use-id"
 date: 2026-04-09
 topics: [终端界面]
-summary: "VirtualMessageList 里，expandKey 优先取 tool_use_id，让 tool_use 和对应的 tool_result 共用同一个展开/折叠状态。点一次展开两行，因为它们语义上属于同一个动作。"
 importance: 1
 ---
 

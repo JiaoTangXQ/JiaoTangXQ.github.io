@@ -77,7 +77,7 @@ async function buildArticlePages() {
     fs.mkdirSync(dir, { recursive: true });
 
     const title = `${escapeHtml(a.title)} — ${SITE_NAME}`;
-    const desc = escapeHtml(a.summary);
+    const desc = escapeHtml(a.preview);
     const url = `${SITE_URL}/article/${a.slug}`;
     const dateStr = normalizeDate(a.date);
 

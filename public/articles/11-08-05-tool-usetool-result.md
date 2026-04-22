@@ -3,7 +3,6 @@ title: "expandKey 为什么要把 tool_use 和 tool_result 折叠成同一个展
 slug: "11-08-05-tool-usetool-result"
 date: 2026-04-09
 topics: [终端界面]
-summary: "Claude Code 的 expandKey 函数用 tool_use_id 而不是 uuid 作为展开状态的键，这意味着工具请求和结果共用同一个折叠状态，用户折叠的是一次完整的动作，不是两条分开的消息。"
 importance: 1
 ---
 

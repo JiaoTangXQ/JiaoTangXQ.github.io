@@ -3,7 +3,6 @@ title: "同样是用 lookupsRef，isItemClickable 和 shouldRenderStatically 的
 slug: "11-08-09-lookupsref"
 date: 2026-04-09
 topics: [终端界面]
-summary: "lookupsRef 在 Messages.tsx 里有两种读取模式：事件回调里按需读，渲染函数体里直接计算。两种模式的选择取决于调用时机是渲染期还是事件期，不是随意的。"
 importance: 1
 ---
 

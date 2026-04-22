@@ -3,7 +3,6 @@ title: "filterForBriefTool 删冗余，不删解释"
 slug: "11-07-06-briefsystemerror"
 date: 2026-04-09
 topics: [终端界面]
-summary: "filterForBriefTool() 在 brief-only 模式下只保留 Brief 工具的 tool_use/tool_result、真实用户输入，以及必须保留的 system 消息和 API 错误。压缩不等于把「理解这轮发生了什么」所需的信息也一起删掉。"
 importance: 1
 ---
 
