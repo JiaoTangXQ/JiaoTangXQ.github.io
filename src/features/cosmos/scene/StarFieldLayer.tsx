@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { starFieldVertex, starFieldFragment } from "../shaders/starField";
 
-const STAR_COUNT = 12000;
+const STAR_COUNT = 8000;
 const SPREAD_X = 4000;
 const SPREAD_Y = 3000;
 

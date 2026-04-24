@@ -7,7 +7,20 @@ import type {
 type NormalizeFeedItemsArgs = {
   xml: string;
   source: ExternalSource;
+  /**
+   * 只接收 `pubDate >= now - sinceHours` 的条目。无法解析日期的条目会被丢弃。
+   * 这是"每日最新"语义的源头硬约束，防止 NOAA Ocean Facts 这类 FAQ 合集源
+   * 把 2008 年起的历史全吐出来。
+   */
+  sinceHours?: number;
+  /**
+   * source.maxItems 未设置时使用的兜底值。防止未配置的源一次灌几百条候选。
+   */
+  defaultMaxItems?: number;
 };
+
+const DEFAULT_SINCE_HOURS = 48;
+const DEFAULT_MAX_ITEMS = 25;
 
 function decodeXmlEntities(value: string): string {
   return value
@@ -61,9 +74,10 @@ function slugify(value: string): string {
 }
 
 function normalizeDate(value: string): string {
+  if (!value) return "";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
-    return value;
+    return "";
   }
   return parsed.toISOString();
 }
@@ -130,6 +144,8 @@ function parseAtomEntry(
 export function normalizeFeedItems({
   xml,
   source,
+  sinceHours = DEFAULT_SINCE_HOURS,
+  defaultMaxItems = DEFAULT_MAX_ITEMS,
 }: NormalizeFeedItemsArgs): ExternalContentCandidate[] {
   const sourceDomain = new URL(source.siteUrl).hostname;
   const useAtom = isAtomFeed(xml);
@@ -168,11 +184,18 @@ export function normalizeFeedItems({
     };
   });
 
-  dedupedItems.sort(
+  // 时间窗硬约束：只保留 pubDate 在 cutoff 之后的。无日期/解析失败的条目直接丢弃。
+  const cutoff = Date.now() - sinceHours * 3_600_000;
+  const freshItems = dedupedItems.filter((item) => {
+    const t = new Date(item.date).getTime();
+    return Number.isFinite(t) && t >= cutoff;
+  });
+
+  freshItems.sort(
     (left, right) =>
       new Date(right.date).getTime() - new Date(left.date).getTime(),
   );
 
-  const maxItems = source.maxItems ?? dedupedItems.length;
-  return dedupedItems.slice(0, Math.max(maxItems, 0));
+  const maxItems = source.maxItems ?? defaultMaxItems;
+  return freshItems.slice(0, Math.max(maxItems, 0));
 }

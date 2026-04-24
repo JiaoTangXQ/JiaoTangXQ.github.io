@@ -1,9 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useLocation, Link, useNavigate } from "react-router-dom";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
 import type { CosmosData, CosmosNode } from "@/lib/content/types";
 import { ArticleLayout } from "@/features/articles/ArticleLayout";
 import { NearbyPlanets } from "@/features/articles/NearbyPlanets";
@@ -27,6 +23,18 @@ function stripFrontmatter(md: string): string {
 
 /** Render markdown body to HTML using remark + rehype. */
 async function renderMarkdown(md: string): Promise<string> {
+  const [
+    { unified },
+    { default: remarkParse },
+    { default: remarkRehype },
+    { default: rehypeStringify },
+  ] = await Promise.all([
+    import("unified"),
+    import("remark-parse"),
+    import("remark-rehype"),
+    import("rehype-stringify"),
+  ]);
+
   const result = await unified()
     .use(remarkParse)
     .use(remarkRehype, { allowDangerousHtml: true })
@@ -68,7 +76,7 @@ export function ArticlePage() {
       setFadeOut(true);
       fadeTimerRef.current = setTimeout(() => {
         navigate(`/${location.hash}`);
-      }, 450);
+      }, 260);
     },
     [navigate, location.hash],
   );
@@ -221,7 +229,7 @@ export function ArticlePage() {
           zIndex: 1000,
           backgroundColor: "var(--space-deep, #060a14)",
           opacity: fadeIn || fadeOut ? 1 : 0,
-          transition: "opacity 450ms ease-in-out",
+          transition: "opacity 260ms ease-in-out",
           pointerEvents: fadeIn || fadeOut ? "all" : "none",
         }}
         aria-hidden="true"

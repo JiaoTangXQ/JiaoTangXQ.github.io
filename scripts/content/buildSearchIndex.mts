@@ -4,8 +4,10 @@ import { readArticles } from "./readArticles.mjs";
 import { readExternalContent } from "./readExternalContent.mjs";
 import type { SearchIndexEntry } from "../../src/lib/content/types.js";
 
+const SEARCH_BODY_SNIPPET_LENGTH = 360;
+
 /** Extract a plain-text snippet from HTML for search indexing. */
-function htmlToSnippet(html: string, maxLen = 800): string {
+function htmlToSnippet(html: string, maxLen = SEARCH_BODY_SNIPPET_LENGTH): string {
   return html
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
@@ -25,7 +27,7 @@ export function buildSearchIndexEntries(): SearchIndexEntry[] {
     topics: article.topics,
     date: article.date,
     cluster: article.topics[0] ?? "其他",
-    body: article.body.slice(0, 800),
+    body: article.body.slice(0, SEARCH_BODY_SNIPPET_LENGTH),
     contentType: "local" as const,
     language: "zh",
   }));
@@ -37,7 +39,7 @@ export function buildSearchIndexEntries(): SearchIndexEntry[] {
     topics: item.topics,
     date: item.date,
     cluster: item.topics[0] ?? "其他",
-    body: htmlToSnippet(item.content ?? "", 800),
+    body: htmlToSnippet(item.content ?? ""),
     contentType: item.contentType,
     language: item.language,
     sourceName: item.sourceName,

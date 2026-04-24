@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { CosmosData } from "@/lib/content/types";
 import type { ClickMap } from "@/lib/usePlanetClicks";
@@ -32,13 +33,13 @@ const DEV = import.meta.env.DEV;
  *
  * 渲染顺序（从后到前）：
  * 1. DeepSpace — fragment shader 深空渐变
- * 2. StarField — 12000 粒子星空
+ * 2. StarField — 8000 粒子星空
  * 3. Nebula        — 多层 FBM 星云（每个集群一片）
  * 4. Meteor        — 流星 + 星尘粒子
  * 5. GravityField  — 引力场暗示连线
  * 6. Nodes         — 行星节点（InstancedMesh）
  */
-export function CosmosScene({
+function CosmosSceneImpl({
   data,
   clicks,
   cameraRef,
@@ -70,7 +71,7 @@ export function CosmosScene({
         alpha: false,
         powerPreference: "high-performance",
       }}
-      dpr={[1, 2]}
+      dpr={[1, 1.5]}
       style={{
         position: "absolute",
         inset: 0,
@@ -98,3 +99,5 @@ export function CosmosScene({
     </Canvas>
   );
 }
+
+export const CosmosScene = memo(CosmosSceneImpl);

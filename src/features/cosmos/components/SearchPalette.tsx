@@ -9,13 +9,18 @@ import {
 import MiniSearch from "minisearch";
 import type { CosmosNode, SearchIndexEntry } from "@/lib/content/types";
 import { getPalette } from "@/lib/content/types";
+import {
+  getCachedSearchIndex,
+  loadSearchIndex,
+} from "@/lib/content/searchIndexCache";
 import "@/styles/cosmos-ui.css";
+
+const SEARCH_RESULT_LIMIT = 80;
 
 type Props = {
   open: boolean;
   onClose: () => void;
   items: CosmosNode[];
-  searchIndex: SearchIndexEntry[];
   onSelect: (node: CosmosNode) => void;
 };
 
@@ -28,15 +33,44 @@ export function SearchPalette({
   open,
   onClose,
   items,
-  searchIndex,
   onSelect,
 }: Props) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [searchIndex, setSearchIndex] = useState<SearchIndexEntry[]>(
+    () => getCachedSearchIndex() ?? [],
+  );
+  const [indexStatus, setIndexStatus] = useState<
+    "idle" | "loading" | "ready" | "error"
+  >(searchIndex.length ? "ready" : "idle");
   const deferredQuery = useDeferredValue(query);
+  const hasQuery = deferredQuery.trim().length > 0;
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const paletteRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!hasQuery) return;
+    if (searchIndex.length) return;
+
+    let cancelled = false;
+    setIndexStatus("loading");
+    loadSearchIndex()
+      .then((data) => {
+        if (cancelled) return;
+        setSearchIndex(data);
+        setIndexStatus("ready");
+      })
+      .catch((err) => {
+        console.error("[search] 加载索引失败:", err);
+        if (!cancelled) setIndexStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, hasQuery, searchIndex.length]);
 
   // slug → CosmosNode 映射
   const nodeMap = useMemo(() => {
@@ -49,6 +83,8 @@ export function SearchPalette({
 
   // 构建 MiniSearch 索引（模糊搜索 + 前缀匹配 + 字段权重）
   const miniSearch = useMemo(() => {
+    if (!searchIndex.length || !hasQuery) return null;
+
     const ms = new MiniSearch<{ id: string; title: string; preview: string; topics_text: string; body: string }>({
       fields: ["title", "preview", "topics_text", "body"],
       storeFields: ["id"],
@@ -70,27 +106,31 @@ export function SearchPalette({
     );
 
     return ms;
-  }, [searchIndex]);
+  }, [searchIndex, hasQuery]);
 
   // 搜索结果
   const results: ScoredResult[] = useMemo(() => {
-    if (!deferredQuery.trim()) {
+    if (!hasQuery) {
       return items
         .map((node) => ({ node, score: 0 }))
         .sort(
           (a, b) =>
             new Date(b.node.date).getTime() - new Date(a.node.date).getTime(),
-        );
+        )
+        .slice(0, SEARCH_RESULT_LIMIT);
     }
+
+    if (!miniSearch) return [];
 
     return miniSearch
       .search(deferredQuery)
+      .slice(0, SEARCH_RESULT_LIMIT)
       .map((result) => {
         const node = nodeMap.get(result.id as string);
         return node ? { node, score: result.score } : null;
       })
       .filter((r): r is ScoredResult => r !== null);
-  }, [deferredQuery, items, miniSearch, nodeMap]);
+  }, [deferredQuery, hasQuery, items, miniSearch, nodeMap]);
 
   // Reset active index when results change
   useEffect(() => {
@@ -144,7 +184,9 @@ export function SearchPalette({
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
-          setActiveIndex((i) => Math.min(i + 1, results.length - 1));
+          setActiveIndex((i) =>
+            Math.min(i + 1, Math.max(results.length - 1, 0)),
+          );
           break;
         case "ArrowUp":
           e.preventDefault();
@@ -222,7 +264,11 @@ export function SearchPalette({
           role="listbox"
           aria-label="搜索结果"
         >
-          {results.length === 0 && deferredQuery.trim() ? (
+          {hasQuery && indexStatus === "loading" ? (
+            <div className="search-palette__empty">正在准备搜索索引...</div>
+          ) : hasQuery && indexStatus === "error" ? (
+            <div className="search-palette__empty">搜索索引暂时不可用</div>
+          ) : results.length === 0 && hasQuery ? (
             <div className="search-palette__empty">未找到相关文章</div>
           ) : (
             results.map((result, i) => {

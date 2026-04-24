@@ -5,7 +5,7 @@
  * 文字颜色与星球主色一致。
  * 仅在 zoom 足够大时显示，避免低 zoom 时文字堆叠。
  */
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import type { CosmosNode } from "@/lib/content/types";
 import { getPalette, buildCoverGradient } from "@/lib/content/types";
 import "@/styles/cosmos-ui.css";
@@ -56,7 +56,7 @@ const OFFSET_PRESETS = [
 /** 折线的垂直段长度 */
 const STEM_LENGTH = 20;
 
-export function NodeLabels({
+function NodeLabelsImpl({
   nodes,
   camera,
   viewportWidth,
@@ -227,3 +227,5 @@ export function NodeLabels({
     </div>
   );
 }
+
+export const NodeLabels = memo(NodeLabelsImpl);

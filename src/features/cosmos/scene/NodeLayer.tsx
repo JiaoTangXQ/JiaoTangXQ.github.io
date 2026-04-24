@@ -82,6 +82,7 @@ export function NodeLayer({
   const emphasisCurrent = useRef<Float32Array>(
     new Float32Array(nodes.length).fill(0.5),
   );
+  const emphasisAnimatingRef = useRef(false);
 
   // 找到 hovered 节点的 cluster
   const hoveredCluster = useMemo(() => {
@@ -89,6 +90,28 @@ export function NodeLayer({
     const node = nodes.find((n) => n.slug === hoveredSlug);
     return node?.cluster ?? null;
   }, [hoveredSlug, nodes]);
+
+  const emphasisTargets = useMemo(() => {
+    const targets = new Float32Array(nodes.length);
+    for (let i = 0; i < nodes.length; i++) {
+      const level = getEmphasis(
+        nodes[i],
+        hoveredSlug,
+        activeSlug,
+        activeTheme,
+        hoveredCluster,
+      );
+      targets[i] = emphasisToFloat(level);
+    }
+    return targets;
+  }, [nodes, hoveredSlug, activeSlug, activeTheme, hoveredCluster]);
+
+  useEffect(() => {
+    if (emphasisCurrent.current.length !== nodes.length) {
+      emphasisCurrent.current = new Float32Array(nodes.length).fill(0.5);
+    }
+    emphasisAnimatingRef.current = true;
+  }, [emphasisTargets, nodes.length]);
 
   // Instance attributes: 颜色、emphasis、大小、已访问标志
   const { colorInner, colorOuter, emphasis, nodeSize, visited, geometry } =
@@ -187,31 +210,35 @@ export function NodeLayer({
       mat.uniforms.uBlindspot.value = bsCur + bsDiff * 0.12;
     }
 
+    if (!emphasisAnimatingRef.current) return;
+
     const empAttr = geometry.getAttribute("aEmphasis") as THREE.InstancedBufferAttribute;
     const cur = emphasisCurrent.current;
     let needsUpdate = false;
+    let stillAnimating = false;
 
     for (let i = 0; i < nodes.length; i++) {
-      const level = getEmphasis(
-        nodes[i],
-        hoveredSlug,
-        activeSlug,
-        activeTheme,
-        hoveredCluster,
-      );
-      const target = emphasisToFloat(level);
+      const target = emphasisTargets[i] ?? 0.5;
       const prev = cur[i];
-      const next = prev + (target - prev) * LERP_SPEED;
+      const diff = target - prev;
 
-      if (Math.abs(next - prev) > 0.001) {
+      if (Math.abs(diff) > 0.001) {
+        const next = prev + diff * LERP_SPEED;
         cur[i] = next;
         empAttr.array[i] = next;
         needsUpdate = true;
+        if (Math.abs(target - next) > 0.001) {
+          stillAnimating = true;
+        }
       }
     }
 
     if (needsUpdate) {
       empAttr.needsUpdate = true;
+    }
+
+    if (!stillAnimating) {
+      emphasisAnimatingRef.current = false;
     }
   });
 

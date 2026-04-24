@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CosmosData,
   CosmosNode,
-  SearchIndexEntry,
 } from "@/lib/content/types";
 import { CosmosScene } from "../scene/CosmosScene";
 import { CosmosErrorBoundary } from "./ErrorBoundary";
@@ -27,12 +26,10 @@ import "@/styles/cosmos-ui.css";
 
 type Props = {
   dataset: CosmosData | null;
-  searchIndex?: SearchIndexEntry[];
 };
 
 export function CosmosViewport({
   dataset,
-  searchIndex = [],
 }: Props) {
   // --- Camera system (owned here, shared with Three.js + DOM) ---
   const initialCamera = loadCameraFromHash();
@@ -50,6 +47,7 @@ export function CosmosViewport({
 
   // --- UI state ---
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const hoveredSlugRef = useRef<string | null>(null);
   const [activeNode, setActiveNode] = useState<CosmosNode | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -85,7 +83,10 @@ export function CosmosViewport({
   }, [refreshVisited]);
 
   // --- DOM overlay camera state (updated via RAF for smooth labels) ---
-  const [domCamera, setDomCamera] = useState({ x: 0, y: 0, zoom: 1 });
+  const [domCamera, setDomCamera] = useState(() => {
+    const s = cam._stateRef.current;
+    return { x: s.x, y: s.y, zoom: s.zoom };
+  });
   const [viewportSize, setViewportSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1920,
     height: typeof window !== "undefined" ? window.innerHeight : 1080,
@@ -94,7 +95,7 @@ export function CosmosViewport({
 
   // Sync camera ref → DOM state at ~30fps for labels/compass
   // 仅在相机真的动了时才 setState，避免静止时每帧重建对象触发 NodeLabels 重算
-  const prevDomCamRef = useRef({ x: NaN, y: NaN, zoom: NaN });
+  const prevDomCamRef = useRef(domCamera);
   useEffect(() => {
     let running = true;
     let lastUpdate = 0;
@@ -214,6 +215,8 @@ export function CosmosViewport({
   );
 
   const handleNodeHover = useCallback((slug: string | null) => {
+    if (hoveredSlugRef.current === slug) return;
+    hoveredSlugRef.current = slug;
     setHoveredSlug(slug);
   }, []);
 
@@ -414,13 +417,14 @@ export function CosmosViewport({
       )}
 
       {/* Search palette */}
-      <SearchPalette
-        open={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        items={dataset.nodes}
-        searchIndex={searchIndex}
-        onSelect={handleSearchSelect}
-      />
+      {searchOpen && (
+        <SearchPalette
+          open={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          items={dataset.nodes}
+          onSelect={handleSearchSelect}
+        />
+      )}
 
       {/* 盲区地图 HUD */}
       <BlindspotHUD

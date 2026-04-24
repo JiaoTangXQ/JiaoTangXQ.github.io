@@ -18,8 +18,8 @@ export type TransitionPhase =
   | "fading-in"
   | "zooming-out";
 
-const ZOOM_DURATION = 800; // 推近动画时长
-const FADE_DURATION = 450; // 淡出/淡入过渡时长
+const ZOOM_DURATION = 420; // 推近动画时长
+const FADE_DURATION = 260; // 淡出/淡入过渡时长
 const RETURN_KEY = "cosmos-return-camera";
 
 export function useZoomTransition(cam: UseCameraReturn) {

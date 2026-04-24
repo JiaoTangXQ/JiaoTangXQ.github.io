@@ -34,6 +34,7 @@ import {
 const ITEMS_PATH = path.resolve("content/external/items.json");
 const FEED_CONCURRENCY = 8;
 const EXTRACT_CONCURRENCY = 6;
+const SINCE_HOURS = Number(process.env.REFRESH_SINCE_HOURS ?? 48);
 
 type CandidateWithSource = ExternalContentCandidate & {
   sourceLanguage?: string;
@@ -67,7 +68,7 @@ async function runPool<T, R>(
 async function main() {
   const sources = readSourceRegistry();
   console.log(
-    `📡 抓取 ${sources.length} 个信息源（并发 ${FEED_CONCURRENCY}）...`,
+    `📡 抓取 ${sources.length} 个信息源（并发 ${FEED_CONCURRENCY}，时间窗 ${SINCE_HOURS}h）...`,
   );
 
   // 读已有 items
@@ -89,7 +90,7 @@ async function main() {
   await runPool(sources, FEED_CONCURRENCY, async (source) => {
     try {
       const xml = await fetchFeedXml(source);
-      const items = normalizeFeedItems({ xml, source });
+      const items = normalizeFeedItems({ xml, source, sinceHours: SINCE_HOURS });
       for (const it of items) {
         if (existingSlugs.has(it.slug)) continue;
         allCandidates.push({
