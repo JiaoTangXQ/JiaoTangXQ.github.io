@@ -127,6 +127,63 @@ test("sanitizeHtml strips script and resolves relative urls", () => {
   assert.ok(cleaned.includes("https://example.com/about"));
 });
 
+test("sanitizeHtml structures plain text articles with URLs and numbered sections", () => {
+  const raw = [
+    "目前，DeepSeek-V4系列已上线官网与App，并同步开放API与模型权重。",
+    "体验地址： chat.deepseek.com或DeepSeek官方APP API文档： https://api-docs.deepseek.com/zh-cn/guides/thinking_mode",
+    "开源链接： https://huggingface.co/collections/deepseek-ai/deepseek-v4 https://modelscope.cn/collections/deepseek-ai/DeepSeek-V4",
+    "01、Agentic编程能力提升明显，读《三体》三部曲烧了54万token 我们初步感受了下DeepSeek-V4的变化，主要测试的模型是DeepSeek-V4-Pro。",
+  ].join(" ");
+
+  const cleaned = sanitizeHtml(raw, "https://wallstreetcn.com/articles/demo");
+
+  assert.match(cleaned, /<p>目前，DeepSeek-V4系列已上线官网与App/);
+  assert.match(cleaned, /<a href="https:\/\/chat\.deepseek\.com"/);
+  assert.match(cleaned, /<a href="https:\/\/api-docs\.deepseek\.com\/zh-cn\/guides\/thinking_mode"/);
+  assert.match(cleaned, /<h2>01、Agentic编程能力提升明显，读《三体》三部曲烧了54万token<\/h2>/);
+  assert.match(cleaned, /<p>我们初步感受了下DeepSeek-V4的变化/);
+});
+
+test("sanitizeHtml preserves code semantics in plain text articles", () => {
+  const raw = [
+    "可以用 `npm run build:data` 重建内容。",
+    "```ts\nconst url = \"https://example.com/api\";\nconsole.log(url);\n```",
+  ].join("\n\n");
+
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+
+  assert.match(cleaned, /<code>npm run build:data<\/code>/);
+  assert.match(
+    cleaned,
+    /<pre><code>const url = &quot;https:\/\/example\.com\/api&quot;;\nconsole\.log\(url\);<\/code><\/pre>/,
+  );
+  assert.doesNotMatch(cleaned, /<a href="https:\/\/example\.com\/api"/);
+});
+
+test("sanitizeHtml does not treat model versions as numbered sections", () => {
+  const raw =
+    "交付质量已接近Claude Opus 4.6非思考模式，但与其思考模式仍存在差距。DeepSeek-V4-Pro在数学任务中表现接近Claude Opus 4.6-Max等模型。";
+
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+
+  assert.doesNotMatch(cleaned, /<h2>4\.6/);
+  assert.match(cleaned, /Claude Opus 4\.6非思考模式/);
+  assert.match(cleaned, /Claude Opus 4\.6-Max/);
+});
+
+test("sanitizeHtml separates numbered conclusion headings from following body", () => {
+  const raw =
+    "05、结语：DeepSeek-V4亮相，国产算力与开源路线的落地之光 DeepSeek-V4的发布不仅展现了团队在技术和架构上的积淀，也标志着开源大模型在国产算力生态下的实际落地能力。";
+
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+
+  assert.match(
+    cleaned,
+    /<h2>05、结语：DeepSeek-V4亮相，国产算力与开源路线的落地之光<\/h2>/,
+  );
+  assert.match(cleaned, /<p>DeepSeek-V4的发布不仅展现了团队/);
+});
+
 test("extractPreview caps length and trims on punctuation when possible", () => {
   const plain = "这是第一句话。这是第二句话，应该更长一些，以测试截断逻辑的行为。第三句话。";
   const preview = extractPreview(`<p>${plain}</p>`, 20);
