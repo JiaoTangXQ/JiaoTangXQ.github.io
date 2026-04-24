@@ -36,6 +36,10 @@ type VisibleNode = {
 
 const MARGIN = 200;
 
+/** DOM 标签上限：超过这个数只保留最重要的，避免 reconcile 抖动 */
+const MAX_LABELS_MID = 60;
+const MAX_LABELS_NEAR = 24;
+
 /** 与 NodeLayer.dynamicSize 保持一致：该日期之前的 legacy 内容退化为背景星星，不展示标签。 */
 const LEGACY_CUTOFF_MS = new Date("2026-04-20T00:00:00Z").getTime();
 
@@ -102,6 +106,13 @@ export function NodeLabels({
       }
     }
 
+    // 超过上限就按 size 保留最重要的几个；zoom 越近标签越少，避免 .card 模式下大卡片互相堆叠
+    const cap = lodMode === "near" ? MAX_LABELS_NEAR : MAX_LABELS_MID;
+    if (result.length > cap) {
+      result.sort((a, b) => b.node.size - a.node.size);
+      result.length = cap;
+    }
+
     return result;
   }, [
     nodes,
@@ -111,6 +122,7 @@ export function NodeLabels({
     viewportWidth,
     viewportHeight,
     shouldRender,
+    lodMode,
   ]);
 
   if (!shouldRender) return null;

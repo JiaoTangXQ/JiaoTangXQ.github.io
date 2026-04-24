@@ -8,6 +8,7 @@ import type { CosmosData, CosmosNode } from "@/lib/content/types";
 import { ArticleLayout } from "@/features/articles/ArticleLayout";
 import { NearbyPlanets } from "@/features/articles/NearbyPlanets";
 import { recordVisit } from "@/features/cosmos/nodes/personalHistory";
+import { loadCosmos, getCachedCosmos } from "@/lib/content/cosmosCache";
 import "@/styles/article.css";
 
 type ArticleData = {
@@ -39,7 +40,7 @@ export function ArticlePage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [cosmos, setCosmos] = useState<CosmosData | null>(null);
+  const [cosmos, setCosmos] = useState<CosmosData | null>(() => getCachedCosmos());
   const [article, setArticle] = useState<ArticleData | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "not-found">(
     "loading",
@@ -147,11 +148,10 @@ export function ArticlePage() {
     (async () => {
       setStatus("loading");
 
-      let cosmosData = cosmos;
+      let cosmosData = cosmos ?? getCachedCosmos();
       if (!cosmosData) {
         try {
-          const res = await fetch("/data/cosmos.json");
-          cosmosData = (await res.json()) as CosmosData;
+          cosmosData = await loadCosmos();
           if (!cancelled) setCosmos(cosmosData);
         } catch {
           if (!cancelled) setStatus("not-found");
@@ -167,7 +167,9 @@ export function ArticlePage() {
     return () => {
       cancelled = true;
     };
-  }, [slug, cosmos, loadArticle]);
+    // 只依赖 slug：cosmos 被 setCosmos 后不需要再跑 effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   useEffect(() => {
     const scrollEl = document.querySelector(".article-scroll");

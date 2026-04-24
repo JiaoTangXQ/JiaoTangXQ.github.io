@@ -93,15 +93,25 @@ export function CosmosViewport({
   const rafRef = useRef(0);
 
   // Sync camera ref → DOM state at ~30fps for labels/compass
+  // 仅在相机真的动了时才 setState，避免静止时每帧重建对象触发 NodeLabels 重算
+  const prevDomCamRef = useRef({ x: NaN, y: NaN, zoom: NaN });
   useEffect(() => {
     let running = true;
     let lastUpdate = 0;
     const tick = (now: number) => {
       if (!running) return;
       if (now - lastUpdate > 33) {
-        // ~30fps
         const s = cam._stateRef.current;
-        setDomCamera({ x: s.x, y: s.y, zoom: s.zoom });
+        const prev = prevDomCamRef.current;
+        // 像素级阈值：位移 >0.5 或 zoom 变化 >0.001 才算动了
+        if (
+          Math.abs(prev.x - s.x) > 0.5 ||
+          Math.abs(prev.y - s.y) > 0.5 ||
+          Math.abs(prev.zoom - s.zoom) > 0.001
+        ) {
+          prevDomCamRef.current = { x: s.x, y: s.y, zoom: s.zoom };
+          setDomCamera({ x: s.x, y: s.y, zoom: s.zoom });
+        }
         lastUpdate = now;
       }
       rafRef.current = requestAnimationFrame(tick);
