@@ -10,6 +10,7 @@
 
 import type { ExternalContentCandidate } from "../../../src/lib/content/types.js";
 import { htmlToPlainText } from "./sanitizeContent.mjs";
+import { getChinaPoliticalContentReason } from "./chinaPoliticsFilter.mjs";
 
 type ScoredCandidate = {
   candidate: ExternalContentCandidate;
@@ -43,6 +44,15 @@ export function scoreCandidate(candidate: ExternalContentCandidate): ScoredCandi
 
   const plain = htmlToPlainText(candidate.rawExcerpt || "");
   const title = candidate.title || "";
+  const chinaPoliticsReason = getChinaPoliticalContentReason(candidate);
+
+  if (chinaPoliticsReason) {
+    return {
+      candidate,
+      score: 0,
+      reason: chinaPoliticsReason,
+    };
+  }
 
   // Length-based scoring
   if (plain.length < 80) {

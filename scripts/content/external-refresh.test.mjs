@@ -5,6 +5,7 @@ import path from "node:path";
 
 import { normalizeFeedItems } from "./external/normalizeFeedItems.mts";
 import { filterByQuality, scoreCandidate } from "./external/qualityFilter.mts";
+import { isChinaPoliticalContent } from "./external/chinaPoliticsFilter.mts";
 import {
   sanitizeHtml,
   htmlToPlainText,
@@ -156,4 +157,62 @@ test("scoreCandidate recognizes weekly round-up open threads as junk", () => {
   };
   const { score } = scoreCandidate(openThread);
   assert.ok(score < 0.45, `expected junk score, got ${score}`);
+});
+
+test("china politics filter drops PRC politics and cross-strait security coverage", () => {
+  const xiTracker = {
+    slug: "ext-scmp-china-xi-jinping-meets-foreign-leaders-tracker-2026",
+    title: "Xi Jinping meets foreign leaders: tracker 2026",
+    date: "2026-04-24T00:00:00Z",
+    topics: ["社会"],
+    sourceName: "South China Morning Post",
+    sourceUrl: "https://www.scmp.com/news/china/diplomacy/article/foo",
+    sourceDomain: "scmp.com",
+    rawExcerpt:
+      "Mozambique President Daniel Chapo became the first African head of state to meet with Chinese President Xi Jinping this year.",
+  };
+  const taiwanSecurity = {
+    slug: "ext-scmp-china-could-thousands-of-us-hellscape-drone-boats-mess-with-pla-plans-for-taiwan",
+    title: "Could thousands of US hellscape drone boats mess with PLA plans for Taiwan?",
+    date: "2026-04-24T00:00:00Z",
+    topics: ["社会"],
+    sourceName: "South China Morning Post",
+    sourceUrl: "https://www.scmp.com/news/china/military/article/foo",
+    sourceDomain: "scmp.com",
+    rawExcerpt:
+      "Taiwanese analysts welcomed a US Navy plan to deploy uncrewed vessels across the Indo-Pacific.",
+  };
+
+  assert.equal(isChinaPoliticalContent(xiTracker), true);
+  assert.equal(isChinaPoliticalContent(taiwanSecurity), true);
+  assert.ok(scoreCandidate(xiTracker).score < 0.45);
+  assert.ok(scoreCandidate(taiwanSecurity).score < 0.45);
+});
+
+test("china politics filter keeps China business and technology coverage", () => {
+  const deepseek = {
+    slug: "ext-rsshub-wallstreetcn-global-deepseek-v4-ai",
+    title: "DeepSeek V4编程能力“大幅领先”，外媒称中国开源AI正获得全球影响力",
+    date: "2026-04-24T00:00:00Z",
+    topics: ["经济", "社会"],
+    sourceName: "华尔街见闻 · 全球",
+    sourceUrl: "https://wallstreetcn.com/articles/foo",
+    sourceDomain: "wallstreetcn.com",
+    rawExcerpt:
+      "DeepSeek正式发布旗下最新大语言模型V4的预览版本，并计划以开源形式向公众发布。",
+  };
+  const supplyChain = {
+    slug: "ext-scmp-china-inside-tesla-s-hidden-supply-chain-how-a-chinese-town-shapes-the-modern-world",
+    title: "Inside Tesla’s hidden supply chain: how a Chinese town shapes the modern world",
+    date: "2026-04-24T00:00:00Z",
+    topics: ["社会"],
+    sourceName: "South China Morning Post",
+    sourceUrl: "https://www.scmp.com/economy/china-economy/article/foo",
+    sourceDomain: "scmp.com",
+    rawExcerpt:
+      "A booming industrial district of Taizhou has become a critical node in the global electric vehicle supply chain.",
+  };
+
+  assert.equal(isChinaPoliticalContent(deepseek), false);
+  assert.equal(isChinaPoliticalContent(supplyChain), false);
 });

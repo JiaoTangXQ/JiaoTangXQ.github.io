@@ -118,72 +118,76 @@ export function ArticleLayout({
         </div>
       </header>
 
-      <div className="article-meta">
-        <time className="article-meta__date" dateTime={date}>
-          {formatDate(date)}
-        </time>
-        {isExternal && sourceName && (
-          <>
-            <span className="article-meta__sep" />
-            <a
-              className="article-meta__source"
-              href={sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={sourceUrl}
-            >
-              {sourceName}
-            </a>
-          </>
-        )}
-        {topics.length > 0 && <span className="article-meta__sep" />}
-        <div className="article-meta__topics">
-          {topics.map((t) => (
-            <span key={t} className="article-meta__topic">
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <article
-        className={`article-body article-enter${language === "en" ? " article-body--en" : ""}`}
-        dangerouslySetInnerHTML={{ __html: bodyHtml }}
-      />
-
-      {isExternal && (
-        <aside className="article-attribution">
-          <div className="article-attribution__row">
-            <span className="article-attribution__label">本文原载于</span>
-            <a
-              className="article-attribution__source"
-              href={sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {sourceName}
-            </a>
-            {sourceDomain && (
-              <span className="article-attribution__domain">
-                ({sourceDomain})
+      <main className="article-reading-shell">
+        <div className="article-meta">
+          <time className="article-meta__date" dateTime={date}>
+            {formatDate(date)}
+          </time>
+          {isExternal && sourceName && (
+            <>
+              <span className="article-meta__sep" />
+              <a
+                className="article-meta__source"
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={sourceUrl}
+              >
+                {sourceName}
+              </a>
+            </>
+          )}
+          {topics.length > 0 && <span className="article-meta__sep" />}
+          <div className="article-meta__topics">
+            {topics.map((t) => (
+              <span key={t} className="article-meta__topic">
+                {t}
               </span>
-            )}
+            ))}
           </div>
-          <a
-            className="article-attribution__cta"
-            href={sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            阅读原文 →
-          </a>
-          <p className="article-attribution__note">
-            版权归原作者所有。这里只是让你在不离开焦糖星球的情况下通读一遍。
-          </p>
-        </aside>
-      )}
+        </div>
 
-      {children}
+        <div className="article-body-wrap">
+          <article
+            className={`article-body article-enter article-body--prose${language === "en" ? " article-body--en" : ""}${isExternal ? " article-body--external" : ""}`}
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          />
+        </div>
+
+        {isExternal && (
+          <aside className="article-attribution">
+            <div className="article-attribution__row">
+              <span className="article-attribution__label">本文原载于</span>
+              <a
+                className="article-attribution__source"
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {sourceName}
+              </a>
+              {sourceDomain && (
+                <span className="article-attribution__domain">
+                  ({sourceDomain})
+                </span>
+              )}
+            </div>
+            <a
+              className="article-attribution__cta"
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              阅读原文 →
+            </a>
+            <p className="article-attribution__note">
+              版权归原作者所有。这里只是让你在不离开焦糖星球的情况下通读一遍。
+            </p>
+          </aside>
+        )}
+
+        {children}
+      </main>
     </div>
   );
 }
