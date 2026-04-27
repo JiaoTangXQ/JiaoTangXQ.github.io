@@ -59,6 +59,10 @@ const RESOURCE_LABELS = [
 const URL_PATTERN =
   /(?:https?:\/\/|www\.)[^\s<>"'，。！？；：、（）()【】\[\]{}]+|(?<![A-Za-z0-9@._-])(?:[A-Za-z0-9-]+\.)+(?:com|cn|org|net|io|ai|dev|site|app|co|me|edu|gov|info|tech|cloud|xyz|top|link|news|tv|cc)(?:\/[^\s<>"'，。！？；：、（）()【】\[\]{}]*)?/gi;
 
+type NumberedHtmlItem = {
+  body: string;
+};
+
 function resolveUrl(raw: string, baseUrl: string): string {
   try {
     return new URL(raw, baseUrl).toString();
@@ -100,6 +104,168 @@ function decodeHtmlEntities(value: string): string {
     );
 }
 
+function normalizeInlinePunctuationSpacing(value: string): string {
+  return value.replace(/\s+([,.;:!?])/g, "$1");
+}
+
+function stripWordPressFeedFooterText(value: string): string {
+  const start = value.search(/\bThe post\b/i);
+  if (start === -1) return value;
+  const footer = value.slice(start);
+  if (!/\bappeared first on\b/i.test(footer)) return value;
+  return value.slice(0, start).trimEnd();
+}
+
+function stripWordPressFeedFooterHtml(value: string): string {
+  return value
+    .replace(/<p>\s*The post\b(?=[\s\S]*?\bappeared first on\b)[\s\S]*?<\/p>/gi, "")
+    .replace(/\s*The post\b(?=[\s\S]*?\bappeared first on\b)[\s\S]*?(?=<\/p>|$)/gi, "");
+}
+
+function transformVisibleText(
+  html: string,
+  transform: (text: string) => string,
+): string {
+  let out = "";
+  let lastIndex = 0;
+  let verbatimDepth = 0;
+  const tagPattern = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g;
+
+  let match: RegExpExecArray | null;
+  while ((match = tagPattern.exec(html)) !== null) {
+    const text = html.slice(lastIndex, match.index);
+    out += verbatimDepth > 0 ? text : transform(text);
+
+    const tag = match[1].toLowerCase();
+    const isClosing = /^<\//.test(match[0]);
+    const isSelfClosing = /\/>$/.test(match[0]);
+    out += match[0];
+
+    if ((tag === "pre" || tag === "code") && !isSelfClosing) {
+      verbatimDepth += isClosing ? -1 : 1;
+      if (verbatimDepth < 0) verbatimDepth = 0;
+    }
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  const tail = html.slice(lastIndex);
+  out += verbatimDepth > 0 ? tail : transform(tail);
+  return out;
+}
+
+function normalizeVisiblePunctuationSpacing(html: string): string {
+  return transformVisibleText(html, normalizeInlinePunctuationSpacing);
+}
+
+function splitNumberedDotText(line: string): string[] | null {
+  const text = stripWordPressFeedFooterText(
+    normalizeInlinePunctuationSpacing(line),
+  ).trim();
+  if (!text) return null;
+
+  const markerPattern = /(?:^|\s)([1-9]\d?)\.\s+/g;
+  const matches = Array.from(text.matchAll(markerPattern));
+  if (matches.length === 0) return null;
+
+  const first = matches[0];
+  if (text.slice(0, first.index ?? 0).trim()) return null;
+
+  const items = matches
+    .map((match, index) => {
+      const start = (match.index ?? 0) + match[0].length;
+      const end =
+        index + 1 < matches.length
+          ? (matches[index + 1].index ?? text.length)
+          : text.length;
+      return text.slice(start, end).trim();
+    })
+    .filter(Boolean);
+
+  return items.length > 0 ? items : null;
+}
+
+function splitNumberedDotHtml(innerHtml: string): NumberedHtmlItem[] | null {
+  const html = stripWordPressFeedFooterHtml(
+    normalizeVisiblePunctuationSpacing(innerHtml),
+  ).trim();
+  if (!html) return null;
+
+  const markerPattern = /(?:^|\s)([1-9]\d?)\.\s+/g;
+  const matches = Array.from(html.matchAll(markerPattern));
+  if (matches.length === 0) return null;
+
+  const first = matches[0];
+  if (html.slice(0, first.index ?? 0).trim()) return null;
+
+  const items = matches
+    .map((match, index) => {
+      const start = (match.index ?? 0) + match[0].length;
+      const end =
+        index + 1 < matches.length
+          ? (matches[index + 1].index ?? html.length)
+          : html.length;
+      return {
+        body: html.slice(start, end).trim(),
+      };
+    })
+    .filter((item) => item.body);
+
+  return items.length > 0 ? items : null;
+}
+
+function structureEnglishNumberedHtmlLists(html: string): string {
+  const paragraphPattern = /<p>([\s\S]*?)<\/p>/gi;
+  let out = "";
+  let lastIndex = 0;
+  let listOpen = false;
+
+  function closeList() {
+    if (!listOpen) return;
+    out += "</ol>";
+    listOpen = false;
+  }
+
+  let match: RegExpExecArray | null;
+  while ((match = paragraphPattern.exec(html)) !== null) {
+    const spacer = html.slice(lastIndex, match.index);
+    if (spacer.trim()) {
+      closeList();
+      out += spacer;
+    } else if (!listOpen) {
+      out += spacer;
+    }
+
+    const paragraph = stripWordPressFeedFooterHtml(match[1] ?? "").trim();
+    const items = splitNumberedDotHtml(paragraph);
+    if (items) {
+      if (!listOpen) {
+        out += "<ol>";
+        listOpen = true;
+      }
+      for (const item of items) {
+        out += `<li>${item.body}</li>`;
+      }
+    } else if (paragraph) {
+      closeList();
+      out += `<p>${paragraph}</p>`;
+    }
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  const tail = html.slice(lastIndex);
+  if (tail.trim()) {
+    closeList();
+    out += tail;
+  } else if (!listOpen) {
+    out += tail;
+  }
+
+  closeList();
+  return out;
+}
+
 function normalizeTextForStructure(raw: string): string {
   let text = decodeHtmlEntities(raw)
     .replace(/\r\n?/g, "\n")
@@ -117,10 +283,12 @@ function normalizeTextForStructure(raw: string): string {
 
   text = text
     .replace(/\s+((?:0[1-9]|[1-9]\d?)、\s*)/g, "\n\n$1")
+    .replace(/\s+((?:[1-9]\d?)\.\s+)/g, " $1")
     .replace(/\n{3,}/g, "\n\n")
+    .replace(/\s+([,.;:!?])/g, "$1")
     .trim();
 
-  return text;
+  return stripWordPressFeedFooterText(text).trim();
 }
 
 function isNumberedSection(line: string): boolean {
@@ -246,6 +414,16 @@ function renderPlainTextBlock(text: string, baseUrl: string): string[] {
       for (const paragraph of splitParagraphs(rest)) {
         html.push(`<p>${renderInline(paragraph, baseUrl)}</p>`);
       }
+      continue;
+    }
+
+    const numberedItems = splitNumberedDotText(line);
+    if (numberedItems) {
+      html.push("<ol>");
+      for (const item of numberedItems) {
+        html.push(`<li>${renderInline(item, baseUrl)}</li>`);
+      }
+      html.push("</ol>");
       continue;
     }
 
@@ -402,13 +580,16 @@ export function sanitizeHtml(html: string, baseUrl: string): string {
 
   // Collapse excessive whitespace between block elements
   out = out.replace(/\s{3,}/g, "\n\n").trim();
+  out = normalizeVisiblePunctuationSpacing(out);
+  out = stripWordPressFeedFooterHtml(out).trim();
+  out = structureEnglishNumberedHtmlLists(out).trim();
 
   return out;
 }
 
 /** Convert HTML to plain text for previews and search indexing. */
 export function htmlToPlainText(html: string): string {
-  return html
+  const plain = html
     .replace(/<(script|style|iframe|noscript)\b[\s\S]*?<\/\1>/gi, "")
     .replace(/<br\s*\/?\s*>/gi, " ")
     .replace(/<\/?(p|div|li|h[1-6]|blockquote|tr|br|figure)[^>]*>/gi, " ")
@@ -422,6 +603,9 @@ export function htmlToPlainText(html: string): string {
     .replace(/&#(\d+);/g, (_m, code) => String.fromCharCode(Number(code)))
     .replace(/\s+/g, " ")
     .trim();
+  return stripWordPressFeedFooterText(
+    normalizeInlinePunctuationSpacing(plain),
+  ).trim();
 }
 
 /** Compute a CJK-ratio-based language tag. */

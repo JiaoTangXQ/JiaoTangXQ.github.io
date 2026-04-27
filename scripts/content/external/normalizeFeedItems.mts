@@ -44,6 +44,12 @@ function extractTagValue(block: string, tag: string): string {
   return match ? compactWhitespace(decodeXmlEntities(match[1])) : "";
 }
 
+function extractTagHtml(block: string, tag: string): string {
+  const pattern = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, "i");
+  const match = block.match(pattern);
+  return match ? decodeXmlEntities(match[1]).trim() : "";
+}
+
 /** Extract href from Atom <link> elements. */
 function extractAtomLink(block: string): string {
   // Prefer rel="alternate", fall back to first <link> with href
@@ -104,9 +110,9 @@ function parseRssItem(
     extractTagValue(block, "published") ||
     extractTagValue(block, "updated") ||
     extractTagValue(block, "dc:date");
-  const description = extractTagValue(block, "description");
-  const contentEncoded = extractTagValue(block, "content:encoded");
-  const summary = extractTagValue(block, "summary");
+  const description = extractTagHtml(block, "description");
+  const contentEncoded = extractTagHtml(block, "content:encoded");
+  const summary = extractTagHtml(block, "summary");
   // Prefer the longest available field — content:encoded usually has the full article
   const rawExcerpt = [contentEncoded, description, summary].reduce(
     (best, cur) => (cur.length > best.length ? cur : best),
@@ -130,8 +136,8 @@ function parseAtomEntry(
   const date =
     extractTagValue(block, "published") ||
     extractTagValue(block, "updated");
-  const summary = extractTagValue(block, "summary");
-  const content = extractTagValue(block, "content");
+  const summary = extractTagHtml(block, "summary");
+  const content = extractTagHtml(block, "content");
   // Prefer the longest available field
   const rawExcerpt = content.length >= summary.length ? content : summary;
 

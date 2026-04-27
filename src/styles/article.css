@@ -218,7 +218,7 @@
 }
 
 .article-body--en p {
-  hyphens: auto;
+  hyphens: none;
 }
 
 .article-body > :first-child {

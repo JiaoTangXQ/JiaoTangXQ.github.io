@@ -27,6 +27,12 @@ test("article reading surface uses production reading typography", () => {
   assert.match(css, /font-variant-numeric:\s*tabular-nums/);
 });
 
+test("english article paragraphs avoid automatic word hyphenation", () => {
+  const css = read("src/styles/article.css");
+
+  assert.match(css, /\.article-body--en p[\s\S]*hyphens:\s*none/);
+});
+
 test("article prose handles rich content without overflowing the viewport", () => {
   const css = read("src/styles/article.css");
 

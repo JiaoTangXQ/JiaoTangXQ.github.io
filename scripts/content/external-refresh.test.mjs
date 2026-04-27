@@ -29,7 +29,11 @@ test("fixture feed normalizes into ExternalContentCandidate records", () => {
   );
   const xml = fs.readFileSync(fixturePath, "utf8");
 
-  const candidates = normalizeFeedItems({ xml, source: TEST_SOURCE });
+  const candidates = normalizeFeedItems({
+    xml,
+    source: TEST_SOURCE,
+    sinceHours: 24 * 365,
+  });
 
   assert.equal(candidates.length, 2);
   assert.equal(candidates[0].sourceName, TEST_SOURCE.name);
@@ -53,6 +57,7 @@ test("source maxItems keeps only the newest feed entries", () => {
       id: "limited-source",
       maxItems: 1,
     },
+    sinceHours: 24 * 365,
   });
 
   assert.equal(candidates.length, 1);
@@ -60,6 +65,33 @@ test("source maxItems keeps only the newest feed entries", () => {
     candidates[0].sourceUrl,
     "https://example.com/library-climate-shelters",
   );
+});
+
+test("feed normalization preserves article body HTML for downstream sanitizing", () => {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  <rss version="2.0">
+    <channel>
+      <item>
+        <title>Saturday assorted links</title>
+        <link>https://example.com/links</link>
+        <pubDate>Mon, 27 Apr 2026 08:00:00 GMT</pubDate>
+        <description><![CDATA[
+          <p>1. <a href="https://example.com/one">First link</a>.</p>
+          <p>2. <a href="/two">Second link</a>. 3. <a href="/three">Third link</a>.</p>
+        ]]></description>
+      </item>
+    </channel>
+  </rss>`;
+
+  const candidates = normalizeFeedItems({
+    xml,
+    source: TEST_SOURCE,
+    sinceHours: 24 * 365,
+  });
+
+  assert.equal(candidates.length, 1);
+  assert.match(candidates[0].rawExcerpt, /<a href="https:\/\/example\.com\/one">First link<\/a>/);
+  assert.match(candidates[0].rawExcerpt, /<a href="\/two">Second link<\/a>/);
 });
 
 test("same-source repeated titles get stable unique slugs", () => {
@@ -87,6 +119,7 @@ test("same-source repeated titles get stable unique slugs", () => {
       ...TEST_SOURCE,
       id: "repeated-title-source",
     },
+    sinceHours: 24 * 365,
   });
 
   assert.equal(candidates.length, 2);
@@ -166,6 +199,37 @@ test("sanitizeHtml structures plain text articles with URLs and numbered section
   assert.match(cleaned, /<a href="https:\/\/api-docs\.deepseek\.com\/zh-cn\/guides\/thinking_mode"/);
   assert.match(cleaned, /<h2>01、Agentic编程能力提升明显，读《三体》三部曲烧了54万token<\/h2>/);
   assert.match(cleaned, /<p>我们初步感受了下DeepSeek-V4的变化/);
+});
+
+test("sanitizeHtml turns English numbered link roundups into ordered lists", () => {
+  const raw = `
+    <p>1. <a href="/one">Hedging the singularity?</a></p>
+    <p>2. <a href="/two">Claude doing stand-up comedy, the video is AI too</a>. 3. <a href="/three">Thirty more lines from Empedocles have been found</a>.</p>
+    <p>4. <a href="/four">Latin America’s oil resurgence</a>. The post Saturday assorted links appeared first on Marginal REVOLUTION.</p>
+  `;
+
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+
+  assert.match(cleaned, /<ol>/);
+  assert.match(cleaned, /<li><a href="https:\/\/example\.com\/one">Hedging the singularity\?<\/a><\/li>/);
+  assert.match(cleaned, /<li><a href="https:\/\/example\.com\/two">Claude doing stand-up comedy, the video is AI too<\/a>\.<\/li>/);
+  assert.match(cleaned, /<li><a href="https:\/\/example\.com\/three">Thirty more lines from Empedocles have been found<\/a>\.<\/li>/);
+  assert.match(cleaned, /<li><a href="https:\/\/example\.com\/four">Latin America’s oil resurgence<\/a>\.<\/li>/);
+  assert.doesNotMatch(cleaned, /The post/);
+});
+
+test("sanitizeHtml structures legacy plain-text English roundups", () => {
+  const raw =
+    "1. Hedging the singularity? 2. Claude doing stand-up comedy, the video is AI too . 3. Thirty more lines from Empedocles have been found . The post Saturday assorted links appeared first on Marginal REVOLUTION .";
+
+  const cleaned = sanitizeHtml(raw, "https://example.com/post");
+
+  assert.match(cleaned, /<ol>/);
+  assert.match(cleaned, /<li>Hedging the singularity\?<\/li>/);
+  assert.match(cleaned, /<li>Claude doing stand-up comedy, the video is AI too\.<\/li>/);
+  assert.match(cleaned, /<li>Thirty more lines from Empedocles have been found\.<\/li>/);
+  assert.doesNotMatch(cleaned, /too \./);
+  assert.doesNotMatch(cleaned, /The post/);
 });
 
 test("sanitizeHtml preserves code semantics in plain text articles", () => {
