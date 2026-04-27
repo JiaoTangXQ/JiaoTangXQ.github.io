@@ -3,13 +3,15 @@
  *
  * 流程：
  *   1. 并行抓 RSS/Atom 所有源
- *   2. 规则过滤（qualityFilter）去掉快讯 / 空贴 / 占位符内容
+ *   2. 规则过滤（qualityFilter）去掉快讯 / 空贴 / 占位符内容 / 中国政治相关内容
  *   3. 对过关的新条目尝试抓原文（readability → 启发式 fallback），抓不到退回 RSS
  *      · source.rssIsFullText=true 的源跳过抓原文，直接用 RSS（PG、Overreacted 这类博客）
  *      · 其余统一走 extractFullArticle，不再按 RSS 长度设阈值
- *   4. 清洗 HTML，派生 preview 和 language，写入 items.json
+ *   4. 清洗 HTML，结构化纯文本正文（段落 / URL / 编号小节 / 代码），派生 preview 和 language
+ *   5. 写入 items.json
  *
  * 已存在 slug 不再抓取、不再修改。仅新增。
+ * 如果清洗或政治过滤规则发生变化，运行 npm run normalize:content 重写现有缓存。
  */
 
 import fs from "node:fs";

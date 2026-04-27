@@ -11,7 +11,8 @@
     "build:seo": "tsx scripts/content/buildSeoPages.mts",
     "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
     "preview": "vite preview",
-    "refresh:content": "node --import tsx scripts/content/external/refresh.mts"
+    "refresh:content": "node --import tsx scripts/content/external/refresh.mts",
+    "normalize:content": "node --import tsx scripts/content/external/normalizeExistingItems.mts"
   },
   "dependencies": {
     "@extractus/article-extractor": "^8.0.20",

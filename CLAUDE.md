@@ -59,14 +59,38 @@ npm run build            # 完整生产构建
 刷新外部内容是**纯代码管线**，不再调用 LLM：
 
 1. 并行抓 160 个 RSS/Atom 源 → `scripts/content/external/refresh.mts`
-2. 规则过滤（`qualityFilter.mts`）去掉快讯、空帖、占位符
+2. 规则过滤（`qualityFilter.mts`）去掉快讯、空帖、占位符，并通过 `chinaPoliticsFilter.mts` 去掉中国政治相关内容
 3. 对 RSS 摘录太短的条目尝试 `readability` 抓全文
-4. 清洗 HTML、派生 `preview` 和 `language`，写入 `content/external/items.json`
+4. 清洗 HTML、结构化纯文本正文（段落、URL、编号小节、代码）、派生 `preview` 和 `language`，写入 `content/external/items.json`
+
+具体规则和命令见 `content/external/README.md`。没有历史对话时，AI 必须优先阅读这个文件和下列代码入口：
+
+- `scripts/content/external/refresh.mts`：抓取新外部文章
+- `scripts/content/external/qualityFilter.mts`：质量过滤入口
+- `scripts/content/external/chinaPoliticsFilter.mts`：中国政治相关内容过滤
+- `scripts/content/external/sanitizeContent.mts`：正文安全清洗和纯文本结构化
+- `scripts/content/external/normalizeExistingItems.mts`：对现有缓存重跑过滤和清洗规则
+
+常用命令：
+
+```bash
+npm run refresh:content    # 抓新文章，只处理新 slug
+npm run normalize:content  # 重跑现有缓存，剔除中国政治内容并重新清洗正文
+npm run build:data         # 重新生成 public/data
+```
+
+新增或修改过滤 / 清洗规则时必须：
+
+1. 在 `scripts/content/external-refresh.test.mjs` 添加正反例。
+2. 不用 AI 改写文章正文，只改规则代码。
+3. 运行 `npm run normalize:content` 更新既有缓存。
+4. 运行 `npm run build:data` 或 `npm run build` 更新部署数据。
 
 **不做的事情**：
 - 不翻译标题、不生成中文摘要（中文源保持中文，英文源保持英文）
 - 不做立场标注、不生成"每日三题"
 - 不做 qualityScore 智能评分（纯规则打分）
+- 不用 AI 手动改写、润色、摘要或重排外部文章正文
 
 **必须遵守**：文章页底部必须展示 `本文原载于 {sourceName}` 和 `阅读原文` 链接。版权归原作者，我们只是内嵌阅读。`ArticleLayout.tsx` 已经内置这个版权区块，不要删。
 

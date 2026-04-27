@@ -20,7 +20,7 @@ const ALLOWED_TAGS = new Set([
 ]);
 
 const ALLOWED_ATTRS: Record<string, Set<string>> = {
-  a: new Set(["href", "title"]),
+  a: new Set(["href", "title", "target", "rel"]),
   img: new Set(["src", "alt", "title"]),
   // everything else strips all attributes
 };
@@ -168,8 +168,8 @@ function trimUrlToken(rawUrl: string): { url: string; trailing: string } {
 
 function hrefForUrl(rawUrl: string, baseUrl: string): string {
   if (/^https?:\/\//i.test(rawUrl)) return resolveUrl(rawUrl, baseUrl);
-  if (/^www\./i.test(rawUrl)) return `https://${rawUrl}`;
-  return `https://${rawUrl}`;
+  if (/^www\./i.test(rawUrl)) return resolveUrl(`https://${rawUrl}`, baseUrl);
+  return resolveUrl(`https://${rawUrl}`, baseUrl);
 }
 
 function linkifyText(text: string, baseUrl: string): string {
@@ -288,11 +288,20 @@ function rewriteAttrs(tag: string, attrString: string, baseUrl: string): string 
   while ((match = attrPattern.exec(attrString)) !== null) {
     const name = match[1].toLowerCase();
     if (!allowed.has(name)) continue;
-    let value = match[2] ?? match[3] ?? match[4] ?? "";
+    let value = decodeHtmlEntities(match[2] ?? match[3] ?? match[4] ?? "");
     if (name === "href" || name === "src") {
       // Filter dangerous protocols
       if (/^\s*(javascript|data):/i.test(value)) continue;
       value = resolveUrl(value, baseUrl);
+    } else if (name === "target") {
+      if (value !== "_blank") continue;
+    } else if (name === "rel") {
+      const safeRel = value
+        .split(/\s+/)
+        .filter((token) => /^(noopener|noreferrer|nofollow|ugc|sponsored)$/i.test(token))
+        .join(" ");
+      if (!safeRel) continue;
+      value = safeRel;
     }
     const escaped = value
       .replace(/&/g, "&amp;")

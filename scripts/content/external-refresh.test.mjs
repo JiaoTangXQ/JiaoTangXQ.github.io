@@ -12,6 +12,7 @@ import {
   extractPreview,
   detectLanguage,
 } from "./external/sanitizeContent.mts";
+import { normalizeExternalRecords } from "./external/normalizeExistingItems.mts";
 
 const TEST_SOURCE = {
   id: "test-source",
@@ -127,6 +128,29 @@ test("sanitizeHtml strips script and resolves relative urls", () => {
   assert.ok(cleaned.includes("https://example.com/about"));
 });
 
+test("sanitizeHtml keeps existing links stable across repeated passes", () => {
+  const raw =
+    '<p><a href="https://example.com/?a=1&amp;b=2" target="_blank" rel="noopener noreferrer">example</a></p>';
+
+  const once = sanitizeHtml(raw, "https://example.com/post");
+  const twice = sanitizeHtml(once, "https://example.com/post");
+
+  assert.equal(twice, once);
+  assert.match(once, /href="https:\/\/example\.com\/\?a=1&amp;b=2"/);
+  assert.match(once, /target="_blank"/);
+  assert.match(once, /rel="noopener noreferrer"/);
+});
+
+test("sanitizeHtml keeps generated bare-domain links stable", () => {
+  const raw = "体验地址： chat.deepseek.com";
+
+  const once = sanitizeHtml(raw, "https://example.com/post");
+  const twice = sanitizeHtml(once, "https://example.com/post");
+
+  assert.equal(twice, once);
+  assert.match(once, /href="https:\/\/chat\.deepseek\.com\/"/);
+});
+
 test("sanitizeHtml structures plain text articles with URLs and numbered sections", () => {
   const raw = [
     "目前，DeepSeek-V4系列已上线官网与App，并同步开放API与模型权重。",
@@ -138,7 +162,7 @@ test("sanitizeHtml structures plain text articles with URLs and numbered section
   const cleaned = sanitizeHtml(raw, "https://wallstreetcn.com/articles/demo");
 
   assert.match(cleaned, /<p>目前，DeepSeek-V4系列已上线官网与App/);
-  assert.match(cleaned, /<a href="https:\/\/chat\.deepseek\.com"/);
+  assert.match(cleaned, /<a href="https:\/\/chat\.deepseek\.com\/"/);
   assert.match(cleaned, /<a href="https:\/\/api-docs\.deepseek\.com\/zh-cn\/guides\/thinking_mode"/);
   assert.match(cleaned, /<h2>01、Agentic编程能力提升明显，读《三体》三部曲烧了54万token<\/h2>/);
   assert.match(cleaned, /<p>我们初步感受了下DeepSeek-V4的变化/);
@@ -272,4 +296,44 @@ test("china politics filter keeps China business and technology coverage", () =>
 
   assert.equal(isChinaPoliticalContent(deepseek), false);
   assert.equal(isChinaPoliticalContent(supplyChain), false);
+});
+
+test("normalizeExternalRecords prunes China politics and re-applies content structure", () => {
+  const { records, stats } = normalizeExternalRecords([
+    {
+      slug: "ext-scmp-china-xi-jinping-meets-foreign-leaders-tracker-2026",
+      contentType: "external",
+      language: "en",
+      title: "Xi Jinping meets foreign leaders: tracker 2026",
+      date: "2026-04-24T00:00:00Z",
+      topics: ["社会"],
+      content:
+        "Mozambique President Daniel Chapo became the first African head of state to meet with Chinese President Xi Jinping this year.",
+      preview: "Mozambique President Daniel Chapo...",
+      sourceName: "South China Morning Post",
+      sourceUrl: "https://www.scmp.com/news/china/diplomacy/article/foo",
+      sourceDomain: "scmp.com",
+    },
+    {
+      slug: "ext-rsshub-wallstreetcn-global-deepseek-v4-ai",
+      contentType: "external",
+      language: "zh",
+      title: "DeepSeek V4初体验",
+      date: "2026-04-24T00:00:00Z",
+      topics: ["经济", "社会"],
+      content:
+        "体验地址： chat.deepseek.com 01、Agentic编程能力提升明显 我们初步感受了下DeepSeek-V4的变化。",
+      preview: "体验地址： chat.deepseek.com",
+      sourceName: "华尔街见闻 · 全球",
+      sourceUrl: "https://wallstreetcn.com/articles/foo",
+      sourceDomain: "wallstreetcn.com",
+    },
+  ]);
+
+  assert.equal(stats.total, 2);
+  assert.equal(stats.kept, 1);
+  assert.equal(stats.droppedChinaPolitics, 1);
+  assert.equal(records[0].slug, "ext-rsshub-wallstreetcn-global-deepseek-v4-ai");
+  assert.match(records[0].content, /<a href="https:\/\/chat\.deepseek\.com\/"/);
+  assert.match(records[0].content, /<h2>01、Agentic编程能力提升明显<\/h2>/);
 });
