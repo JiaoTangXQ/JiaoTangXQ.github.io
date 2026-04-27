@@ -208,6 +208,39 @@ test("sanitizeHtml separates numbered conclusion headings from following body", 
   assert.match(cleaned, /<p>DeepSeek-V4的发布不仅展现了团队/);
 });
 
+test("sanitizeHtml strips Solidot navigation chrome from article pages", () => {
+  const raw = `
+    <div>
+      <div><p><a href="/login">登录</a> <a href="/register">注册</a></p></div>
+      <ul>
+        <li><span>文章</span></li>
+        <li><span>皮肤</span></li>
+      </ul>
+      <ul>
+        <li>分类: </li>
+        <li><a href="https://www.solidot.org/">首页</a></li>
+        <li><a href="https://science.solidot.org/">科学</a></li>
+      </ul>
+      <h2>消息</h2>
+      <p><b>本文已被查看 2925 次</b></p>
+      <h2>好奇号在火星上发现新有机分子</h2>
+      <p><a href="https://www.solidot.org/~Edwards">Edwards</a> (42866)发表于 2026年04月22日 18时38分 星期三</p>
+      <p><b>来自尘埃记</b></p>
+      <p>根据发表在《Nature Communications》期刊上的一项研究，科学家从好奇号在火星盖尔陨石坑采集的岩石样本中发现了 20 多种有机分子。</p>
+      <p>https://www.nature.com/articles/s41467-026-70656-0</p>
+    </div>
+  `;
+
+  const cleaned = sanitizeHtml(raw, "https://www.solidot.org/story?sid=84117");
+
+  assert.doesNotMatch(cleaned, /登录|注册|分类:|本文已被查看|Edwards|来自尘埃记/);
+  assert.match(cleaned, /<p>根据发表在《Nature Communications》期刊上的一项研究/);
+  assert.match(
+    cleaned,
+    /<a href="https:\/\/www\.nature\.com\/articles\/s41467-026-70656-0"/,
+  );
+});
+
 test("extractPreview caps length and trims on punctuation when possible", () => {
   const plain = "这是第一句话。这是第二句话，应该更长一些，以测试截断逻辑的行为。第三句话。";
   const preview = extractPreview(`<p>${plain}</p>`, 20);

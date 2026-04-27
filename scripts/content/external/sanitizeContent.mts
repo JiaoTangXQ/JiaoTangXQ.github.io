@@ -277,6 +277,55 @@ function structurePlainTextArticle(raw: string, baseUrl: string): string {
   return html.join("\n");
 }
 
+function isSolidotUrl(baseUrl: string): boolean {
+  try {
+    return new URL(baseUrl).hostname.endsWith("solidot.org");
+  } catch {
+    return false;
+  }
+}
+
+function isSolidotChromeParagraph(text: string): boolean {
+  if (!text) return true;
+  return (
+    /^(登录\s+注册|文章\s+往日文章|往日文章|蓝色\s+橙色|分类:|关注我们)/.test(text) ||
+    /^solidot新版网站常见问题/.test(text) ||
+    /^本文已被查看\s*\d+\s*次/.test(text) ||
+    /^[A-Za-z][\w.-]*\s*\(\d+\)发表于\s*\d{4}年/.test(text) ||
+    /^来自\S+/.test(text)
+  );
+}
+
+function structureSolidotArticle(raw: string, baseUrl: string): string | null {
+  if (!isSolidotUrl(baseUrl)) return null;
+  if (!/(登录|注册|往日文章|皮肤|分类:|本文已被查看|来自\S+)/.test(raw)) {
+    return null;
+  }
+
+  const paragraphs = Array.from(raw.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi));
+  if (paragraphs.length === 0) return null;
+
+  const chunks: string[] = [];
+  let sawStoryByline = false;
+
+  for (const paragraph of paragraphs) {
+    const plain = htmlToPlainText(paragraph[1] ?? "");
+    if (/^来自\S+/.test(plain)) {
+      sawStoryByline = true;
+      continue;
+    }
+    if (isSolidotChromeParagraph(plain)) continue;
+    if (!sawStoryByline && plain.length < 80 && !/^https?:\/\//i.test(plain)) {
+      continue;
+    }
+    chunks.push(plain);
+  }
+
+  const body = chunks.join("\n\n").trim();
+  if (body.length < 120) return null;
+  return structurePlainTextArticle(body, baseUrl);
+}
+
 /** Strip all attributes except the whitelisted ones for the given tag. */
 function rewriteAttrs(tag: string, attrString: string, baseUrl: string): string {
   const allowed = ALLOWED_ATTRS[tag];
@@ -326,6 +375,9 @@ export function sanitizeHtml(html: string, baseUrl: string): string {
     .replace(/<svg\b[\s\S]*?<\/svg>/gi, "")
     .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, "")
     .replace(/<!--[\s\S]*?-->/g, "");
+
+  const solidotArticle = structureSolidotArticle(out, baseUrl);
+  if (solidotArticle) return solidotArticle;
 
   if (!BLOCK_TAG_PATTERN.test(out)) {
     return structurePlainTextArticle(out, baseUrl);
