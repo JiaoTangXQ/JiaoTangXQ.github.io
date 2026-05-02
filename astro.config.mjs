@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -15,6 +15,57 @@ export default defineConfig({
   trailingSlash: "always",
   build: {
     format: "directory",
+  },
+  experimental: {
+    fonts: [
+      {
+        provider: fontProviders.google(),
+        name: "Fraunces",
+        cssVariable: "--font-display",
+        weights: ["300 700"],
+        styles: ["normal", "italic"],
+        subsets: ["latin", "latin-ext"],
+        fallbacks: [
+          "Source Han Serif SC",
+          "Songti SC",
+          "Noto Serif SC",
+          "ui-serif",
+          "Georgia",
+          "serif",
+        ],
+      },
+      {
+        provider: fontProviders.google(),
+        name: "Newsreader",
+        cssVariable: "--font-serif",
+        weights: ["400 700"],
+        styles: ["normal", "italic"],
+        subsets: ["latin", "latin-ext"],
+        fallbacks: [
+          "Source Han Serif SC",
+          "Songti SC",
+          "Noto Serif SC",
+          "ui-serif",
+          "Georgia",
+          "serif",
+        ],
+      },
+      {
+        provider: fontProviders.google(),
+        name: "Inter Tight",
+        cssVariable: "--font-sans",
+        weights: ["400 600"],
+        styles: ["normal"],
+        subsets: ["latin", "latin-ext"],
+        fallbacks: [
+          "PingFang SC",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "sans-serif",
+        ],
+      },
+    ],
   },
   integrations: [
     mdx(),

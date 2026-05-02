@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import "@/styles/global.css";
 
 type Props = {
@@ -62,6 +63,10 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : undefined
 
     <link rel="alternate" type="application/rss+xml" title={siteName} href={`${siteUrl}/rss.xml`} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-serif" preload />
+    <Font cssVariable="--font-sans" />
   </head>
   <body>
     <slot />

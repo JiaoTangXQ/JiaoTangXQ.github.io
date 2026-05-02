@@ -28,7 +28,7 @@ const jsonLd = {
   keywords: data.tags.join(", "),
   mainEntityOfPage: {
     "@type": "WebPage",
-    "@id": new URL(`/posts/${post.id}`, Astro.site).toString(),
+    "@id": new URL(`/posts/${post.id}/`, Astro.site).toString(),
   },
 };
 ---
@@ -50,10 +50,10 @@ const jsonLd = {
           <time datetime={isoDate(data.date)}>{dateStr}</time>
           {data.tags.length > 0 && (
             <>
-              <span aria-hidden="true">·</span>
+              <span class="article-eyebrow__divider" aria-hidden="true"></span>
               {data.tags.map((tag, i) => (
                 <>
-                  {i > 0 && <span aria-hidden="true">·</span>}
+                  {i > 0 && <span class="article-eyebrow__divider" aria-hidden="true"></span>}
                   <span class="article-eyebrow__tag">#{tag}</span>
                 </>
               ))}
@@ -63,8 +63,15 @@ const jsonLd = {
         <h1 class="article-title">{data.title}</h1>
         {data.subtitle && <p class="article-subtitle">{data.subtitle}</p>}
         <p class="article-meta">
-          作者 焦糖 · 阅读约 {minutes} 分钟
-          {updatedStr && <span class="article-meta__updated"> · 更新于 {updatedStr}</span>}
+          <span>焦糖</span>
+          <span class="article-meta__divider" aria-hidden="true"></span>
+          <span>阅读约 {minutes} 分钟</span>
+          {updatedStr && (
+            <>
+              <span class="article-meta__divider" aria-hidden="true"></span>
+              <span>更新于 {updatedStr}</span>
+            </>
+          )}
         </p>
       </header>
       <div class="prose">
@@ -72,9 +79,7 @@ const jsonLd = {
       </div>
       <footer class="article-footer">
         <p>
-          如果这篇文章对你有用，欢迎订阅
-          <a href="/rss.xml">RSS</a>
-          继续读。
+          如果这篇文章对你有用，欢迎订阅 <a href="/rss.xml">RSS</a> 继续读。
         </p>
       </footer>
     </article>

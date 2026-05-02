@@ -8,6 +8,10 @@ import { getCollection } from "astro:content";
 const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
+
+const cnNumerals = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+const now = new Date();
+const editionLabel = `VOL. I · NO. 1 · 二〇二六年${cnNumerals[now.getUTCMonth()]}月`;
 ---
 
 <Base
@@ -17,11 +21,16 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
   <SiteHeader current="home" />
   <main class="page page--home">
     <section class="masthead">
-      <p class="masthead__eyebrow">焦糖 · 写作归档</p>
-      <h1 class="masthead__title">想清楚一件事，再写下来。</h1>
+      <p class="masthead__edition">
+        <span class="masthead__edition-mark" aria-hidden="true"></span>
+        {editionLabel}
+      </p>
+      <h1 class="masthead__title">
+        想清楚一件事，<em>再写下来。</em>
+      </h1>
       <p class="masthead__lede">
-        这是一个只发原创长文的写作站。话题集中在工程、产品、AI、阅读和那些值得停下来
-        反复琢磨的问题。每篇文章都尽量做到：要么把一件事讲透，要么不写。
+        这是一个只发原创长文的写作站。话题集中在工程、产品、AI、阅读和那些值得停下来反复琢磨的问题。
+        每篇文章都尽量做到 ——<strong>要么把一件事讲透，要么不写。</strong>
       </p>
     </section>
 
@@ -29,13 +38,12 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
       <section class="empty">
         <p class="empty__title">第一篇正在动笔。</p>
         <p class="empty__body">
-          归档当前为空。订阅
-          <a href="/rss.xml">RSS</a>
-          ，第一篇上线时会送到你的阅读器。
+          归档当前为空。订阅 <a href="/rss.xml">RSS</a>，第一篇上线时会送到你的阅读器。
         </p>
       </section>
     ) : (
       <section class="post-list" aria-label="文章列表">
+        <p class="post-list__index-label">归档 · ARCHIVE</p>
         {posts.map((post) => <PostCard post={post} />)}
       </section>
     )}

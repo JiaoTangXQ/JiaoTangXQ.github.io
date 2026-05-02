@@ -9,32 +9,38 @@ type Props = {
 const { post } = Astro.props;
 const minutes = estimateReadingMinutes(post.body ?? post.data.description ?? "");
 const dateStr = formatDate(post.data.date, post.data.lang);
-const href = `/posts/${post.id}`;
+const href = `/posts/${post.id}/`;
 ---
 
 <article class="post-card">
   <a href={href} class="post-card__link">
-    <header class="post-card__head">
-      <time class="post-card__date" datetime={post.data.date.toISOString()}>
-        {dateStr}
-      </time>
-      {post.data.tags.length > 0 && (
-        <ul class="post-card__tags" aria-label="标签">
-          {post.data.tags.slice(0, 3).map((tag) => (
-            <li class="post-card__tag">{tag}</li>
-          ))}
-        </ul>
+    <span class="post-card__serial" aria-hidden="true"></span>
+    <div class="post-card__body">
+      <header class="post-card__head">
+        <time class="post-card__date" datetime={post.data.date.toISOString()}>
+          {dateStr}
+        </time>
+        {post.data.tags.length > 0 && (
+          <>
+            <span class="post-card__head-divider" aria-hidden="true"></span>
+            <ul class="post-card__tags" aria-label="标签">
+              {post.data.tags.slice(0, 3).map((tag) => (
+                <li>#{tag}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </header>
+      <h2 class="post-card__title">{post.data.title}</h2>
+      {post.data.subtitle && (
+        <p class="post-card__subtitle">{post.data.subtitle}</p>
       )}
-    </header>
-    <h2 class="post-card__title">{post.data.title}</h2>
-    {post.data.subtitle && (
-      <p class="post-card__subtitle">{post.data.subtitle}</p>
-    )}
-    <p class="post-card__excerpt">{post.data.description}</p>
-    <p class="post-card__meta">
-      <span>{minutes} 分钟</span>
-      <span aria-hidden="true">·</span>
-      <span class="post-card__cta">继续阅读</span>
-    </p>
+      <p class="post-card__excerpt">{post.data.description}</p>
+      <p class="post-card__meta">
+        <span>{minutes} 分钟</span>
+        <span class="post-card__head-divider" aria-hidden="true"></span>
+        <span class="post-card__cta">继续阅读</span>
+      </p>
+    </div>
   </a>
 </article>
