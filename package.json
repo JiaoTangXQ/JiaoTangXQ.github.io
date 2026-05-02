@@ -1,45 +1,33 @@
 {
   "name": "jiaotang-planet",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build:validate": "tsx scripts/content/validateArticles.mts",
-    "build:data": "npm run build:validate && tsx scripts/content/buildCosmosData.mts && tsx scripts/content/buildSearchIndex.mts && tsx scripts/content/buildExternalArticles.mts",
-    "build:articles": "mkdir -p public/articles && rm -f public/articles/*.md && (ls content/articles/*.md >/dev/null 2>&1 && cp content/articles/*.md public/articles/ || true)",
-    "build:seo": "tsx scripts/content/buildSeoPages.mts",
-    "build": "npm run build:data && npm run build:articles && vite build && npm run build:seo",
-    "preview": "vite preview",
-    "refresh:content": "node --import tsx scripts/content/external/refresh.mts",
-    "normalize:content": "node --import tsx scripts/content/external/normalizeExistingItems.mts"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@extractus/article-extractor": "^8.0.20",
-    "@react-three/fiber": "^9.1.2",
-    "@supabase/supabase-js": "^2.102.1",
-    "d3-force": "^3.0.0",
-    "gray-matter": "^4.0.3",
-    "minisearch": "^7.1.1",
+    "astro": "^5.0.0",
+    "@astrojs/check": "^0.9.0",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^4.1.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.2.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.1",
-    "rehype-highlight": "^7.0.2",
-    "rehype-stringify": "^10.0.1",
-    "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.1",
-    "three": "^0.175.0",
-    "unified": "^11.0.5"
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "reading-time": "^1.5.0"
   },
   "devDependencies": {
-    "@types/d3-force": "^3.0.10",
-    "@types/node": "^25.5.0",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
-    "@types/three": "^0.175.0",
-    "@vitejs/plugin-react": "^4.5.2",
-    "tsx": "^4.19.4",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "typescript": "^5.8.3"
   }
 }

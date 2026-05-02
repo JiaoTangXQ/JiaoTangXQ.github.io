@@ -2,171 +2,166 @@
 
 ## 项目是什么
 
-焦糖星球是一个以无限宇宙画布为载体的个人思想星图，部署在 GitHub Pages。不是传统博客模板，而是一个有强烈 art direction 的作品。
+焦糖星球是焦糖的个人原创写作站，部署在 GitHub Pages（https://jiaotangxq.github.io）。
 
-核心体验：
-- 首页是 GPU 渲染的无限画布，文章以发光行星形态散布在宇宙中
-- 文章按主题语义自动聚类成星系，距离表达相关性
-- 远景传达宇宙壮阔感，近景展开高端 editorial 封面卡片
-- 用户通过拖拽、缩放、漫游探索内容
-- 默认有自动巡游，让宇宙始终"活着"
+**核心定位**：只发原创长文。不转载、不聚合外部文章。一条规则 —— 要么把一件事讲透，要么不写。
 
-明确不要：传统博客框架感、普通列表页、精简但平庸的站。
-明确要：精美、大胆、高端、有设计感、看起来像顶级个人作品。
+**最高优先级**：流量为王。所有架构决策都服从这个目标 —— SEO 可索引、原创内容、作者身份、分发可达。
+
+风格：editorial 杂志风。单栏正文、宋体标题、克制的排版纪律、把文字本身放在 C 位。
+
+## 历史背景
+
+v0.1（2025 - 2026.04）是一个 GPU 渲染的"思想宇宙"画布，每篇文章是一颗发光行星。视觉很强但有结构性问题：
+
+1. 全 SPA 渲染，HTML 几乎为空（1.5KB），搜索引擎不可索引
+2. 没有原创内容，靠外部 RSS 聚合凑数
+3. sitemap 只收首页一条 URL
+4. 流量几乎为 0
+
+2026.05.01 重启为当前形态。旧版本完整封存在 git tag `v0.1-cosmos-archive`，源码归档在仓库根 `legacy/` 目录。详见 `src/content/posts/site-relaunch.mdx`。
 
 ## 技术栈
 
-- Vite + React 19 + TypeScript
-- Three.js + @react-three/fiber（GPU 渲染）
-- 自定义 GLSL shaders（深空、星空、星云、行星节点）
-- React Router（SPA 路由）
-- gray-matter + remark + rehype（Markdown 内容管线）
-- d3-force（构建时文章布局）
-- MiniSearch（搜索）
+- **Astro 5**（核心，静态优先、零 JS 默认）
+- **MDX**（文章撰写）
+- **React 19**（仅作为 island，目前未使用）
+- **Tailwind CSS 4**（@tailwindcss/vite 插件）
+- **TypeScript**（严格模式，astro/tsconfigs/strict）
+- **@astrojs/sitemap、@astrojs/rss**（SEO 一等公民）
+- **rehype-slug + rehype-autolink-headings**（标题锚点）
+- **shiki**（代码高亮，github-light-default 主题）
+- **reading-time**（阅读时长估算，wordsPerMinute: 300 适配中文）
 
 ## 架构
 
 ```
-content/articles/*.md → scripts/ → public/data/cosmos.json
-                                 → public/data/search-index.json
+src/
+├── content.config.ts            # Astro Content Collections schema
+├── content/
+│   └── posts/*.mdx              # 原创文章 MDX 源
+├── layouts/
+│   ├── Base.astro               # HTML 头 + 全部 SEO meta（OG、Twitter、JSON-LD 占位）
+│   └── Article.astro            # 文章页布局 + JSON-LD Article schema
+├── components/
+│   ├── SiteHeader.astro         # 顶部导航
+│   ├── SiteFooter.astro         # 页脚（含 RSS、关于、彩蛋链接）
+│   └── PostCard.astro           # 列表卡片
+├── pages/
+│   ├── index.astro              # 文章列表（SSG）
+│   ├── posts/[...slug].astro    # 文章详情（SSG，每篇独立 HTML）
+│   ├── about.astro              # 关于页
+│   ├── universe.astro           # cosmos 归档说明页（noindex，footer 入口）
+│   ├── 404.astro                # 404 页
+│   └── rss.xml.ts               # RSS feed
+├── lib/
+│   └── format.ts                # 日期格式化、阅读时长估算
+└── styles/
+    └── global.css               # editorial 设计系统（tokens + 全部组件样式 + .prose）
 
-src/features/cosmos/shaders/    → GLSL (deepSpace, starField, nebula, planetNode)
-src/features/cosmos/scene/      → R3F layers (DeepSpace, StarField, Nebula, Node)
-src/features/cosmos/camera/     → useCamera, useAutoCruise, useGestures, CameraController, urlState
-src/features/cosmos/components/ → CosmosViewport, SummaryCard, SearchPalette, ThemeLens, GalaxyCompass, NodeLabels, CosmosChrome
-src/features/articles/          → ArticleLayout, NearbyPlanets
-src/routes/                     → CosmosPage, ArticlePage
+legacy/                          # v0.1 cosmos 时期所有代码归档（不参与构建）
+├── features/cosmos/             # GLSL/R3F 5 层渲染管线
+├── features/articles/           # 旧文章布局
+├── features/blindspot/          # 旧"盲点"统计组件
+├── routes/                      # 旧 React Router 页面
+├── lib/, styles/, app/          # 旧框架代码
+└── tests-cosmos/                # 旧 cosmos UI 测试
 ```
 
-渲染管线 5 层：
-1. Deep Space — fragment shader 深空渐变 + 漂移色彩场
-2. Star Field — 4000 粒子星空，vertex shader 闪烁 + 视差
-3. Nebula — simplex noise 星云，每个主题集群一片
-4. Planet Nodes — 自定义 ShaderMaterial 发光球体
-5. DOM Overlay — 标题标签、卡片、UI
+构建产物（`dist/`）：每个页面一个独立 HTML，sitemap 自动收录所有非 `noindex` 页面，RSS 自动从 posts 集合生成。
+
+## 内容数据模型
+
+`src/content.config.ts` 定义 posts 集合 schema：
+
+```ts
+{
+  title: string;            // 必填，文章标题
+  subtitle?: string;        // 可选，副标题（斜体衬线渲染）
+  description: string;      // 20–300 字，进入 meta description + OG + RSS
+  date: Date;               // 发布日期（必填）
+  updated?: Date;           // 更新日期（可选，渲染在文章 meta）
+  tags: string[];           // 标签数组（默认 []）
+  cluster?: string;         // 主题集群标识（用于未来分组）
+  cover?: ImageMetadata;    // 封面图（可选）
+  coverAlt?: string;        // 封面 alt 文案
+  draft: boolean;           // 默认 false。draft=true 不进列表/RSS/sitemap
+  lang: "zh" | "en";        // 默认 zh
+}
+```
+
+新增文章：在 `src/content/posts/` 下放一个 `.mdx` 文件，frontmatter 满足 schema。文件名（不含扩展名）就是 slug，URL 为 `/posts/{slug}`。
 
 ## 常用命令
 
 ```bash
-npm run dev              # 开发服务器
-npm run refresh:content  # 抓外部源 → 规则过滤 → 抓正文 → 写入 items.json（零 LLM）
-npm run build:data       # 重新生成 cosmos.json / search-index.json / 外部文章单文件
-npm run build            # 完整生产构建
+npm run dev       # Astro 开发服务器（默认 4321 端口）
+npm run build     # astro check + astro build，输出 dist/
+npm run preview   # 预览生产构建
 ```
 
-## 外部内容规则
+## SEO 与流量优先级
 
-刷新外部内容是**纯代码管线**，不再调用 LLM：
+每个新增 / 改动必须问：**这件事有助于流量吗？** 如果不是，要么砍掉、要么放到 P2 之后。
 
-1. 并行抓 160 个 RSS/Atom 源 → `scripts/content/external/refresh.mts`
-2. 规则过滤（`qualityFilter.mts`）去掉快讯、空帖、占位符，并通过 `chinaPoliticsFilter.mts` 去掉中国政治相关内容
-3. 对 RSS 摘录太短的条目尝试 `readability` 抓全文
-4. 清洗 HTML、结构化纯文本正文（段落、URL、编号小节、代码）、派生 `preview` 和 `language`，写入 `content/external/items.json`
+每个文章页必须包含：
+- 标准 meta：title、description、canonical
+- Open Graph：og:type=article、og:title、og:description、og:url、og:locale、article:published_time、article:tag
+- Twitter Card
+- JSON-LD Article schema（已在 Article.astro 实现）
+- 全文进 sitemap、RSS
 
-具体规则和命令见 `content/external/README.md`。没有历史对话时，AI 必须优先阅读这个文件和下列代码入口：
+OG image（per-post）当前缺失 —— 是 launch 后第一个 P1 follow-up。
 
-- `scripts/content/external/refresh.mts`：抓取新外部文章
-- `scripts/content/external/qualityFilter.mts`：质量过滤入口
-- `scripts/content/external/chinaPoliticsFilter.mts`：中国政治相关内容过滤
-- `scripts/content/external/sanitizeContent.mts`：正文安全清洗和纯文本结构化
-- `scripts/content/external/normalizeExistingItems.mts`：对现有缓存重跑过滤和清洗规则
+## 写作守则
 
-常用命令：
+新增文章前 / 改文章时遵守：
 
-```bash
-npm run refresh:content    # 抓新文章，只处理新 slug
-npm run normalize:content  # 重跑现有缓存，剔除中国政治内容并重新清洗正文
-npm run build:data         # 重新生成 public/data
-```
-
-新增或修改过滤 / 清洗规则时必须：
-
-1. 在 `scripts/content/external-refresh.test.mjs` 添加正反例。
-2. 不用 AI 改写文章正文，只改规则代码。
-3. 运行 `npm run normalize:content` 更新既有缓存。
-4. 运行 `npm run build:data` 或 `npm run build` 更新部署数据。
-
-**不做的事情**：
-- 不翻译标题、不生成中文摘要（中文源保持中文，英文源保持英文）
-- 不做立场标注、不生成"每日三题"
-- 不做 qualityScore 智能评分（纯规则打分）
-- 不用 AI 手动改写、润色、摘要或重排外部文章正文
-
-**必须遵守**：文章页底部必须展示 `本文原载于 {sourceName}` 和 `阅读原文` 链接。版权归原作者，我们只是内嵌阅读。`ArticleLayout.tsx` 已经内置这个版权区块，不要删。
+1. **不转载。** 只发原创。引用他人观点要做评论、对比或综述，不能整段复制。
+2. **要么把一件事讲透，要么不写。** 频率不承诺，宁缺毋滥。
+3. **不写日记式快讯。** 不发"今天在看什么"、"随想"、"最近在想 X"。每篇都要有一个明确的命题。
+4. **description 字段必须自己写好。** 这是 meta description + OG + RSS 摘要的唯一来源，是潜在读者点不点开的决定性 1.5 秒。
+5. **draft: true 用于工作中草稿。** 草稿文章 URL 仍可访问，但不进列表 / RSS / sitemap。
 
 ## 发布流程
 
-代码改动后发布到 https://jiaotangxq.github.io 只需要 push 到 master：
-
 ```bash
-git add <改动的文件>
-git commit -m "描述改动"
 git push origin master
 ```
 
-Push 之后 GitHub Actions 会自动执行：
-1. `npm ci` 安装依赖
-2. `npm run build`（生成 cosmos.json + search-index.json → Vite 构建 → 输出 dist/）
-3. 部署 `dist/` 到 GitHub Pages
+GitHub Actions 自动执行：
+1. `npm ci`
+2. `npm run build`（astro check 会先跑类型检查）
+3. `dist/` 部署到 GitHub Pages
 
-通常 1-2 分钟后页面生效。可以在仓库 Actions tab 查看构建状态。
+通常 1-2 分钟后页面生效。Pages Source 必须设为 **"GitHub Actions"**（Settings → Pages → Source）。
 
-**注意事项：**
-- GitHub Pages Source 必须设为 **"GitHub Actions"**（Settings → Pages → Source），不能选 "Deploy from a branch"，否则会直接发布源码而不是构建产物
-- 如果新增了文章（`content/articles/*.md`），构建时会自动重新计算布局和搜索索引
-- 本地验证：先 `npm run build && npx vite preview` 确认没问题再 push
+本地验证：`npm run build && npm run preview`
 
-## 当前进度（v0.1）
+## 当前形态（v0.2）
 
 已完成：
-- 完整项目搭建和构建管线
-- 5 层 GPU 渲染管线 + 4 个 GLSL shader
-- 相机系统（自动巡游、拖拽/缩放/捏合、弹簧缓动、URL 持久化）
-- 全部 UI 组件（SummaryCard、SearchPalette、ThemeLens、GalaxyCompass、NodeLabels）
-- 文章页（封面、排版、Markdown 渲染、相关星球、返回导航）
-- 5 篇示例文章
-- Code splitting（Three.js 独立 chunk）
+- Astro 5 + MDX + Tailwind 4 完整骨架
+- 全静态预渲染：每篇文章独立 HTML、sitemap 自动收录、RSS feed
+- Editorial 视觉系统：宋体衬线 + 单栏 680px + 单一暖橙强调色 + 完整 .prose 排版
+- 路由：`/`（列表）`/posts/{slug}`（文章）`/about`（关于）`/universe`（cosmos 归档说明，noindex）`/404` `/rss.xml`
+- 首篇原创：`src/content/posts/site-relaunch.mdx`（重启自述）
+- GitHub Actions 部署链路（Node 22）
 
-## 未来开发计划
-
-### P1 — 视觉调优
-- 浏览器中调试 shader 参数（星云密度、节点发光强度、星空亮度）
-- 调整 LOD 阈值和过渡动画平滑度
-- 优化节点大小和间距
-- 移动端适配和手势优化
-
-### P2 — 封面系统
-- 每篇文章可高度定制的封面设计
-- 封面配置扩展：自定义渐变、图片、排版方向
-- 近景 LOD 封面卡片过渡动画
-
-### P3 — 内容扩展
-- 更多文章（20-50 篇验证性能和布局）
-- AI 辅助内容管线：自动摘要、语义聚类
-- 骑行、健身等新主题星系
-
-### P4 — 部署和 SEO
-- GitHub Pages 部署（404.html SPA 路由、CNAME）
-- GitHub Actions 自动构建
-- 预渲染文章页 HTML（SEO）
-- Open Graph / Twitter Card 元数据
-
-### P5 — 高级交互
-- 文章页进入/退出的宇宙缩放过渡动画
-- 搜索结果相机飞行效果
-- 200+ 节点 instanced rendering
-- 手动覆盖集群分配
-
-### P6 — 大气层增强
-- 流星、星尘粒子效果
-- 多层 FBM 星云、边缘溶解
-- 节点间微弱引力场视觉暗示
-- 多层视差星空深度感
+待办（按优先级）：
+- **P0** — 写作。60 天内 8-10 篇能拿出手的原创长文
+- **P1** — per-post OG image 自动生成（satori + resvg + 中英文字体打包）
+- **P1** — `/about` 真名 / 联系方式 / 简介（当前有占位）
+- **P2** — 邮件订阅入口（Buttondown / Substack 接入）
+- **P2** — 文章页目录（TOC）侧栏 + 阅读进度条
+- **P3** — cosmos /universe 完整迁移为 React island（前提是写作量起来后再说）
+- **P3** — 站内搜索（MiniSearch 或 Pagefind）
 
 ## 协作偏好
 
-- 快速执行，少问多做。需求清晰时直接写代码。
-- 利用并行 agent 加速开发。
-- 只在真正影响架构的决策点停下来确认。
-- 中文沟通。
-- 对视觉品质要求极高，不接受"能用就行"的实现。
+- 流量为王，每个决策都问"这件事有助于流量吗"
+- 快速执行，少问多做。需求清晰时直接写代码
+- 只在真正影响架构的决策点停下来确认
+- 中文沟通
+- 对视觉品质要求极高，不接受"能用就行"的实现
+- 拒绝转载、聚合、AI 改写外部内容 —— 只做原创
