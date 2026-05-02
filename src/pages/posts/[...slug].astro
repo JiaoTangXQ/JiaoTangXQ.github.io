@@ -1,0 +1,21 @@
+---
+import Article from "@/layouts/Article.astro";
+import { getCollection, render } from "astro:content";
+import { estimateReadingMinutes } from "@/lib/format";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const minutes = estimateReadingMinutes(post.body ?? post.data.description ?? "");
+---
+
+<Article post={post} minutes={minutes}>
+  <Content />
+</Article>

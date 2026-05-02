@@ -1,0 +1,34 @@
+---
+type Props = {
+  current?: "home" | "about" | "rss";
+};
+const { current = "home" } = Astro.props;
+
+const links: Array<{ href: string; label: string; key: NonNullable<Props["current"]> }> = [
+  { href: "/", label: "归档", key: "home" },
+  { href: "/about", label: "关于", key: "about" },
+  { href: "/rss.xml", label: "RSS", key: "rss" },
+];
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__brand" href="/" aria-label="返回首页">
+      <span class="site-header__brand-mark">焦糖星球</span>
+    </a>
+    <nav class="site-header__nav" aria-label="主导航">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "site-header__link",
+            { "site-header__link--current": current === link.key },
+          ]}
+          aria-current={current === link.key ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

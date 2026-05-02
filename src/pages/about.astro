@@ -1,0 +1,43 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+---
+
+<Base
+  title="关于 — 焦糖星球"
+  description="关于焦糖与这个写作站。"
+>
+  <SiteHeader current="about" />
+  <main class="page page--about">
+    <article class="prose">
+      <h1>关于</h1>
+      <p class="lede">
+        焦糖在写作。这里是焦糖把自己想清楚的事情留下的地方。
+      </p>
+      <h2>这个站做什么</h2>
+      <p>
+        只发原创长文。一条规则：要么把一件事讲透，要么不写。话题主要是工程、产品、AI、
+        阅读，以及那些值得停下来反复琢磨的问题。
+      </p>
+      <h2>不做什么</h2>
+      <ul>
+        <li>不转载外部文章。</li>
+        <li>不做信息聚合。</li>
+        <li>不写标题党快讯。</li>
+      </ul>
+      <h2>联系</h2>
+      <ul>
+        <li>邮箱 · <em>占位，待补</em></li>
+        <li>X / Twitter · <em>占位，待补</em></li>
+        <li>GitHub · <a href="https://github.com/JiaoTangXQ" rel="me">JiaoTangXQ</a></li>
+      </ul>
+      <h2>订阅</h2>
+      <p>
+        订阅 <a href="/rss.xml">RSS</a>，新文章会自动出现在你的阅读器里。这是这个站
+        目前唯一的订阅入口。
+      </p>
+    </article>
+  </main>
+  <SiteFooter />
+</Base>

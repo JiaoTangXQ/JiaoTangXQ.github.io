@@ -1,0 +1,84 @@
+---
+import Base from "./Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { formatDate, isoDate } from "@/lib/format";
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  minutes: number;
+};
+
+const { post, minutes } = Astro.props;
+const { data } = post;
+const dateStr = formatDate(data.date, data.lang);
+const updatedStr = data.updated ? formatDate(data.updated, data.lang) : null;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: data.title,
+  description: data.description,
+  datePublished: isoDate(data.date),
+  dateModified: data.updated ? isoDate(data.updated) : isoDate(data.date),
+  author: { "@type": "Person", name: "焦糖" },
+  publisher: { "@type": "Organization", name: "焦糖星球" },
+  inLanguage: data.lang === "en" ? "en" : "zh-CN",
+  keywords: data.tags.join(", "),
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": new URL(`/posts/${post.id}`, Astro.site).toString(),
+  },
+};
+---
+
+<Base
+  title={`${data.title} — 焦糖星球`}
+  description={data.description}
+  type="article"
+  publishedTime={isoDate(data.date)}
+  modifiedTime={data.updated ? isoDate(data.updated) : undefined}
+  tags={data.tags}
+  noIndex={data.draft}
+>
+  <SiteHeader current="home" />
+  <main class="page page--article">
+    <article>
+      <header class="article-header">
+        <p class="article-eyebrow">
+          <time datetime={isoDate(data.date)}>{dateStr}</time>
+          {data.tags.length > 0 && (
+            <>
+              <span aria-hidden="true">·</span>
+              {data.tags.map((tag, i) => (
+                <>
+                  {i > 0 && <span aria-hidden="true">·</span>}
+                  <span class="article-eyebrow__tag">#{tag}</span>
+                </>
+              ))}
+            </>
+          )}
+        </p>
+        <h1 class="article-title">{data.title}</h1>
+        {data.subtitle && <p class="article-subtitle">{data.subtitle}</p>}
+        <p class="article-meta">
+          作者 焦糖 · 阅读约 {minutes} 分钟
+          {updatedStr && <span class="article-meta__updated"> · 更新于 {updatedStr}</span>}
+        </p>
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+      <footer class="article-footer">
+        <p>
+          如果这篇文章对你有用，欢迎订阅
+          <a href="/rss.xml">RSS</a>
+          继续读。
+        </p>
+      </footer>
+    </article>
+  </main>
+  <SiteFooter />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+</Base>

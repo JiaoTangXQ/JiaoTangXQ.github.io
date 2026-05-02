@@ -1,0 +1,44 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+---
+
+<Base
+  title="宇宙画布 — 焦糖星球"
+  description="焦糖星球早期版本的 GPU 渲染宇宙画布。已暂时收起，归档在 git tag v0.1-cosmos-archive。"
+  noIndex={true}
+>
+  <SiteHeader />
+  <main class="page page--about">
+    <article class="prose">
+      <p class="article-eyebrow">彩蛋 · 已归档</p>
+      <h1>宇宙画布暂时收起</h1>
+      <p class="lede">
+        这里曾经是焦糖星球 v0.1 的样子 —— 一个 GPU 渲染的无限宇宙画布，
+        文章以发光行星散布其中。
+      </p>
+      <p>
+        2026 年 5 月，我把整个站点重启为只做原创长文的写作站。详细原因写在
+        <a href="/posts/site-relaunch">站点重启</a>这篇文章里。
+      </p>
+      <p>
+        旧版本完整代码归档在 git tag <code>v0.1-cosmos-archive</code>。
+        如果你想看，本地：
+      </p>
+      <pre><code>git clone https://github.com/JiaoTangXQ/JiaoTangXQ.github.io.git
+cd JiaoTangXQ.github.io
+git checkout v0.1-cosmos-archive
+npm install
+npm run dev</code></pre>
+      <p>
+        如果有一天我重新写够了文章，让"宇宙"真的能映射出我思考的图谱，它会
+        以更克制的形式回来 —— 那时候，它会是配菜，不再是主菜。
+      </p>
+      <p>
+        <a href="/">回到归档</a>
+      </p>
+    </article>
+  </main>
+  <SiteFooter />
+</Base>
