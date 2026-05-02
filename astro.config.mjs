@@ -12,7 +12,7 @@ const SITE = "https://jiaotangxq.github.io";
 export default defineConfig({
   site: SITE,
   output: "static",
-  trailingSlash: "never",
+  trailingSlash: "always",
   build: {
     format: "directory",
   },
