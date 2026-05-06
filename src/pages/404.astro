@@ -3,12 +3,16 @@ import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import { seoForPage } from "@/lib/seo";
+import { HUB_PILLARS, PILLARS } from "@/lib/pillars";
+import { getPublishedPosts } from "@/lib/posts";
 
 const seo = seoForPage({
   title: "404 — 焦糖星球",
   description: "这一页找不到了。",
   noIndex: true,
 });
+
+const recent = (await getPublishedPosts()).slice(0, 3);
 ---
 
 <Base seo={seo}>
@@ -18,10 +22,49 @@ const seo = seoForPage({
       <p class="article-eyebrow">404</p>
       <h1>这一页找不到了。</h1>
       <p class="lede">
-        可能是地址写错了，可能是以前的链接已经迁移。
+        可能是地址写错了，可能是链接迁移了，也可能是这篇文章还没动笔。
       </p>
+
+      <h2>试试这些</h2>
+      <ul>
+        <li><a href="/">回到归档首页</a></li>
+        <li><a href="/about/">了解这个站在做什么</a></li>
+        <li>
+          按主题浏览：
+          {HUB_PILLARS.map((slug, i) => (
+            <>
+              {i > 0 && " · "}
+              <a href={`/topics/${slug}/`}>{PILLARS[slug].title}</a>
+            </>
+          ))}
+        </li>
+        <li>
+          订阅：<a href="/rss.xml">RSS</a> · 关注 X
+          <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>
+        </li>
+      </ul>
+
+      {recent.length > 0 && (
+        <>
+          <h2>最近的文章</h2>
+          <ul>
+            {recent.map((post) => (
+              <li>
+                <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+                {post.data.subtitle && (
+                  <>
+                    {" — "}
+                    <em>{post.data.subtitle}</em>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <p>
-        回到 <a href="/">归档首页</a>，或者订阅 <a href="/rss.xml">RSS</a>。
+        或者直接 <button type="button" data-search-trigger style="background:none;border:0;padding:0;color:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">搜一下</button>。
       </p>
     </article>
   </main>
