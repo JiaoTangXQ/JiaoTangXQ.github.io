@@ -9,6 +9,8 @@ const links: Array<{ href: string; label: string; key: NonNullable<Props["curren
   { href: "/about", label: "关于", key: "about" },
   { href: "/rss.xml", label: "RSS", key: "rss" },
 ];
+
+const searchEnabled = import.meta.env.PROD;
 ---
 
 <header class="site-header">
@@ -30,6 +32,16 @@ const links: Array<{ href: string; label: string; key: NonNullable<Props["curren
           {link.label}
         </a>
       ))}
+      {searchEnabled && (
+        <button
+          type="button"
+          class="site-header__link site-header__search"
+          data-search-trigger
+          aria-label="打开搜索"
+        >
+          搜索
+        </button>
+      )}
     </nav>
   </div>
 </header>

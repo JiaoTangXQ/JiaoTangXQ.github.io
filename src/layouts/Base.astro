@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import SearchModal from "@/components/SearchModal.astro";
 import "@/styles/global.css";
 
 type Props = {
@@ -30,6 +31,11 @@ const siteName = "焦糖星球";
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
+
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
+const plausibleHost =
+  (import.meta.env.PUBLIC_PLAUSIBLE_HOST as string | undefined) ?? "https://plausible.io";
+const analyticsEnabled = Boolean(import.meta.env.PROD && plausibleDomain);
 ---
 
 <!doctype html>
@@ -67,8 +73,18 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : undefined
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-serif" preload />
     <Font cssVariable="--font-sans" />
+
+    {analyticsEnabled && (
+      <script
+        is:inline
+        defer
+        data-domain={plausibleDomain}
+        src={`${plausibleHost}/js/script.js`}
+      />
+    )}
   </head>
   <body>
     <slot />
+    <SearchModal />
   </body>
 </html>

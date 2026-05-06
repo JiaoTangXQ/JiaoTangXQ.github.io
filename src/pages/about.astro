@@ -2,6 +2,7 @@
 import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import SubscribeForm from "@/components/SubscribeForm.astro";
 ---
 
 <Base
@@ -32,12 +33,8 @@ import SiteFooter from "@/components/SiteFooter.astro";
         <li>X / Twitter · <em>占位，待补</em></li>
         <li>GitHub · <a href="https://github.com/JiaoTangXQ" rel="me">JiaoTangXQ</a></li>
       </ul>
-      <h2>订阅</h2>
-      <p>
-        订阅 <a href="/rss.xml">RSS</a>，新文章会自动出现在你的阅读器里。这是这个站
-        目前唯一的订阅入口。
-      </p>
     </article>
+    <SubscribeForm />
   </main>
   <SiteFooter />
 </Base>

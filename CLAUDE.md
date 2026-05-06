@@ -147,15 +147,21 @@ GitHub Actions 自动执行：
 - 路由：`/`（列表）`/posts/{slug}`（文章）`/about`（关于）`/universe`（cosmos 归档说明，noindex）`/404` `/rss.xml`
 - 首篇原创：`src/content/posts/site-relaunch.mdx`（重启自述）
 - GitHub Actions 部署链路（Node 22）
+- **favicon.svg**（深色圆角 + 焦糖色行星）
+- **per-post OG image** 自动生成：`src/lib/og.ts` + `src/pages/og/[slug].png.ts`，satori + @resvg/resvg-js，按字符动态加载 fontsource 子集（Fraunces latin + Noto Serif SC CJK），输出到 `/og/{slug}.png`
+- **JSON-LD Article schema** image 字段已补全（指向 OG 图）
+- **Plausible 数据分析** 接入（`PUBLIC_PLAUSIBLE_DOMAIN` 环境变量启用，生产构建注入）
+- **邮件订阅** `<SubscribeForm />` 组件（Buttondown 集成；`PUBLIC_BUTTONDOWN_USERNAME` 未设时显示占位 + RSS 入口；挂载于文章页底部和 /about）
+- **阅读进度条** `<ReadingProgress />`（CSS scroll-driven animation 优先，老浏览器 JS fallback）
+- **文章页 TOC** `<ArticleTOC />`（从 MarkdownHeadings 派生 h2/h3，IntersectionObserver 高亮当前段，≥1280px sticky 右栏）
+- **站内搜索** Pagefind v1.5（构建期 `pagefind --site dist` 自动索引，header 「搜索」按钮 + ⌘K 唤起 `<dialog>` 模态框，editorial 主题覆盖默认 UI）
+- 部署期环境变量通过 GitHub repo Variables 注入：`vars.PUBLIC_PLAUSIBLE_DOMAIN` / `vars.PUBLIC_BUTTONDOWN_USERNAME`
 
 待办（按优先级）：
 - **P0** — 写作。60 天内 8-10 篇能拿出手的原创长文
-- **P1** — per-post OG image 自动生成（satori + resvg + 中英文字体打包）
-- **P1** — `/about` 真名 / 联系方式 / 简介（当前有占位）
-- **P2** — 邮件订阅入口（Buttondown / Substack 接入）
-- **P2** — 文章页目录（TOC）侧栏 + 阅读进度条
+- **P1** — `/about` 真名 / 联系方式 / 简介（当前邮箱、X 仍是占位文案）
+- **P1** — Plausible / Buttondown 注册账号 → GitHub repo Settings → Variables 填入 `PUBLIC_PLAUSIBLE_DOMAIN`、`PUBLIC_BUTTONDOWN_USERNAME` → 触发部署即可启用
 - **P3** — cosmos /universe 完整迁移为 React island（前提是写作量起来后再说）
-- **P3** — 站内搜索（MiniSearch 或 Pagefind）
 
 ## 协作偏好
 

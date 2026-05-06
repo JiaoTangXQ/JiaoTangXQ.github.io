@@ -1,0 +1,55 @@
+---
+type Props = {
+  variant?: "block" | "inline";
+  title?: string;
+  lede?: string;
+};
+
+const { variant = "block", title, lede } = Astro.props;
+
+const username = (import.meta.env.PUBLIC_BUTTONDOWN_USERNAME as string | undefined)?.trim();
+const action = username
+  ? `https://buttondown.com/api/emails/embed-subscribe/${encodeURIComponent(username)}`
+  : null;
+const popup = username ? `https://buttondown.com/${encodeURIComponent(username)}` : null;
+
+const headline = title ?? "新文章直接送到信箱";
+const ledeText =
+  lede ?? "没有日记式快讯，不分享外部链接。每发一篇，邮箱响一次，全是原创长文。";
+---
+
+<aside class:list={["subscribe", `subscribe--${variant}`]}>
+  <p class="subscribe__eyebrow">订阅</p>
+  <h2 class="subscribe__title">{headline}</h2>
+  <p class="subscribe__lede">{ledeText}</p>
+  {action && popup ? (
+    <form
+      class="subscribe__form"
+      action={action}
+      method="post"
+      target="popupwindow"
+      onsubmit={`window.open('${popup}', 'popupwindow'); return true;`}
+    >
+      <label class="subscribe__label" for={`subscribe-email-${variant}`}>邮箱</label>
+      <div class="subscribe__row">
+        <input
+          class="subscribe__input"
+          type="email"
+          name="email"
+          id={`subscribe-email-${variant}`}
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        />
+        <button class="subscribe__btn" type="submit">订阅</button>
+      </div>
+      <p class="subscribe__alt">
+        或订阅 <a href="/rss.xml">RSS</a>。
+      </p>
+    </form>
+  ) : (
+    <p class="subscribe__placeholder">
+      邮件订阅尚未启用。当前你可以订阅 <a href="/rss.xml">RSS</a>，新文章会自动出现在你的阅读器里。
+    </p>
+  )}
+</aside>

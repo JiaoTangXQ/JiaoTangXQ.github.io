@@ -927,6 +927,347 @@ a {
 }
 
 /* ----------------------------------------------------------------
+   Search modal — Pagefind UI in editorial dialog
+---------------------------------------------------------------- */
+.site-header__search {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  transition: color 200ms;
+}
+
+.site-header__search:hover {
+  color: var(--color-accent);
+}
+
+.search-dialog {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  max-width: min(720px, 92vw);
+  width: 100%;
+  margin: 5rem auto auto;
+  color: var(--color-ink);
+}
+
+.search-dialog::backdrop {
+  background: rgba(28, 22, 16, 0.32);
+  backdrop-filter: blur(2px);
+}
+
+.search-dialog__inner {
+  position: relative;
+  background: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 6px;
+  padding: 2.25rem 2rem 2rem;
+  box-shadow: 0 24px 60px -20px rgba(28, 22, 16, 0.35);
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.search-dialog__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.95rem;
+  background: transparent;
+  border: 0;
+  color: var(--color-ink-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.4rem 0.55rem;
+  line-height: 1;
+  border-radius: 3px;
+  transition: color 200ms, background 200ms;
+}
+
+.search-dialog__close:hover {
+  color: var(--color-accent);
+  background: var(--color-rule-soft);
+}
+
+.search-dialog__hint {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}
+
+/* Pagefind UI custom theme — match editorial palette */
+.search-dialog #search {
+  --pagefind-ui-scale: 0.92;
+  --pagefind-ui-primary: var(--color-accent);
+  --pagefind-ui-text: var(--color-ink);
+  --pagefind-ui-background: var(--color-paper);
+  --pagefind-ui-border: var(--color-rule);
+  --pagefind-ui-tag: var(--color-paper-warm);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 4px;
+  --pagefind-ui-image-border-radius: 3px;
+  --pagefind-ui-image-box-ratio: 3 / 2;
+  --pagefind-ui-font: var(--font-serif);
+}
+
+.search-dialog .pagefind-ui__search-input {
+  background: var(--color-paper);
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+}
+
+.search-dialog .pagefind-ui__result-title a {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.search-dialog .pagefind-ui__result-title a:hover {
+  color: var(--color-accent);
+}
+
+.search-dialog .pagefind-ui__message {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+}
+
+.search-dialog mark {
+  background: var(--color-accent-glow);
+  color: var(--color-accent-deep);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+@media (max-width: 720px) {
+  .search-dialog {
+    margin-top: 2rem;
+  }
+  .search-dialog__inner {
+    padding: 1.85rem 1.25rem 1.5rem;
+  }
+}
+
+/* ----------------------------------------------------------------
+   Article TOC — sticky right rail (desktop only)
+---------------------------------------------------------------- */
+.article-toc {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .article-toc {
+    display: block;
+    position: fixed;
+    top: 7.5rem;
+    right: max(1.5rem, calc((100vw - 720px) / 2 - 17.5rem));
+    width: 14rem;
+    max-height: calc(100vh - 12rem);
+    overflow-y: auto;
+    z-index: 5;
+    /* 不让滚动条侵入 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule) transparent;
+  }
+}
+
+.article-toc__label {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  font-weight: 600;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--color-rule-soft);
+}
+
+.article-toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.article-toc__item {
+  margin: 0;
+  padding: 0;
+}
+
+.article-toc__item + .article-toc__item {
+  margin-top: 0.55rem;
+}
+
+.article-toc__item--d3 {
+  padding-left: 0.85rem;
+}
+
+.article-toc__link {
+  text-decoration: none;
+  color: var(--color-ink-muted);
+  display: block;
+  border-left: 1.5px solid transparent;
+  padding-left: 0.7rem;
+  margin-left: -0.7rem;
+  transition: color 200ms, border-color 200ms;
+}
+
+.article-toc__link:hover {
+  color: var(--color-accent);
+}
+
+.article-toc__link.is-current {
+  color: var(--color-ink);
+  border-left-color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------
+   Subscribe form — editorial newsletter card
+---------------------------------------------------------------- */
+.subscribe {
+  margin: 4.5rem 0 0;
+  padding: 2.75rem 0 2.5rem;
+  border-top: 1px solid var(--color-rule);
+}
+
+.subscribe--block {
+  border-bottom: 1px solid var(--color-rule-soft);
+  padding-bottom: 2.75rem;
+}
+
+.subscribe__eyebrow {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  font-weight: 500;
+}
+
+.subscribe__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.18;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: var(--color-ink);
+}
+
+.subscribe__lede {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.04rem;
+  font-style: italic;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+  max-width: 38em;
+}
+
+.subscribe__form {
+  margin: 0;
+}
+
+.subscribe__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+.subscribe__row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1.5px solid var(--color-ink);
+  max-width: 30em;
+  align-items: stretch;
+  transition: border-color 200ms;
+}
+
+.subscribe__row:focus-within {
+  border-bottom-color: var(--color-accent);
+}
+
+.subscribe__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0.7rem 0.5rem 0.7rem 0;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  color: var(--color-ink);
+  outline: 0;
+}
+
+.subscribe__input::placeholder {
+  color: var(--color-ink-quiet);
+  font-style: italic;
+}
+
+.subscribe__btn {
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-accent);
+  cursor: pointer;
+  padding: 0.7rem 0.1rem 0.7rem 1.4rem;
+  transition: color 200ms, transform 200ms;
+  white-space: nowrap;
+}
+
+.subscribe__btn:hover {
+  color: var(--color-accent-deep);
+  transform: translateX(2px);
+}
+
+.subscribe__alt {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--color-ink-quiet);
+  letter-spacing: 0.05em;
+}
+
+.subscribe__alt a,
+.subscribe__placeholder a {
+  color: var(--color-accent);
+}
+
+.subscribe__placeholder {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-style: italic;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+  max-width: 36em;
+}
+
+/* ----------------------------------------------------------------
    Responsive
 ---------------------------------------------------------------- */
 @media (max-width: 720px) {
