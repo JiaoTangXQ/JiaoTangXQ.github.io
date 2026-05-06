@@ -6,8 +6,34 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const SITE = "https://jiaotangxq.github.io";
+
+// 收集所有 draft 文章的 slug，用于 sitemap 过滤。
+// CLAUDE.md 约定：草稿 URL 仍可访问（noindex），但不进 sitemap / RSS / 列表。
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const POSTS_DIR = path.join(__dirname, "src/content/posts");
+
+/** @param {string} file */
+function isDraftFile(file) {
+  const content = fs.readFileSync(file, "utf8");
+  const fmMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!fmMatch) return false;
+  return /^\s*draft:\s*true\b/m.test(fmMatch[1]);
+}
+
+const DRAFT_SLUGS = new Set(
+  fs.existsSync(POSTS_DIR)
+    ? fs
+        .readdirSync(POSTS_DIR)
+        .filter((f) => f.endsWith(".mdx") || f.endsWith(".md"))
+        .filter((f) => isDraftFile(path.join(POSTS_DIR, f)))
+        .map((f) => f.replace(/\.(mdx|md)$/, ""))
+    : [],
+);
 
 export default defineConfig({
   site: SITE,
@@ -71,7 +97,12 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
-      filter: (page) => !page.includes("/universe"),
+      filter: (page) => {
+        if (page.includes("/universe")) return false;
+        const m = page.match(/\/posts\/([^/]+)\/?$/);
+        if (m && DRAFT_SLUGS.has(m[1])) return false;
+        return true;
+      },
     }),
   ],
   vite: {

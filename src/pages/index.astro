@@ -3,21 +3,23 @@ import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import PostCard from "@/components/PostCard.astro";
-import { getCollection } from "astro:content";
+import { getPublishedPosts } from "@/lib/posts";
+import { seoForPage } from "@/lib/seo";
 
-const posts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const posts = await getPublishedPosts();
+
+const seo = seoForPage({
+  title: "焦糖星球 — 中文 AI 工程实践写作站",
+  description:
+    "中文圈关于 AI 时代工程实践最值得读的写作站。专注 AI 辅助开发、AI Agent 工程、LLM 应用架构、AI 时代的工程文化。每篇都尽量讲透一件事。",
+});
 
 const cnNumerals = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
 const now = new Date();
 const editionLabel = `VOL. I · NO. 1 · 二〇二六年${cnNumerals[now.getUTCMonth()]}月`;
 ---
 
-<Base
-  title="焦糖星球 — 焦糖的原创博客"
-  description="焦糖的个人原创博客。关于工程、思考方式、阅读笔记，和那些值得停下来想清楚的问题。"
->
+<Base seo={seo}>
   <SiteHeader current="home" />
   <main class="page page--home">
     <section class="masthead">
@@ -29,8 +31,9 @@ const editionLabel = `VOL. I · NO. 1 · 二〇二六年${cnNumerals[now.getUTCM
         想清楚一件事，<em>再写下来。</em>
       </h1>
       <p class="masthead__lede">
-        这是一个只发原创长文的写作站。话题集中在工程、产品、AI、阅读和那些值得停下来反复琢磨的问题。
-        每篇文章都尽量做到 ——<strong>要么把一件事讲透，要么不写。</strong>
+        焦糖星球是关于 <strong>AI 时代工程实践</strong> 的中文写作站。
+        覆盖 <a href="/topics/ai-coding/">AI 辅助开发</a>、<a href="/topics/agent/">AI Agent 工程</a>、<a href="/topics/llm-arch/">LLM 应用架构</a>、<a href="/topics/culture/">AI 时代的工程文化</a>。
+        每篇都尽量做到 ——<strong>要么把一件事讲透，要么不写。</strong>
       </p>
     </section>
 

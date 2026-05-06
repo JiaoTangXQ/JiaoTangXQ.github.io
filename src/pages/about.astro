@@ -3,34 +3,62 @@ import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SubscribeForm from "@/components/SubscribeForm.astro";
+import { seoForPage } from "@/lib/seo";
+
+const seo = seoForPage({
+  title: "关于 — 焦糖星球",
+  description:
+    "焦糖星球是关于 AI 时代工程实践的中文写作站。作者焦糖，写 AI 辅助开发、AI Agent 工程、LLM 应用架构、AI 时代的工程文化。",
+});
 ---
 
-<Base
-  title="关于 — 焦糖星球"
-  description="关于焦糖与这个写作站。"
->
+<Base seo={seo}>
   <SiteHeader current="about" />
   <main class="page page--about">
     <article class="prose">
       <h1>关于</h1>
       <p class="lede">
-        焦糖在写作。这里是焦糖把自己想清楚的事情留下的地方。
+        焦糖星球是关于 <strong>AI 时代工程实践</strong> 的中文写作站。
       </p>
-      <h2>这个站做什么</h2>
+
+      <h2>这个站在写什么</h2>
       <p>
-        只发原创长文。一条规则：要么把一件事讲透，要么不写。话题主要是工程、产品、AI、
-        阅读，以及那些值得停下来反复琢磨的问题。
+        只发原创长文。规则一条：<strong>要么把一件事讲透，要么不写。</strong>
+        焦点收在 4 个主题上，主线之外极少出现：
       </p>
-      <h2>不做什么</h2>
+      <ul>
+        <li><a href="/topics/ai-coding/"><strong>AI 辅助开发</strong></a> — Claude Code、Cursor、subagent 工作流，把 AI 装进真实工程现场。</li>
+        <li><a href="/topics/agent/"><strong>AI Agent 工程</strong></a> — tool use、planning、记忆、评估，把 agent 从 demo 推到生产。</li>
+        <li><a href="/topics/llm-arch/"><strong>LLM 应用架构</strong></a> — prompt cache、上下文工程、多 model 路由、token 成本。</li>
+        <li><a href="/topics/culture/"><strong>AI 时代的工程文化</strong></a> — code review、技术决策、工程师定位的变化。</li>
+      </ul>
+
+      <h2>关于作者</h2>
+      <p>
+        焦糖，工程师。写 AI 工程实践与中文圈缺位的工程深度长文。
+      </p>
+
+      <h2>不写什么</h2>
       <ul>
         <li>不转载外部文章。</li>
         <li>不做信息聚合。</li>
-        <li>不写标题党快讯。</li>
+        <li>不写日记式快讯、随想、"今天读了什么"。</li>
+        <li>不写不在上面 4 个主题里的内容。</li>
       </ul>
+
+      <h2>怎么读到新文章</h2>
+      <p>
+        三种方式，任选其一即可：
+      </p>
+      <ul>
+        <li><strong>邮件订阅</strong> — 站内任意页面底部的订阅框，新文章直接送到信箱（推荐）。</li>
+        <li><strong>RSS</strong> — <a href="/rss.xml">/rss.xml</a>，把链接放进你的阅读器。</li>
+        <li><strong>X / Twitter</strong> — 关注 <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>，每发一篇会发 thread。</li>
+      </ul>
+
       <h2>联系</h2>
       <ul>
-        <li>邮箱 · <em>占位，待补</em></li>
-        <li>X / Twitter · <em>占位，待补</em></li>
+        <li>X · <a href="https://x.com/leadbelief" rel="me">@leadbelief</a></li>
         <li>GitHub · <a href="https://github.com/JiaoTangXQ" rel="me">JiaoTangXQ</a></li>
       </ul>
     </article>

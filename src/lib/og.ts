@@ -357,3 +357,164 @@ export async function generateOgPng(input: OgInput): Promise<Buffer> {
 
   return png;
 }
+
+type BrandedOgInput = {
+  /** 顶部小字标签，默认 "焦糖星球 · VOL. I" */
+  label?: string;
+  /** 主标题 */
+  title: string;
+  /** 副标题（斜体） */
+  subtitle?: string;
+};
+
+/**
+ * 站默认 / hub 页用的品牌 OG 图。视觉与文章 OG 保持一致，但内容是站身份 + 主题标签。
+ */
+export async function generateBrandedOgPng(input: BrandedOgInput): Promise<Buffer> {
+  const { label = "焦糖星球 · VOL. I", title, subtitle = "" } = input;
+
+  const visibleText = [label, title, subtitle, "—", "·"].join("");
+  const { fonts, serifFamily, italicFamily } = buildFonts(visibleText);
+
+  const titleLength = [...title].length;
+  const titleSize =
+    titleLength <= 10 ? 96 : titleLength <= 18 ? 80 : titleLength <= 26 ? 64 : 56;
+
+  type Node =
+    | string
+    | { type: string; props: { style?: Record<string, unknown>; children?: Node | Node[] } };
+
+  const brandLine: Node = {
+    type: "div",
+    props: {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: "16px",
+        fontSize: "24px",
+        letterSpacing: "0.2em",
+        textTransform: "uppercase",
+        color: "#6b5d4f",
+        fontFamily: serifFamily,
+        fontWeight: 500,
+      },
+      children: [
+        {
+          type: "div",
+          props: {
+            style: {
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "#b16a1e",
+            },
+          },
+        },
+        {
+          type: "span",
+          props: { style: { display: "flex" }, children: label },
+        },
+      ],
+    },
+  };
+
+  const titleNode: Node = {
+    type: "div",
+    props: {
+      style: {
+        display: "flex",
+        fontSize: `${titleSize}px`,
+        fontWeight: 500,
+        lineHeight: 1.1,
+        letterSpacing: "-0.02em",
+        color: "#1c1610",
+        fontFamily: serifFamily,
+      },
+      children: title,
+    },
+  };
+
+  const subtitleNode: Node | null = subtitle
+    ? {
+        type: "div",
+        props: {
+          style: {
+            display: "flex",
+            fontSize: "32px",
+            fontStyle: "italic",
+            lineHeight: 1.4,
+            color: "#6b5d4f",
+            fontFamily: italicFamily,
+            marginTop: "32px",
+            maxWidth: "880px",
+          },
+          children: subtitle,
+        },
+      }
+    : null;
+
+  const middleBlock: Node = {
+    type: "div",
+    props: {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        justifyContent: "center",
+        paddingTop: "64px",
+        paddingBottom: "64px",
+      },
+      children: [titleNode, ...(subtitleNode ? [subtitleNode] : [])],
+    },
+  };
+
+  const tagline: Node = {
+    type: "div",
+    props: {
+      style: {
+        display: "flex",
+        paddingTop: "32px",
+        fontSize: "22px",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        fontFamily: serifFamily,
+        fontWeight: 500,
+        color: "#5e7a64",
+        borderTop: "1px solid #d6c8b1",
+      },
+      children: "中文 · AI 时代的工程实践",
+    },
+  };
+
+  const root: Node = {
+    type: "div",
+    props: {
+      style: {
+        width: "1200px",
+        height: "630px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        backgroundColor: "#fbf6ec",
+        padding: "80px",
+        color: "#1c1610",
+        position: "relative",
+      },
+      children: [brandLine, middleBlock, tagline],
+    },
+  };
+
+  const svg = await satori(root as never, {
+    width: 1200,
+    height: 630,
+    fonts,
+  });
+
+  const png = new Resvg(svg, {
+    fitTo: { mode: "width", value: 1200 },
+  })
+    .render()
+    .asPng();
+
+  return png;
+}

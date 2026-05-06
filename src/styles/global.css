@@ -1344,3 +1344,79 @@ a {
     transition: none;
   }
 }
+
+/* ----------------------------------------------------------------
+   Dark mode — caramel inverted, ink → cream, paper → carbon.
+   Activated by [data-theme="dark"] on <html>.
+---------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-paper: #15110d;
+  --color-paper-warm: #1d1814;
+  --color-paper-warm-2: #25201a;
+  --color-ink: #f5edd9;
+  --color-ink-2: #d6c8b1;
+  --color-ink-muted: #a89a86;
+  --color-ink-quiet: #7d7060;
+  --color-rule: #3a2e22;
+  --color-rule-soft: #2a2118;
+  --color-rule-hairline: #1f1812;
+  --color-accent: #d68a4a;
+  --color-accent-deep: #f0a868;
+  --color-accent-soft: #5a3e1d;
+  --color-accent-glow: rgba(214, 138, 74, 0.18);
+  --color-sage: #8aa590;
+  --color-sage-soft: #2a3a2e;
+  --color-code-bg: #1f1812;
+
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body::before {
+  opacity: 0.22;
+}
+
+[data-theme="dark"] img,
+[data-theme="dark"] .article-cover img {
+  filter: brightness(0.92) contrast(1.02);
+}
+
+/* Theme toggle button in header */
+.theme-toggle {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-left: 0.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-ink-muted);
+  border-radius: 50%;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--color-accent-deep);
+  background: var(--color-rule-hairline);
+}
+
+.theme-toggle__icon {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
+.theme-toggle__icon--sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle__icon--moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle__icon--sun {
+  display: block;
+}
+

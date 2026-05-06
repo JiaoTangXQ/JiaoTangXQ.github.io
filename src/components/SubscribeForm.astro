@@ -13,9 +13,10 @@ const action = username
   : null;
 const popup = username ? `https://buttondown.com/${encodeURIComponent(username)}` : null;
 
-const headline = title ?? "新文章直接送到信箱";
+const headline = title ?? "把下一篇深度长文直接送到你的邮箱";
 const ledeText =
-  lede ?? "没有日记式快讯，不分享外部链接。每发一篇，邮箱响一次，全是原创长文。";
+  lede ??
+  "AI 时代工程实践的中文长文站。每发一篇，邮箱响一次——AI 辅助开发、Agent 工程、LLM 架构、工程文化。不发推送，不发日记，不发外链整理。";
 ---
 
 <aside class:list={["subscribe", `subscribe--${variant}`]}>
@@ -44,12 +45,12 @@ const ledeText =
         <button class="subscribe__btn" type="submit">订阅</button>
       </div>
       <p class="subscribe__alt">
-        或订阅 <a href="/rss.xml">RSS</a>。
+        不爱邮件？订阅 <a href="/rss.xml">RSS</a> 或在 X 关注 <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>。
       </p>
     </form>
   ) : (
     <p class="subscribe__placeholder">
-      邮件订阅尚未启用。当前你可以订阅 <a href="/rss.xml">RSS</a>，新文章会自动出现在你的阅读器里。
+      邮件订阅尚未启用。当前你可以订阅 <a href="/rss.xml">RSS</a>，或在 X 关注 <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>，新文章上线时会同步发出。
     </p>
   )}
 </aside>

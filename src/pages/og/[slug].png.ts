@@ -1,11 +1,10 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
-import type { CollectionEntry } from "astro:content";
 import { generateOgPng } from "@/lib/og";
-import { formatDate } from "@/lib/format";
+import { getAllPostsForBuild, type Post } from "@/lib/posts";
+import { postSummary } from "@/lib/post-view";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
+  const posts = await getAllPostsForBuild();
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -13,11 +12,12 @@ export async function getStaticPaths() {
 }
 
 export const GET: APIRoute = async ({ props }) => {
-  const { post } = props as { post: CollectionEntry<"posts"> };
+  const { post } = props as { post: Post };
+  const summary = postSummary(post);
   const png = await generateOgPng({
     title: post.data.title,
     subtitle: post.data.subtitle,
-    date: formatDate(post.data.date, post.data.lang),
+    date: summary.dateStr,
     tags: post.data.tags,
   });
   return new Response(new Uint8Array(png), {

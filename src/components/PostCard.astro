@@ -1,19 +1,17 @@
 ---
-import { formatDate, estimateReadingMinutes } from "@/lib/format";
-import type { CollectionEntry } from "astro:content";
+import { postSummary } from "@/lib/post-view";
+import type { Post } from "@/lib/posts";
 
 type Props = {
-  post: CollectionEntry<"posts">;
+  post: Post;
 };
 
 const { post } = Astro.props;
-const minutes = estimateReadingMinutes(post.body ?? post.data.description ?? "");
-const dateStr = formatDate(post.data.date, post.data.lang);
-const href = `/posts/${post.id}/`;
+const { url, minutes, dateStr } = postSummary(post);
 ---
 
 <article class="post-card">
-  <a href={href} class="post-card__link">
+  <a href={url} class="post-card__link">
     <span class="post-card__serial" aria-hidden="true"></span>
     <div class="post-card__body">
       <header class="post-card__head">

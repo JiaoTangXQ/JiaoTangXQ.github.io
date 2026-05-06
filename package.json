@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build && pagefind --site dist",
+    "build": "astro check && astro build && pagefind --site dist && node scripts/lint-seo.mjs",
+    "lint:seo": "node scripts/lint-seo.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

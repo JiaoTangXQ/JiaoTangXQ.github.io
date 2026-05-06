@@ -1,36 +1,21 @@
 ---
 import { Font } from "astro:assets";
 import SearchModal from "@/components/SearchModal.astro";
+import { SITE_NAME, type SeoData } from "@/lib/seo";
 import "@/styles/global.css";
 
 type Props = {
-  title: string;
-  description: string;
-  canonical?: string;
-  ogImage?: string;
-  type?: "website" | "article";
-  publishedTime?: string;
-  modifiedTime?: string;
-  tags?: string[];
-  noIndex?: boolean;
+  seo: SeoData;
 };
 
-const {
-  title,
-  description,
-  canonical,
-  ogImage,
-  type = "website",
-  publishedTime,
-  modifiedTime,
-  tags = [],
-  noIndex = false,
-} = Astro.props;
+const { seo } = Astro.props;
 
-const siteName = "焦糖星球";
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
-const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
-const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
+const fullCanonical = seo.canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = seo.ogImage
+  ? (seo.ogImage.startsWith("http") ? seo.ogImage : new URL(seo.ogImage, Astro.site).toString())
+  : undefined;
+const tags = seo.tags ?? [];
 
 const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
 const plausibleHost =
@@ -44,35 +29,53 @@ const analyticsEnabled = Boolean(import.meta.env.PROD && plausibleDomain);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      // 主题预加载：在 paint 前把 data-theme 设上，避免 FOUC。
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme = saved || (prefers ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {
+          /* localStorage blocked — fall back to OS preference via CSS */
+        }
+      })();
+    </script>
     <link rel="canonical" href={fullCanonical} />
-    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+    {seo.noIndex && <meta name="robots" content="noindex, nofollow" />}
 
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
 
-    <meta property="og:type" content={type} />
-    <meta property="og:site_name" content={siteName} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:type" content={seo.type} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
     <meta property="og:url" content={fullCanonical} />
     {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
     <meta property="og:locale" content="zh_CN" />
 
     <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
-    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {seo.publishedTime && <meta property="article:published_time" content={seo.publishedTime} />}
+    {seo.modifiedTime && <meta property="article:modified_time" content={seo.modifiedTime} />}
     {tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-    <link rel="alternate" type="application/rss+xml" title={siteName} href={`${siteUrl}/rss.xml`} />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href={`${siteUrl}/rss.xml`} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-serif" preload />
     <Font cssVariable="--font-sans" />
+
+    {seo.jsonLd &&
+      (Array.isArray(seo.jsonLd) ? seo.jsonLd : [seo.jsonLd]).map((block) => (
+        <script type="application/ld+json" set:html={JSON.stringify(block)} is:inline />
+      ))}
 
     {analyticsEnabled && (
       <script

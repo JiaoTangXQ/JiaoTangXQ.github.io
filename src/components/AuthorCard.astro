@@ -1,0 +1,104 @@
+---
+// 文章末尾的作者卡片。次转化目标 = X follow + GitHub follow。
+---
+
+<aside class="author-card" aria-label="关于作者">
+  <div class="author-card__head">
+    <span class="author-card__mark" aria-hidden="true"></span>
+    <p class="author-card__eyebrow">作者</p>
+  </div>
+  <h2 class="author-card__name">焦糖 · JiaoTang</h2>
+  <p class="author-card__bio">
+    工程师，写 <strong>AI 时代的工程实践</strong>——AI 辅助开发、Agent 工程、LLM 应用架构、AI 介入下的工程文化。
+  </p>
+  <p class="author-card__links">
+    <a href="https://x.com/leadbelief" rel="me noopener" target="_blank">X · @leadbelief</a>
+    <span class="author-card__divider" aria-hidden="true"></span>
+    <a href="https://github.com/JiaoTangXQ" rel="me noopener" target="_blank">GitHub · JiaoTangXQ</a>
+    <span class="author-card__divider" aria-hidden="true"></span>
+    <a href="/about/">关于这个站</a>
+  </p>
+</aside>
+
+<style>
+  .author-card {
+    margin-top: 4rem;
+    padding: 2rem 0 1.5rem;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .author-card__head {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .author-card__mark {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+
+  .author-card__eyebrow {
+    margin: 0;
+    font-family: var(--font-display, serif);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .author-card__name {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display, serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--color-ink);
+  }
+
+  .author-card__bio {
+    margin: 0 0 1rem;
+    color: var(--color-ink-2);
+    line-height: 1.65;
+    max-width: 38rem;
+  }
+
+  .author-card__bio strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .author-card__links {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    color: var(--color-ink-muted);
+  }
+
+  .author-card__links a {
+    color: var(--color-accent-deep);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-rule);
+    padding-bottom: 1px;
+    transition: border-color 0.15s ease;
+  }
+
+  .author-card__links a:hover {
+    border-bottom-color: var(--color-accent);
+  }
+
+  .author-card__divider {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-rule);
+  }
+</style>

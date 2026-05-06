@@ -2,21 +2,19 @@
 import type { MarkdownHeading } from "astro";
 
 type Props = {
+  // 调用方需传入已经清洗过的 h2/h3 列表（PostView.headings）。
   headings: MarkdownHeading[];
 };
 
 const { headings } = Astro.props;
-const items = headings
-  .filter((h) => h.depth === 2 || h.depth === 3)
-  .map((h) => ({ ...h, text: h.text.replace(/[\s#]+$/, "") }));
 ---
 
 {
-  items.length >= 2 && (
+  headings.length >= 2 && (
     <aside class="article-toc" aria-label="目录">
       <p class="article-toc__label">目录</p>
       <ol class="article-toc__list">
-        {items.map((h) => (
+        {headings.map((h) => (
           <li class:list={["article-toc__item", `article-toc__item--d${h.depth}`]}>
             <a href={`#${h.slug}`} class="article-toc__link" data-toc-link={h.slug}>
               {h.text}
@@ -60,7 +58,6 @@ const items = headings
             visible.delete(entry.target.id);
           }
         });
-        // 选择当前可见的最上方一个 heading
         var current = null;
         headings.forEach(function (h) {
           if (!current && visible.has(h.id)) current = h.id;

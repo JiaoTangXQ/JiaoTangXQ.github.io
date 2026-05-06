@@ -2,13 +2,16 @@
 import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import { seoForPage } from "@/lib/seo";
+
+const seo = seoForPage({
+  title: "宇宙画布 — 焦糖星球",
+  description: "焦糖星球早期版本的 GPU 渲染宇宙画布。已暂时收起，归档在 git tag v0.1-cosmos-archive。",
+  noIndex: true,
+});
 ---
 
-<Base
-  title="宇宙画布 — 焦糖星球"
-  description="焦糖星球早期版本的 GPU 渲染宇宙画布。已暂时收起，归档在 git tag v0.1-cosmos-archive。"
-  noIndex={true}
->
+<Base seo={seo}>
   <SiteHeader />
   <main class="page page--about">
     <article class="prose">

@@ -2,13 +2,16 @@
 import Base from "@/layouts/Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import { seoForPage } from "@/lib/seo";
+
+const seo = seoForPage({
+  title: "404 — 焦糖星球",
+  description: "这一页找不到了。",
+  noIndex: true,
+});
 ---
 
-<Base
-  title="404 — 焦糖星球"
-  description="这一页找不到了。"
-  noIndex={true}
->
+<Base seo={seo}>
   <SiteHeader />
   <main class="page page--about">
     <article class="prose">
