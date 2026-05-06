@@ -126,7 +126,7 @@
 - **reading-time**（阅读时长估算，wordsPerMinute: 300 适配中文）
 - **satori + @resvg/resvg-js**（per-post OG 图，按字符动态加载 fontsource 子集）
 - **Pagefind v1.5**（站内搜索，构建期索引）
-- **Plausible**（数据分析，env: `PUBLIC_PLAUSIBLE_DOMAIN`）
+- **Cloudflare Web Analytics**（数据分析，env: `PUBLIC_CF_BEACON_TOKEN`，永久免费）
 - **Buttondown**（邮件 newsletter，env: `PUBLIC_BUTTONDOWN_USERNAME = JiaoTangXQ`）
 
 ## 架构
@@ -209,7 +209,7 @@ git push origin master
 GitHub Actions 自动 build + deploy。Pages Source 必须设为 **GitHub Actions**。
 
 部署期 env 通过 GitHub repo Settings → Secrets and variables → Actions → **Variables**：
-- `PUBLIC_PLAUSIBLE_DOMAIN` — Plausible 数据分析（可选）
+- `PUBLIC_CF_BEACON_TOKEN` — Cloudflare Web Analytics token（可选）
 - `PUBLIC_BUTTONDOWN_USERNAME = JiaoTangXQ` — 邮件 newsletter（必填）
 
 ## 协作偏好

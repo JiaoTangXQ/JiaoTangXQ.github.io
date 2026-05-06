@@ -17,10 +17,10 @@ const ogImageUrl = seo.ogImage
   : undefined;
 const tags = seo.tags ?? [];
 
-const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
-const plausibleHost =
-  (import.meta.env.PUBLIC_PLAUSIBLE_HOST as string | undefined) ?? "https://plausible.io";
-const analyticsEnabled = Boolean(import.meta.env.PROD && plausibleDomain);
+// Cloudflare Web Analytics: 永久免费、隐私友好、无 cookie。
+// 在 GitHub repo Variables 设 PUBLIC_CF_BEACON_TOKEN 后自动注入生产构建。
+const cfBeaconToken = (import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined)?.trim();
+const analyticsEnabled = Boolean(import.meta.env.PROD && cfBeaconToken);
 ---
 
 <!doctype html>
@@ -92,8 +92,8 @@ const analyticsEnabled = Boolean(import.meta.env.PROD && plausibleDomain);
       <script
         is:inline
         defer
-        data-domain={plausibleDomain}
-        src={`${plausibleHost}/js/script.js`}
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
       />
     )}
   </head>
