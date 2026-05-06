@@ -63,14 +63,29 @@ const OG_IMAGE_RE = /<meta\s+property=["']og:image["'][^>]*content=["']([^"']*)[
 const errors = [];
 const warnings = [];
 
+/**
+ * 站根目录下的"非页面 HTML"白名单：搜索引擎站点验证文件、ads.txt 等。
+ * 这些文件不是真正的 HTML 页面，lint 时跳过。
+ */
+function isVerificationFile(rel, html) {
+  // Google Search Console / Bing Webmaster 等的 verification 文件
+  if (/^google[a-f0-9]+\.html$/i.test(rel)) return true;
+  if (/^BingSiteAuth\.xml$/i.test(rel)) return true;
+  // 内容里没有 <html / <!doctype 的，肯定不是真页面
+  if (!/<html\b|<!doctype\s+html/i.test(html)) return true;
+  return false;
+}
+
 for (const file of htmlFiles) {
   const rel = path.relative(DIST, file);
+  const html = fs.readFileSync(file, "utf8");
+
+  if (isVerificationFile(rel, html)) continue;
+
   // 404 页不在 sitemap 里，弱要求
   const is404 = rel === "404.html";
   // 文章页 = /posts/{slug}/index.html
   const isArticle = /^posts\/[^/]+\/index\.html$/.test(rel);
-
-  const html = fs.readFileSync(file, "utf8");
 
   for (const rule of RULES) {
     const v = getTag(html, rule.re);
