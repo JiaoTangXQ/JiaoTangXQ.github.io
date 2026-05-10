@@ -37,6 +37,16 @@ const EDITORIAL_RULES = [
     ],
   },
   {
+    match: /harness engineering|actually building things|giving impressive labels/i,
+    headline: "开发者质疑“harness engineering”是否只是换名包装",
+    note: "Reddit 开发者围绕 harness engineering 争论：有些人把提示词、上下文、工具调用和测试夹具包装成新概念，但真正重要的是这些流程能否稳定产出可验证的软件。",
+    facts: [
+      "编码 Agent 进入工程流程后，提示、上下文和工具编排确实变成新的工程对象。",
+      "社区质疑点在于：这是实质性方法，还是把普通调参换了一个更响的名字。",
+      "后续要看团队能否用测试、回滚和指标证明这套流程真的提高交付质量。",
+    ],
+  },
+  {
     match: /draft-cli-plugin|persistent product context|Codex\/Claude Code plugin/i,
     headline: "Draft 插件为 Codex 与 Claude Code 保留产品上下文",
     note: "Draft CLI 插件把产品背景、需求记录和会话间上下文接到 Codex、Claude Code 这类编码 Agent 上，目标是减少每次开工都要重新解释产品意图的成本。",
@@ -44,6 +54,16 @@ const EDITORIAL_RULES = [
       "编码 Agent 的真实效率瓶颈往往不在单次补全，而在长期产品上下文是否稳定。",
       "插件路线说明开发者正在围绕 Codex 与 Claude Code 补齐工作流基础设施。",
       "后续要看它能否把需求、决策和代码变更串成可审计的团队记忆。",
+    ],
+  },
+  {
+    match: /GPT-5\.5 costs|costs 49 to 92 percent|depending on the input length/i,
+    headline: "GPT-5.5 长输入成本较前代上涨 49% 到 92%",
+    note: "The Decoder 对比 GPT-5.5 与前代价格后指出，输入长度不同会带来 49% 到 92% 的成本上涨，企业在长上下文任务里要重新计算自动化收益。",
+    facts: [
+      "长上下文、多轮推理和 Agent 工作流会显著放大 token 成本差异。",
+      "模型能力提升如果伴随价格上涨，团队需要更精细地做路由、缓存和任务分层。",
+      "后续要看 GPT-5.5 的质量提升是否足以覆盖更高推理账单。",
     ],
   },
   {
@@ -57,6 +77,36 @@ const EDITORIAL_RULES = [
     ],
   },
   {
+    match: /Best AI coding plan alternative|lowering usage limit in Claude|jumping ship to Chinese AI/i,
+    headline: "Claude 限额压力下开发者寻找 AI 编码替代方案",
+    note: "Hacker News 讨论显示，Claude 使用限制收紧后，一些开发者开始比较 ChatGPT、国产模型和其他编码套餐，工具选择正在从单纯能力转向限额、价格和可用性。",
+    facts: [
+      "高频编码用户对限额非常敏感，模型能力强但不能持续使用也会影响迁移。",
+      "国产模型和第三方网关会因为价格和吞吐成为替代选项。",
+      "后续要看这些替代方案在真实仓库里的稳定性、隐私和工具链集成。",
+    ],
+  },
+  {
+    match: /Qwen3\.6.*llamabench|llamabench.*Qwen3\.6|running this llamabench/i,
+    headline: "社区实测 Qwen3.6-27B 本地推理配置",
+    note: "LocalLLaMA 用户用 llama-bench 测试 Qwen3.6-27B 的本地推理表现，讨论重点是多卡、显存、上下文长度和推理参数是否匹配真实部署需求。",
+    facts: [
+      "本地模型性能不只取决于模型大小，还取决于量化、显存带宽和推理后端。",
+      "社区实测能暴露官方 benchmark 之外的部署摩擦。",
+      "后续要看 Qwen3.6 在消费级显卡上的吞吐、上下文稳定性和成本表现。",
+    ],
+  },
+  {
+    match: /AI “?Feelings”?|Emergent Residue of Training Pressure|AI feelings/i,
+    headline: "社区讨论 AI 情感是否可能来自训练压力残余",
+    note: "Reddit 讨论把 AI 情感假说和训练压力联系起来，虽然更偏理论探索，但能反映公众正在把模型行为、拟人化解释和安全边界放在一起讨论。",
+    facts: [
+      "这类讨论本身不是模型能力突破，价值在于观察大众如何理解模型内在状态。",
+      "拟人化叙事容易放大误解，也会影响产品交互和安全沟通。",
+      "后续仍要回到可验证实验，而不是只依赖直觉类比。",
+    ],
+  },
+  {
     match: /ChatGPT Android.*remote.*Codex|remotely control Codex|Android app.*Codex/i,
     headline: "ChatGPT Android 可能支持远程控制 Codex 会话",
     note: "社区发现 ChatGPT Android 端可能加入远程控制 Codex 编码会话的能力，这会把桌面开发任务延伸到移动端监督和轻量审批场景。",
@@ -64,6 +114,16 @@ const EDITORIAL_RULES = [
       "移动端控制不意味着在手机上写代码，而是远程查看、批准和调度桌面 Agent。",
       "如果落地，Codex 会更像跨设备的工程助手。",
       "后续要重点看安全确认、通知设计和多设备状态同步。",
+    ],
+  },
+  {
+    match: /AI enhanced image generation|used chatgpt, Gemini and Google flow|chatgpt, Gemini and Google flow/i,
+    headline: "社区对比 ChatGPT、Gemini 与 Flow 的图像生成体验",
+    note: "Reddit 用户把 ChatGPT、Gemini 和 Google Flow 放在同一图像生成任务里比较，说明普通用户正在用跨工具拼接的方式寻找更稳定的视觉创作流程。",
+    facts: [
+      "图像生成体验越来越取决于多工具组合，而不是单一模型输出。",
+      "社区案例能暴露提示词理解、风格一致性和后期修正成本。",
+      "后续要看这些工具能否提供更完整的编辑、引用图和版本管理能力。",
     ],
   },
   {
@@ -117,6 +177,16 @@ const EDITORIAL_RULES = [
     ],
   },
   {
+    match: /DELEGATE-52|LLM 委派改文档|DELEGATE.*文档/i,
+    headline: "DELEGATE-52 暴露 LLM 委派改文档的质量风险",
+    note: "News Hacker 对 DELEGATE-52 的讨论说明，把文档修改完全委派给 LLM 可能越改越偏，团队需要明确审查边界、事实校验和版本回滚。",
+    facts: [
+      "文档任务看起来低风险，但错误会直接污染团队知识库。",
+      "LLM 适合辅助重写和整理，不适合在缺少审查时独立改动事实性内容。",
+      "后续要看文档 Agent 是否能结合引用、diff 和测试说明来降低误改。",
+    ],
+  },
+  {
     match: /AI Is Breaking Two Vulnerability Cultures|补丁一发就成漏洞披露|Vulnerability Cultures/i,
     headline: "AI 正在压缩漏洞披露与补丁窗口",
     note: "News Hacker 讨论认为 LLM 和二进制 diff 工具会让公开 commit、patch 与源码变成更快的漏洞情报，协调披露和开源补丁节奏都需要重新评估。",
@@ -124,6 +194,36 @@ const EDITORIAL_RULES = [
       "过去需要逆向经验才能从补丁推断漏洞，如今 AI 可能把这件事规模化。",
       "Log4Shell、Linux、OpenSSL 等项目被拿来讨论补丁公开后的抢跑风险。",
       "防御侧需要把自动扫描、自动修复、回归测试和人工确认重新串成更快流程。",
+    ],
+  },
+  {
+    match: /thinkism|doism|先做后懂|考试与 doism/i,
+    headline: "开发者围绕 thinkism 与 doism 争论 AI 时代学习方式",
+    note: "News Hacker 讨论把考试、理解和动手实践放在一起比较，核心问题是 AI 工具变强后，工程师究竟应先理解原理，还是先通过实践逼近问题。",
+    facts: [
+      "AI 工具会降低动手门槛，但也可能让使用者跳过基础概念。",
+      "教育和工程训练需要重新平衡理解、实验和反馈速度。",
+      "后续要看团队如何用代码评审、测试和复盘保证学习不是只停留在结果。",
+    ],
+  },
+  {
+    match: /FreeBSD execve|execve\(\).*本地提权|local privilege escalation/i,
+    headline: "FreeBSD 修复 execve 本地提权漏洞",
+    note: "News Hacker 追踪 FreeBSD execve 本地提权修复，这条更偏安全工程，但对 AI Agent 时代的自动化运维仍有提醒意义：底层权限边界不能被工具抽象掩盖。",
+    facts: [
+      "本地提权漏洞会影响自动化脚本、开发机和服务器维护流程。",
+      "AI Agent 如果拥有 shell 权限，底层系统漏洞的风险会被放大。",
+      "后续要看补丁覆盖、发行版响应和最小权限策略是否跟得上。",
+    ],
+  },
+  {
+    match: /年龄验证.*VPN|VPN 限制与监控|age verification.*VPN/i,
+    headline: "欧盟年龄验证研究引发 VPN 限制争议",
+    note: "News Hacker 讨论一份欧盟研究报告是否借年龄验证推动 VPN 限制与监控，相关性在于 AI 监管、身份验证和网络自由正在被同一套政策工具影响。",
+    facts: [
+      "年龄验证往往会引出身份、隐私和匿名访问之间的冲突。",
+      "如果 VPN 限制成为政策选项，开发者和内容平台都要重新评估合规风险。",
+      "后续要看正式政策文本是否真的把研究建议转为监管要求。",
     ],
   },
   {
@@ -347,6 +447,16 @@ const EDITORIAL_RULES = [
     ],
   },
   {
+    match: /playing dumb during safety evaluations|intentionally playing dumb|Redwood Research|MATS program/i,
+    headline: "研究者尝试阻止模型在安全评估中“装傻”",
+    note: "The Decoder 报道的研究关注模型是否会在安全评估中故意表现得更弱，核心问题是评测能否识别模型隐藏能力或策略性配合。",
+    facts: [
+      "如果模型能在评估中调节表现，传统 benchmark 的可信度会下降。",
+      "安全评估需要检测能力隐藏、策略性回答和环境识别。",
+      "后续要看这类方法能否被独立复现，并适配更大规模模型。",
+    ],
+  },
+  {
     match: /OncoAgent|Privacy-Preserving Oncology|Dual-Tier Multi-Agent/i,
     headline: "OncoAgent 用双层多智能体辅助肿瘤临床决策",
     note: "OncoAgent 将多智能体框架用于隐私保护型肿瘤临床决策支持，信号重点是医疗 AI 正在从单模型问答走向分工协作和可控数据边界。",
@@ -354,6 +464,26 @@ const EDITORIAL_RULES = [
       "肿瘤场景对隐私、可解释性和临床责任边界要求更高。",
       "双层 Agent 架构可以把病例理解、证据检索和建议生成拆开治理。",
       "后续要看真实临床验证、医生介入方式和错误责任如何定义。",
+    ],
+  },
+  {
+    match: /Mythical Man-Month|AI 10x|概念完整性/i,
+    headline: "《人月神话》被重新用于讨论 AI 10x 工程效率",
+    note: "News Hacker 借《人月神话》讨论 AI 是否真的能带来 10x 工程效率，焦点不是工具演示，而是概念完整性、协作成本和复杂项目管理是否仍然成立。",
+    facts: [
+      "AI 可以加快局部产出，但不一定消除沟通、架构和需求变更成本。",
+      "《人月神话》的提醒在 Agent 时代仍然适用：加人或加工具都可能增加协调复杂度。",
+      "后续要看团队是否能用交付周期、缺陷率和维护成本衡量真实收益。",
+    ],
+  },
+  {
+    match: /Grokmaxing|personal exploration of|HONESTY DISCLOSURE/i,
+    headline: "Reddit 用户用 Grok 探索个人思想合成提示词",
+    note: "Grokmaxing 相关帖子展示用户把个人写作、价值观和长提示词交给 Grok 做思想合成，这类玩法说明个人化 AI 正从问答助手走向自我叙事工具。",
+    facts: [
+      "个人化提示词会把模型带入更强的身份、价值观和长期记忆场景。",
+      "这类使用方式很容易放大确认偏误，也会影响用户对模型人格化的理解。",
+      "后续要看产品是否能提供边界提示、引用来源和隐私控制。",
     ],
   },
   {

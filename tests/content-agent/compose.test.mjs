@@ -173,6 +173,56 @@ describe("content-agent composers", () => {
     assert.doesNotMatch(daily.markdown, /submitted by|some of the friction|Paper: https:\/\/palisaderesearch/);
   });
 
+  it("rewrites 24-hour window social and media fallbacks into concrete Chinese copy", () => {
+    const daily = composeDaily({
+      date: "2026-05-10",
+      brand: "焦糖星球",
+      draft: false,
+      summaries: [
+        {
+          id: "harness",
+          title: 'On "harness engineering": Are people actually building things or just giving impressive labels to "tweaking?"',
+          aiSummary:
+            'I see a lot of posts and videos talking about harness engineering, or it could be context engineering.',
+          aiScore: 83,
+          reason: "高分。",
+          section: "product",
+          sourceName: "Reddit OpenAI",
+          sourceUrl: "https://www.reddit.com/r/OpenAI/comments/1t91d35/on_harness_engineering_are_people_actually",
+          tags: ["Reddit", "Agent"],
+        },
+        {
+          id: "gpt-cost",
+          title: "GPT-5.5 costs 49 to 92 percent more than its predecessor, depending on the input length",
+          aiSummary: "OpenAI doubled GPT-5.",
+          aiScore: 79,
+          reason: "高分。",
+          section: "product",
+          sourceName: "The Decoder",
+          sourceUrl:
+            "https://the-decoder.com/gpt-5-5-costs-49-to-92-percent-more-than-its-predecessor-depending-on-the-input-length",
+          tags: ["模型"],
+        },
+        {
+          id: "delegate",
+          title: "😬 DELEGATE-52：LLM 委派改文档会越改越烂",
+          aiSummary: "News Hacker 出现一条 DELEGATE-52 进入今日前沿研究观察。",
+          aiScore: 90,
+          reason: "高分。",
+          section: "research",
+          sourceName: "News Hacker",
+          sourceUrl: "https://newshacker.me/story?id=48073246",
+          tags: ["Agent", "AI编程"],
+        },
+      ],
+    });
+
+    assert.match(daily.markdown, /开发者质疑“harness engineering”是否只是换名包装/);
+    assert.match(daily.markdown, /GPT-5\.5 长输入成本较前代上涨 49% 到 92%/);
+    assert.match(daily.markdown, /DELEGATE-52 暴露 LLM 委派改文档的质量风险/);
+    assert.doesNotMatch(daily.markdown, /Are 进入今日|I see a lot of posts|OpenAI doubled GPT-5|DELEGATE-52 进入今日/);
+  });
+
   it("expands short noisy summaries so generated frontmatter satisfies the daily schema", () => {
     const daily = composeDaily({
       date: "2026-05-10",

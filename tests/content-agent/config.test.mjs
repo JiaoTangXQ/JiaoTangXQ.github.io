@@ -3,6 +3,10 @@ import { describe, it } from "node:test";
 import { DEFAULT_CONFIG } from "../../scripts/content-agent/config.mjs";
 
 describe("content-agent default source pool", () => {
+  it("limits the daily core pool to the last 24 hours by default", () => {
+    assert.equal(DEFAULT_CONFIG.scoring.coreSelection.maxAgeHours, 24);
+  });
+
   it("includes Chinese tech and creator-economy feeds for bursty AI stories", () => {
     const activeIds = DEFAULT_CONFIG.sources.filter((source) => source.enabled !== false).map((source) => source.id);
 

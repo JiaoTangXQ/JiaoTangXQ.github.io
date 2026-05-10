@@ -6,7 +6,6 @@ import { composeDaily } from "./compose/daily.mjs";
 import { composeWeekly } from "./compose/weekly.mjs";
 import { loadConfig } from "./config.mjs";
 import { createAIProvider } from "./ai/provider.mjs";
-import { readRecentDailySourceUrls } from "./daily-history.mjs";
 import { localizeSummaryMedia } from "./media-assets.mjs";
 import { writeContentFile, writeReviewArtifact } from "./publish.mjs";
 import { classifySignal, normalizeSignals, scoreSignals, selectCoreSignals } from "./score.mjs";
@@ -61,16 +60,9 @@ async function ingest() {
     now: `${date}T23:59:59.000Z`,
     sourceWeights: config.scoring.sourceWeights,
   });
-  const excludeUrls = await readRecentDailySourceUrls({
-    projectRoot,
-    dailiesDir: config.output.dailiesDir,
-    date,
-    days: Number(config.scoring.dailyDedupeLookbackDays ?? 7),
-  });
   const selected = selectCoreSignals(scored, {
     limit: Number(args.limit ?? 96),
     now: `${date}T23:59:59.000Z`,
-    excludeUrls,
     ...(config.scoring.coreSelection ?? {}),
   });
   await store.writeRunArtifact(date, "signals", selected);

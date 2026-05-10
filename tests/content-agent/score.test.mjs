@@ -476,33 +476,35 @@ describe("content-agent scoring", () => {
     assert.deepEqual(selected.map((signal) => signal.id), ["fresh-news"]);
   });
 
-  it("excludes URLs that already appeared in recent published dailies", () => {
+  it("excludes signals older than 24 hours when the daily core window is applied", () => {
     const selected = selectCoreSignals(
       [
         {
-          id: "repeat",
-          title: "Repeated OpenAI launch",
-          url: "https://openai.com/news/repeated?utm_source=rss",
-          canonicalUrl: "https://openai.com/news/repeated",
+          id: "older-than-day",
+          title: "Yesterday morning OpenAI launch",
+          url: "https://openai.com/news/yesterday-morning",
           sourceType: "official",
           sourceId: "openai-news",
+          publishedAt: "2026-05-09T08:00:00.000Z",
           score: 99,
         },
         {
-          id: "fresh",
-          title: "Fresh Anthropic launch",
-          url: "https://www.anthropic.com/news/fresh",
+          id: "within-day",
+          title: "Today Anthropic launch",
+          url: "https://www.anthropic.com/news/today",
           sourceType: "official",
           sourceId: "anthropic-news",
+          publishedAt: "2026-05-10T08:00:00.000Z",
           score: 91,
         },
       ],
       {
         limit: 2,
-        excludeUrls: ["https://openai.com/news/repeated"],
+        now: "2026-05-10T23:59:59.000Z",
+        maxAgeHours: 24,
       },
     );
 
-    assert.deepEqual(selected.map((signal) => signal.id), ["fresh"]);
+    assert.deepEqual(selected.map((signal) => signal.id), ["within-day"]);
   });
 });

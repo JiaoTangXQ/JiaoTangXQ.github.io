@@ -37,7 +37,6 @@ export const DEFAULT_CONFIG = {
     reasoningEffort: process.env.CONTENT_AGENT_REASONING_EFFORT || "low",
   },
   scoring: {
-    dailyDedupeLookbackDays: 7,
     sourceWeights: {
       official: 18,
       github: 15,
@@ -50,7 +49,7 @@ export const DEFAULT_CONFIG = {
     },
     coreSelection: {
       maxPerSourceId: 8,
-      maxAgeHours: 168,
+      maxAgeHours: 24,
       sourceTypeCaps: {
         official: 10,
         news: 36,
