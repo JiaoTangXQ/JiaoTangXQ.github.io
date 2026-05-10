@@ -1,55 +1,44 @@
 ---
-import Base from "@/layouts/Base.astro";
-import SiteHeader from "@/components/SiteHeader.astro";
-import SiteFooter from "@/components/SiteFooter.astro";
+import CyberPage from "@/layouts/CyberPage.astro";
+import CyberHero from "@/components/CyberHero.astro";
 import PostCard from "@/components/PostCard.astro";
+import DailyCard from "@/components/DailyCard.astro";
 import { getPublishedPosts } from "@/lib/posts";
+import { getPublishedDailies, dailyUrl } from "@/lib/dailies";
 import { seoForPage } from "@/lib/seo";
 
 const posts = await getPublishedPosts();
+const dailies = await getPublishedDailies();
 
 const seo = seoForPage({
   title: "焦糖星球 — 中文 AI 工程实践写作站",
   description:
-    "中文圈关于 AI 时代工程实践最值得读的写作站。专注 AI 辅助开发、AI Agent 工程、LLM 应用架构、AI 时代的工程文化。每篇都尽量讲透一件事。",
+    "焦糖星球是中文 AI 工程实践与 AI 信号降噪站。提供原创长文、AI 日报、周报归档和面向开发者的技术判断。",
 });
-
-const cnNumerals = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
-const now = new Date();
-const editionLabel = `VOL. I · NO. 1 · 二〇二六年${cnNumerals[now.getUTCMonth()]}月`;
 ---
 
-<Base seo={seo}>
-  <SiteHeader current="home" />
-  <main class="page page--home">
-    <section class="masthead">
-      <p class="masthead__edition">
-        <span class="masthead__edition-mark" aria-hidden="true"></span>
-        {editionLabel}
-      </p>
-      <h1 class="masthead__title">
-        想清楚一件事，<em>再写下来。</em>
-      </h1>
-      <p class="masthead__lede">
-        焦糖星球是关于 <strong>AI 时代工程实践</strong> 的中文写作站。
-        覆盖 <a href="/topics/ai-coding/">AI 辅助开发</a>、<a href="/topics/agent/">AI Agent 工程</a>、<a href="/topics/llm-arch/">LLM 应用架构</a>、<a href="/topics/culture/">AI 时代的工程文化</a>。
-        每篇都尽量做到 ——<strong>要么把一件事讲透，要么不写。</strong>
-      </p>
+<CyberPage seo={seo} current="home">
+  <div class="cyber-container home-page">
+    <CyberHero latestDailyUrl={dailies[0] ? dailyUrl(dailies[0]) : "/docs/"} />
+
+    <section class="cyber-section">
+      <div class="cyber-section__head">
+        <h2>今日头版</h2>
+        <span>Daily Edition</span>
+      </div>
+      <div class="daily-grid">
+        {dailies.slice(0, 6).map((daily) => <DailyCard daily={daily} />)}
+      </div>
     </section>
 
-    {posts.length === 0 ? (
-      <section class="empty">
-        <p class="empty__title">第一篇正在动笔。</p>
-        <p class="empty__body">
-          归档当前为空。订阅 <a href="/rss.xml">RSS</a>，第一篇上线时会送到你的阅读器。
-        </p>
-      </section>
-    ) : (
-      <section class="post-list" aria-label="文章列表">
-        <p class="post-list__index-label">归档 · ARCHIVE</p>
-        {posts.map((post) => <PostCard post={post} />)}
-      </section>
-    )}
-  </main>
-  <SiteFooter />
-</Base>
+    <section class="cyber-section">
+      <div class="cyber-section__head">
+        <h2>社论与长文</h2>
+        <span>Opinion & Features</span>
+      </div>
+      <div class="post-grid">
+        {posts.slice(0, 6).map((post) => <PostCard post={post} />)}
+      </div>
+    </section>
+  </div>
+</CyberPage>

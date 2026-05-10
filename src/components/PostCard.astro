@@ -12,7 +12,7 @@ const { url, minutes, dateStr } = postSummary(post);
 
 <article class="post-card">
   <a href={url} class="post-card__link">
-    <span class="post-card__serial" aria-hidden="true"></span>
+    <span class="post-card__serial" aria-hidden="true">Opinion</span>
     <div class="post-card__body">
       <header class="post-card__head">
         <time class="post-card__date" datetime={post.data.date.toISOString()}>
@@ -35,9 +35,10 @@ const { url, minutes, dateStr } = postSummary(post);
       )}
       <p class="post-card__excerpt">{post.data.description}</p>
       <p class="post-card__meta">
+        <span class="post-card__author">J</span>
         <span>{minutes} 分钟</span>
         <span class="post-card__head-divider" aria-hidden="true"></span>
-        <span class="post-card__cta">继续阅读</span>
+        <span class="post-card__cta">阅读全文</span>
       </p>
     </div>
   </a>

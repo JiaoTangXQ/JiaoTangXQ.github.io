@@ -50,7 +50,7 @@ const recent = (await getPublishedPosts()).slice(0, 3);
           <ul>
             {recent.map((post) => (
               <li>
-                <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+                <a href={`/blog/${post.id}/`}>{post.data.title}</a>
                 {post.data.subtitle && (
                   <>
                     {" — "}

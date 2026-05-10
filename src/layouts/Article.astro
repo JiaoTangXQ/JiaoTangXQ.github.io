@@ -2,6 +2,7 @@
 import Base from "./Base.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import FloatingContact from "@/components/FloatingContact.astro";
 import SubscribeForm from "@/components/SubscribeForm.astro";
 import ReadingProgress from "@/components/ReadingProgress.astro";
 import ArticleTOC from "@/components/ArticleTOC.astro";
@@ -20,6 +21,7 @@ type Props = {
 const { view } = Astro.props;
 const { post, minutes, dateStr, isoDateStr, updatedStr, headings, coverPath, coverAlt } = view;
 const { data } = post;
+const headerCurrent = post.id.startsWith("weekly/") ? "weekly" : "home";
 
 const seo = seoForPost(view, Astro.site!);
 
@@ -34,7 +36,8 @@ const relatedPosts: Post[] = relatedRaw.filter(
 
 <Base seo={seo}>
   <ReadingProgress />
-  <SiteHeader current="home" />
+  <div class="cyberpunk-body">
+  <SiteHeader current={headerCurrent} />
   <ArticleTOC headings={headings} />
   <main class="page page--article">
     <article>
@@ -82,6 +85,8 @@ const relatedPosts: Post[] = relatedRaw.filter(
     </article>
   </main>
   <SiteFooter />
+  <FloatingContact />
+  </div>
   <TweetableQuotes />
 </Base>
 

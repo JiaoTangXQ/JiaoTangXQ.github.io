@@ -1,0 +1,40 @@
+---
+type Props = {
+  latestDailyUrl?: string;
+};
+
+const { latestDailyUrl = "/docs/" } = Astro.props;
+---
+
+<section class="cyber-hero executive-hero">
+  <div class="cyber-hero__copy executive-hero__copy">
+    <p class="cyber-eyebrow">Front Page / AI Intelligence</p>
+    <h1>给 AI 时代决策者的每日头版</h1>
+    <p class="cyber-hero__lede">
+      焦糖星球把产品、研究、开源、资本与工程信号重新编排成一份可读、可查、可行动的中文情报报。
+    </p>
+    <div class="cyber-hero__actions">
+      <a class="cp-btn" href={latestDailyUrl}>打开今日头版</a>
+      <a class="cp-btn cp-btn--ghost" href="/blog/?category=weekly">阅读本周社论</a>
+    </div>
+  </div>
+  <aside class="system-card executive-brief" aria-label="今日情报面板">
+    <div class="system-card__top">
+      <div>
+        <span>Morning Edition</span>
+        <strong>Editor's Desk</strong>
+      </div>
+      <div class="system-card__status">
+        <i></i>
+        Filed
+      </div>
+    </div>
+    <img class="system-card__visual" src="/og/site.png" alt="" loading="eager" decoding="async" />
+    <div class="executive-brief__rows">
+      <p><span>版面</span><strong>日报 / 周报 / 长文</strong></p>
+      <p><span>取材</span><strong>公开信源与项目动态</strong></p>
+      <p><span>编辑</span><strong>重写标题、摘要与判断</strong></p>
+    </div>
+    <p class="system-card__note">每条信号保留来源链路，进入编辑管线后按重要性、影响范围和工程价值重新排序。</p>
+  </aside>
+</section>

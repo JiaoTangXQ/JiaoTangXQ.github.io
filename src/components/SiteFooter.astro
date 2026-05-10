@@ -1,60 +1,37 @@
 ---
-import { HUB_PILLARS, PILLARS } from "@/lib/pillars";
-
 const year = new Date().getUTCFullYear();
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <nav class="site-footer__topics" aria-label="主题导航">
-      <span class="site-footer__topics-label">主题 ·</span>
-      {HUB_PILLARS.map((slug, i) => (
-        <>
-          {i > 0 && <span class="site-footer__topics-divider" aria-hidden="true">/</span>}
-          <a href={`/topics/${slug}/`}>{PILLARS[slug].title}</a>
-        </>
-      ))}
-    </nav>
-    <p class="site-footer__line">
-      © {year} 焦糖 · <a href="/about/">关于</a> · <a href="/rss.xml">RSS</a> · <a href="https://x.com/leadbelief" rel="me">X</a> · <a href="https://github.com/JiaoTangXQ" rel="me">GitHub</a>
-    </p>
-    <p class="site-footer__line site-footer__line--quiet">
-      <a href="/universe" rel="prefetch">宇宙画布</a>（彩蛋 · 旧版归档）
-    </p>
+    <div class="site-footer__brand">
+      <div class="site-footer__logo">焦糖<span>星球</span></div>
+      <p>一份面向 AI 决策者与工程师的中文情报报。</p>
+    </div>
+    <div class="site-footer__columns">
+      <nav aria-label="产品">
+        <p>情报</p>
+        <a href="/docs/">AI 日报</a>
+        <a href="/blog/?category=weekly">AI 周报</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+      <nav aria-label="法律信息">
+        <p>条款</p>
+        <a href="/privacy/">隐私</a>
+        <a href="/terms/">条款</a>
+        <a href="/refund/">退款</a>
+      </nav>
+      <nav aria-label="连接">
+        <p>连接</p>
+        <a href="https://x.com/leadbelief" rel="me">X</a>
+        <a href="https://github.com/JiaoTangXQ" rel="me">GitHub</a>
+        <a href="/contact/">联系</a>
+        <a href="/about/">关于</a>
+      </nav>
+    </div>
+    <div class="site-footer__bottom">
+      <p>© {year} 焦糖星球. 版权保留，欢迎引用并链接原文。</p>
+      <p>The AI Gazette. Filed daily.</p>
+    </div>
   </div>
 </footer>
-
-<style>
-  .site-footer__topics {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 0.5rem;
-    margin-bottom: 0.5rem;
-    font-family: var(--font-display, serif);
-    font-size: 0.8125rem;
-    color: var(--color-ink-muted);
-  }
-
-  .site-footer__topics-label {
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    color: var(--color-ink-quiet);
-  }
-
-  .site-footer__topics a {
-    color: var(--color-ink-2);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-rule);
-  }
-
-  .site-footer__topics a:hover {
-    color: var(--color-accent-deep);
-    border-bottom-color: var(--color-accent);
-  }
-
-  .site-footer__topics-divider {
-    color: var(--color-rule);
-  }
-</style>

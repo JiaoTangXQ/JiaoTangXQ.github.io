@@ -40,7 +40,7 @@ export function postSummary(post: Post): PostSummary {
   if (cached) return cached;
   const summary: PostSummary = {
     post,
-    url: `/posts/${post.id}/`,
+    url: `/blog/${post.id}/`,
     minutes: estimateReadingMinutes(post.body ?? post.data.description ?? ""),
     dateStr: formatDate(post.data.date, post.data.lang),
     isoDateStr: isoDate(post.data.date),
@@ -73,7 +73,7 @@ export async function buildPostView(post: Post): Promise<PostView> {
     headings: cleanedHeadings,
     updatedStr: post.data.updated ? formatDate(post.data.updated, post.data.lang) : null,
     isoUpdatedStr: post.data.updated ? isoDate(post.data.updated) : null,
-    ogPath: `/og/${post.id}.png`,
+    ogPath: `/og/${post.id.replaceAll("/", "__")}.png`,
     coverPath: cover.path,
     coverAlt: cover.alt,
   };

@@ -1,0 +1,51 @@
+---
+import { render } from "astro:content";
+import CyberPage from "@/layouts/CyberPage.astro";
+import DailyNav from "@/components/DailyNav.astro";
+import { dailyDay, dailyUrl, getAllDailiesForBuild, getPublishedDailies } from "@/lib/dailies";
+import { seoForPage } from "@/lib/seo";
+import type { Daily } from "@/lib/dailies";
+
+export async function getStaticPaths() {
+  const dailies = await getAllDailiesForBuild();
+  return dailies.map((daily) => ({
+    params: {
+      month: daily.data.date.toISOString().slice(0, 7),
+      day: daily.data.date.toISOString().slice(0, 10),
+    },
+    props: { daily },
+  }));
+}
+
+const { daily } = Astro.props as { daily: Daily };
+const publishedDailies = await getPublishedDailies();
+const { Content } = await render(daily);
+
+const seo = seoForPage({
+  title: `${daily.data.title} — 焦糖星球`,
+  description: daily.data.description,
+  noIndex: daily.data.draft,
+});
+---
+
+<CyberPage seo={seo} current="docs">
+  <div class="daily-detail-shell">
+    <DailyNav dailies={publishedDailies} currentId={daily.id} />
+    <article class="daily-detail cp-cut">
+      <nav class="daily-breadcrumb">
+        <a href="/docs/">AI 日报</a><span>/</span><strong>{dailyDay(daily).slice(5)} 简报</strong>
+      </nav>
+      <header class="daily-detail__header">
+        <p>Daily Edition</p>
+        <h1>{daily.data.title}</h1>
+      </header>
+      <div class="prose daily-prose">
+        <Content />
+      </div>
+      <footer class="daily-detail__footer">
+        <a class="cp-btn cp-btn--ghost" href="/docs/">返回日报中心</a>
+        {publishedDailies[0] && <a class="cp-btn" href={dailyUrl(publishedDailies[0])}>最新日报</a>}
+      </footer>
+    </article>
+  </div>
+</CyberPage>
