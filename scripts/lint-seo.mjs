@@ -84,8 +84,8 @@ for (const file of htmlFiles) {
 
   // 404 页不在 sitemap 里，弱要求
   const is404 = rel === "404.html";
-  // 文章页 = /posts/{slug}/index.html
-  const isArticle = /^posts\/[^/]+\/index\.html$/.test(rel);
+  // 文章页 = /blog/{slug}/index.html（含 /blog/weekly/{slug}/index.html）
+  const isArticle = /^blog\/.+\/index\.html$/.test(rel) && rel !== "blog/index.html";
 
   for (const rule of RULES) {
     const v = getTag(html, rule.re);

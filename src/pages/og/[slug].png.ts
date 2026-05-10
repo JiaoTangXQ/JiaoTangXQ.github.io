@@ -6,7 +6,7 @@ import { postSummary } from "@/lib/post-view";
 export async function getStaticPaths() {
   const posts = await getAllPostsForBuild();
   return posts.map((post) => ({
-    params: { slug: post.id },
+    params: { slug: post.id.replaceAll("/", "__") },
     props: { post },
   }));
 }

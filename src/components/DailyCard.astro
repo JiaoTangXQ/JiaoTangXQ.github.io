@@ -1,0 +1,26 @@
+---
+import { dailyDisplayDate, dailyUrl, type Daily } from "@/lib/dailies";
+
+type Props = {
+  daily: Daily;
+};
+
+const { daily } = Astro.props;
+const displayTitle = daily.data.title.replace(/^焦糖星球\s*/, "");
+const tags = Array.from(new Set(daily.data.sections.flatMap((section) => section.items.flatMap((item) => item.tags)))).slice(0, 4);
+---
+
+<a href={dailyUrl(daily)} class="daily-card cp-cut">
+  <span class="daily-card__corner" aria-hidden="true"></span>
+  <div>
+    <p class="daily-card__type">Daily Edition</p>
+    <h3>{displayTitle}</h3>
+    <p>{daily.data.description}</p>
+  </div>
+  <div class="daily-card__bottom">
+    <time datetime={daily.data.date.toISOString()}>{dailyDisplayDate(daily)}</time>
+    <div>
+      {tags.map((tag) => <span>{tag}</span>)}
+    </div>
+  </div>
+</a>
