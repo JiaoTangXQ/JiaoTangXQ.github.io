@@ -1,8 +1,4 @@
-import type { PostView } from "@/lib/post-view";
-import { PILLARS, type PillarSlug } from "@/lib/pillars";
-
 export const SITE_NAME = "焦糖星球";
-export const AUTHOR_NAME = "焦糖";
 
 /**
  * Base.astro 唯一接受的 SEO 输入。
@@ -27,80 +23,6 @@ export type SeoData = {
    */
   jsonLd?: unknown | unknown[];
 };
-
-function articleJsonLd(view: PostView, site: URL, ogImageAbsolute: string) {
-  const data = view.post.data;
-  const url = new URL(view.url, site).toString();
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: data.title,
-    description: data.description,
-    image: [ogImageAbsolute],
-    datePublished: view.isoDateStr,
-    dateModified: view.isoUpdatedStr ?? view.isoDateStr,
-    author: { "@type": "Person", name: AUTHOR_NAME },
-    publisher: { "@type": "Organization", name: SITE_NAME },
-    inLanguage: data.lang === "en" ? "en" : "zh-CN",
-    keywords: data.tags.join(", "),
-    mainEntityOfPage: { "@type": "WebPage", "@id": url },
-  };
-}
-
-function breadcrumbJsonLd(view: PostView, site: URL) {
-  const data = view.post.data;
-  const items: Array<{ name: string; url: string }> = [
-    { name: "归档", url: new URL("/", site).toString() },
-  ];
-  const pillar = data.pillar as PillarSlug | undefined;
-  if (pillar && pillar !== "notes") {
-    items.push({
-      name: PILLARS[pillar].title,
-      url: new URL(`/topics/${pillar}/`, site).toString(),
-    });
-  }
-  items.push({
-    name: data.title,
-    url: new URL(view.url, site).toString(),
-  });
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: item.name,
-      item: item.url,
-    })),
-  };
-}
-
-export function seoForPost(view: PostView, site: URL): SeoData {
-  const data = view.post.data;
-  const url = new URL(view.url, site).toString();
-
-  // OG 图：cover 优先（手工封面），fallback 到 satori 生成的 /og/{slug}.png
-  const ogImagePath = view.coverPath ?? view.ogPath;
-  const ogImageAbsolute = ogImagePath.startsWith("http")
-    ? ogImagePath
-    : new URL(ogImagePath, site).toString();
-
-  const article = articleJsonLd(view, site, ogImageAbsolute);
-  const breadcrumb = breadcrumbJsonLd(view, site);
-
-  return {
-    title: `${data.title} — ${SITE_NAME}`,
-    description: data.description,
-    canonical: url,
-    ogImage: ogImagePath,
-    type: "article",
-    publishedTime: view.isoDateStr,
-    modifiedTime: view.isoUpdatedStr ?? undefined,
-    tags: data.tags,
-    noIndex: data.draft,
-    jsonLd: [article, breadcrumb],
-  };
-}
 
 export function seoForPage(input: {
   title: string;

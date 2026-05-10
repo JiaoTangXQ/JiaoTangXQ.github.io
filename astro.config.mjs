@@ -12,10 +12,7 @@ import { fileURLToPath } from "node:url";
 
 const SITE = "https://jiaotangxq.github.io";
 
-// 收集所有 draft 文章的 slug，用于 sitemap 过滤。
-// CLAUDE.md 约定：草稿 URL 仍可访问（noindex），但不进 sitemap / RSS / 列表。
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const POSTS_DIR = path.join(__dirname, "src/content/posts");
 const DAILIES_DIR = path.join(__dirname, "src/content/dailies");
 
 /** @param {string} file */
@@ -36,16 +33,6 @@ function frontmatterDate(file) {
   const filenameDate = basename.match(/\d{4}-\d{2}-\d{2}/);
   return filenameDate?.[0] ?? null;
 }
-
-const DRAFT_SLUGS = new Set(
-  fs.existsSync(POSTS_DIR)
-    ? fs
-        .readdirSync(POSTS_DIR)
-        .filter((f) => f.endsWith(".mdx") || f.endsWith(".md"))
-        .filter((f) => isDraftFile(path.join(POSTS_DIR, f)))
-        .map((f) => f.replace(/\.(mdx|md)$/, ""))
-    : [],
-);
 
 const DRAFT_DAILY_ROUTE_PARTS = new Set(
   fs.existsSync(DAILIES_DIR)
@@ -123,8 +110,6 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         if (page.includes("/universe")) return false;
-        const m = page.match(/\/posts\/([^/]+)\/?$/);
-        if (m && DRAFT_SLUGS.has(m[1])) return false;
         for (const routePart of DRAFT_DAILY_ROUTE_PARTS) {
           if (page.includes(routePart)) return false;
         }

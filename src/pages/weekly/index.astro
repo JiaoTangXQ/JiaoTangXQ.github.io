@@ -1,0 +1,41 @@
+---
+import CyberPage from "@/layouts/CyberPage.astro";
+import DailyCard from "@/components/DailyCard.astro";
+import { getPublishedDailies } from "@/lib/dailies";
+import { seoForPage } from "@/lib/seo";
+
+const dailies = await getPublishedDailies();
+
+const seo = seoForPage({
+  title: "AI Weekly | AI周报 — 焦糖星球",
+  description: "焦糖星球 AI 周报中心：从每日 AI 情报中提炼产品、研究、开源和行业趋势。",
+});
+---
+
+<CyberPage seo={seo} current="weekly">
+  <div class="cyber-container">
+    <header class="docs-header">
+      <span>Weekly Edition</span>
+      <h1>AI 周报</h1>
+      <p>从一周 AI 日报里提炼趋势判断。当前周报页正在重构，日报归档仍保持更新。</p>
+    </header>
+
+    <section class="empty">
+      <p class="empty__title">周报正在重构。</p>
+      <p class="empty__body">
+        新版周报会基于日报信号重新生成，重点保留一周内真正值得复盘的趋势判断。
+      </p>
+      <a class="cp-btn" href="/docs/">打开 AI 日报</a>
+    </section>
+
+    <section class="cyber-section">
+      <div class="cyber-section__head">
+        <h2>最近日报</h2>
+        <span>Daily Signals</span>
+      </div>
+      <div class="daily-grid">
+        {dailies.slice(0, 3).map((daily) => <DailyCard daily={daily} />)}
+      </div>
+    </section>
+  </div>
+</CyberPage>

@@ -6,7 +6,7 @@ const { current = "home" } = Astro.props;
 
 const primaryLinks: Array<{ href: string; label: string; current: NonNullable<Props["current"]> }> = [
   { href: "/docs/", label: "AI 日报", current: "docs" },
-  { href: "/blog/?category=weekly", label: "AI 周报", current: "weekly" },
+  { href: "/weekly/", label: "AI 周报", current: "weekly" },
 ];
 const secondaryLinks: Array<{ href: string; label: string; current: NonNullable<Props["current"]> }> = [
   { href: "/about/", label: "关于", current: "about" },
@@ -135,10 +135,8 @@ const isCurrentLink = (link: (typeof links)[number]) => Boolean(link.current && 
 
     var headerLinks = document.querySelectorAll("[data-header-link]");
     var path = window.location.pathname;
-    var params = new URLSearchParams(window.location.search);
     var currentKey = "";
-    if (path === "/blog/" && params.get("category") === "weekly") currentKey = "weekly";
-    else if (path.startsWith("/blog/weekly/")) currentKey = "weekly";
+    if (path.startsWith("/weekly/")) currentKey = "weekly";
     else if (path.startsWith("/docs/")) currentKey = "docs";
     else if (path.startsWith("/about/") || path.startsWith("/contact/")) currentKey = "about";
     if (currentKey) {

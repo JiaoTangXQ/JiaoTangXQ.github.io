@@ -4,7 +4,7 @@
  *   - <title>（非空）
  *   - <meta name="description">（非空）
  *   - <link rel="canonical">
- *   - <meta property="og:image">（文章页强制；其它页只警告）
+ *   - <meta property="og:image">（详情页强制；其它页只警告）
  *
  * 失败时 exit 1，让 GitHub Actions / CI 可见。
  */
@@ -84,8 +84,7 @@ for (const file of htmlFiles) {
 
   // 404 页不在 sitemap 里，弱要求
   const is404 = rel === "404.html";
-  // 文章页 = /blog/{slug}/index.html（含 /blog/weekly/{slug}/index.html）
-  const isArticle = /^blog\/.+\/index\.html$/.test(rel) && rel !== "blog/index.html";
+  const isArticle = /^docs\/\d{4}-\d{2}\/\d{4}-\d{2}-\d{2}\/index\.html$/.test(rel);
 
   for (const rule of RULES) {
     const v = getTag(html, rule.re);
@@ -97,7 +96,7 @@ for (const file of htmlFiles) {
 
   const og = getTag(html, OG_IMAGE_RE);
   if (isArticle && (og === null || og === "")) {
-    errors.push(`${rel} — 文章页缺 og:image（社交分享会没图）`);
+    errors.push(`${rel} — 详情页缺 og:image（社交分享会没图）`);
   } else if (!isArticle && !is404 && (og === null || og === "")) {
     warnings.push(`${rel} — 缺 og:image（非文章页可选）`);
   }
