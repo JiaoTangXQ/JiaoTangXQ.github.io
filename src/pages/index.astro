@@ -1,13 +1,10 @@
 ---
 import CyberPage from "@/layouts/CyberPage.astro";
 import CyberHero from "@/components/CyberHero.astro";
-import PostCard from "@/components/PostCard.astro";
 import DailyCard from "@/components/DailyCard.astro";
-import { getPublishedPosts } from "@/lib/posts";
 import { getPublishedDailies, dailyUrl } from "@/lib/dailies";
 import { seoForPage } from "@/lib/seo";
 
-const posts = await getPublishedPosts();
 const dailies = await getPublishedDailies();
 
 const seo = seoForPage({
@@ -31,14 +28,5 @@ const seo = seoForPage({
       </div>
     </section>
 
-    <section class="cyber-section">
-      <div class="cyber-section__head">
-        <h2>社论与长文</h2>
-        <span>Opinion & Features</span>
-      </div>
-      <div class="post-grid">
-        {posts.slice(0, 6).map((post) => <PostCard post={post} />)}
-      </div>
-    </section>
   </div>
 </CyberPage>
