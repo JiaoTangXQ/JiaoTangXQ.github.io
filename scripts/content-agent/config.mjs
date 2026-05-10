@@ -37,6 +37,7 @@ export const DEFAULT_CONFIG = {
     reasoningEffort: process.env.CONTENT_AGENT_REASONING_EFFORT || "low",
   },
   scoring: {
+    dailyDedupeLookbackDays: 7,
     sourceWeights: {
       official: 18,
       github: 15,

@@ -475,4 +475,34 @@ describe("content-agent scoring", () => {
 
     assert.deepEqual(selected.map((signal) => signal.id), ["fresh-news"]);
   });
+
+  it("excludes URLs that already appeared in recent published dailies", () => {
+    const selected = selectCoreSignals(
+      [
+        {
+          id: "repeat",
+          title: "Repeated OpenAI launch",
+          url: "https://openai.com/news/repeated?utm_source=rss",
+          canonicalUrl: "https://openai.com/news/repeated",
+          sourceType: "official",
+          sourceId: "openai-news",
+          score: 99,
+        },
+        {
+          id: "fresh",
+          title: "Fresh Anthropic launch",
+          url: "https://www.anthropic.com/news/fresh",
+          sourceType: "official",
+          sourceId: "anthropic-news",
+          score: 91,
+        },
+      ],
+      {
+        limit: 2,
+        excludeUrls: ["https://openai.com/news/repeated"],
+      },
+    );
+
+    assert.deepEqual(selected.map((signal) => signal.id), ["fresh"]);
+  });
 });

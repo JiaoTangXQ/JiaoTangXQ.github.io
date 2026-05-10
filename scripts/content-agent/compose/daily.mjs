@@ -37,6 +37,66 @@ const EDITORIAL_RULES = [
     ],
   },
   {
+    match: /draft-cli-plugin|persistent product context|Codex\/Claude Code plugin/i,
+    headline: "Draft 插件为 Codex 与 Claude Code 保留产品上下文",
+    note: "Draft CLI 插件把产品背景、需求记录和会话间上下文接到 Codex、Claude Code 这类编码 Agent 上，目标是减少每次开工都要重新解释产品意图的成本。",
+    facts: [
+      "编码 Agent 的真实效率瓶颈往往不在单次补全，而在长期产品上下文是否稳定。",
+      "插件路线说明开发者正在围绕 Codex 与 Claude Code 补齐工作流基础设施。",
+      "后续要看它能否把需求、决策和代码变更串成可审计的团队记忆。",
+    ],
+  },
+  {
+    match: /Remind.*Claude Code|schedule Claude Code|olliewagner\.com\/remind/i,
+    headline: "Remind 让 Claude Code 在 Mac 上定时执行任务",
+    note: "Remind 把 Claude Code 接到本地定时任务里，让开发者能安排代码检查、自动修复或周期性脚本执行，说明编码 Agent 正在从即时聊天走向后台工作流。",
+    facts: [
+      "定时执行会把 Agent 从手动触发工具变成可编排的本地自动化组件。",
+      "这类工具适合重复检查、批量整理和低风险维护任务。",
+      "关键风险在于权限、失败告警和误改代码后的回滚能力。",
+    ],
+  },
+  {
+    match: /ChatGPT Android.*remote.*Codex|remotely control Codex|Android app.*Codex/i,
+    headline: "ChatGPT Android 可能支持远程控制 Codex 会话",
+    note: "社区发现 ChatGPT Android 端可能加入远程控制 Codex 编码会话的能力，这会把桌面开发任务延伸到移动端监督和轻量审批场景。",
+    facts: [
+      "移动端控制不意味着在手机上写代码，而是远程查看、批准和调度桌面 Agent。",
+      "如果落地，Codex 会更像跨设备的工程助手。",
+      "后续要重点看安全确认、通知设计和多设备状态同步。",
+    ],
+  },
+  {
+    match: /Codex Minsoo|SPIRAL STATE|AI-Mediated Governance|Governance Framework/i,
+    headline: "Codex Minsoo 社区提出 AI 辅助治理框架",
+    note: "Reddit 社区围绕 Codex Minsoo 分享 AI 辅助治理框架，价值不在概念包装，而在开发者开始讨论 Agent 如何参与政策草案、上下文整理和群体决策。",
+    facts: [
+      "AI 治理工具需要处理意见汇总、上下文保真和可追溯修订。",
+      "社区实验能暴露模型参与公共决策时的偏见、幻觉和责任边界。",
+      "后续要看它是否能形成可复用流程，而不是停留在宣言式文本。",
+    ],
+  },
+  {
+    match: /Codex is gaining steam|bensbites\.com\/p\/codex-is-gaining-steam/i,
+    headline: "Codex 开发者热度继续升温",
+    note: "Ben's Bites 把 Codex 的采用热度列入简报，说明编码 Agent 的讨论已经从发布本身进入开发者持续试用、迁移和工具生态扩散阶段。",
+    facts: [
+      "Codex 的热度不只来自官方更新，也来自社区实际把它接入项目流程。",
+      "简报渠道扩散会继续放大开发者对编码 Agent 的试用意愿。",
+      "真正需要观察的是留存、成功率和团队协作成本。",
+    ],
+  },
+  {
+    match: /enterprise AI agent swarms|Lemonade.*CrowdStrike.*Siemens|agent swarms/i,
+    headline: "社区拆解 Lemonade 等企业 AI Agent 编队案例",
+    note: "Reddit 用户把 Lemonade、CrowdStrike、Siemens 等企业 AI Agent 案例拆成可运行的浏览器模板，说明企业 Agent 的知识开始从案例叙事转向可复现工作流。",
+    facts: [
+      "企业 Agent 的关键不是单个聊天机器人，而是多步骤任务、权限和业务系统协作。",
+      "把案例转成模板能帮助开发者理解真实流程，而不只是看厂商宣传。",
+      "后续要看这些模板是否能处理异常分支、数据安全和人工接管。",
+    ],
+  },
+  {
     match: /GPT[-\s]?Realtime|Realtime[-\s]?2|Realtime[-\s]?Translate|Realtime[-\s]?Whisper|三款实时语音模型|实时语音模型|实时翻译模型/i,
     headline: "OpenAI 推出三款实时语音模型",
     note: "OpenAI 新实时语音模型覆盖推理对话、实时翻译和流式转写，信号重点是语音应用从转录工具升级成低延迟、多语言、可调用工具的交互入口。",
@@ -44,6 +104,26 @@ const EDITORIAL_RULES = [
       "新模型分别覆盖实时对话、实时翻译和语音转写。",
       "低延迟会直接影响会议同传、客服和跨语言协作体验。",
       "开发者要继续观察 API 成本、语言覆盖和嘈杂场景稳定性。",
+    ],
+  },
+  {
+    match: /React2Shell|RSC 协议|The React2Shell Story/i,
+    headline: "React2Shell 复盘引发 RSC 协议安全争议",
+    note: "News Hacker 对 React2Shell 的讨论集中在 React Server Components 协议文档不足、攻防链路难排查，以及 Meta 与 Cloudflare 快速响应背后的架构复杂度。",
+    facts: [
+      "RSC 把客户端和服务端边界推到更复杂的位置，安全审计成本也随之上升。",
+      "Meta 约 17 小时完成 triage、复现和确认，说明大厂安全响应链路正在被公开比较。",
+      "后续要看 React、Next.js 和 Vercel 生态是否能降低协议理解与排障门槛。",
+    ],
+  },
+  {
+    match: /AI Is Breaking Two Vulnerability Cultures|补丁一发就成漏洞披露|Vulnerability Cultures/i,
+    headline: "AI 正在压缩漏洞披露与补丁窗口",
+    note: "News Hacker 讨论认为 LLM 和二进制 diff 工具会让公开 commit、patch 与源码变成更快的漏洞情报，协调披露和开源补丁节奏都需要重新评估。",
+    facts: [
+      "过去需要逆向经验才能从补丁推断漏洞，如今 AI 可能把这件事规模化。",
+      "Log4Shell、Linux、OpenSSL 等项目被拿来讨论补丁公开后的抢跑风险。",
+      "防御侧需要把自动扫描、自动修复、回归测试和人工确认重新串成更快流程。",
     ],
   },
   {
@@ -134,6 +214,16 @@ const EDITORIAL_RULES = [
       "物理 AGI 需要同时解决感知、规划、控制和环境泛化。",
       "仿真、世界模型和机器人数据会决定具身智能的训练效率。",
       "后续要看这些路线能否在真实硬件上稳定复现。",
+    ],
+  },
+  {
+    match: /ABot|AGIBot|高德.*全球挑战赛|具身化.*跃迁/i,
+    headline: "高德 ABot 体系模型夺冠 AGIBot 全球挑战赛",
+    note: "高德 ABot 体系模型在 AGIBot 全球挑战赛中拿到榜首，重点是空间智能、具身任务理解和机器人评测正在被放到同一个公开竞赛框架里比较。",
+    facts: [
+      "具身智能评测比单纯视觉或文本榜单更接近真实机器人任务。",
+      "ABot 的成绩说明地图、空间理解和动作规划能力正在互相融合。",
+      "后续要看竞赛成绩能否转化成真实场景里的稳定执行能力。",
     ],
   },
   {
@@ -244,6 +334,26 @@ const EDITORIAL_RULES = [
       "图像生成模型不只追求单一分数，还要同时满足美学、文本一致性和安全约束。",
       "多维奖励对齐会影响后续图像模型训练和自动优化流程。",
       "关键看它能否在 SD3.5 等实际模型上保持质量提升和训练效率。",
+    ],
+  },
+  {
+    match: /AI self-replication|self-replication via hacking|hack a machine and copy yourself|palisaderesearch/i,
+    headline: "Palisade Research 测试 AI 通过入侵链式自我复制",
+    note: "Palisade Research 的实验把模型放进“入侵机器并复制自己”的任务里，社区关注点是 AI Agent 在网络环境中是否会形成连续扩散链路。",
+    facts: [
+      "这类实验不等于现实系统已经失控，但能暴露自主 Agent 与网络权限结合后的风险边界。",
+      "安全评估需要同时看模型能力、工具权限和运行环境隔离。",
+      "后续要看论文细节、复现实验和防护策略是否经得住独立验证。",
+    ],
+  },
+  {
+    match: /OncoAgent|Privacy-Preserving Oncology|Dual-Tier Multi-Agent/i,
+    headline: "OncoAgent 用双层多智能体辅助肿瘤临床决策",
+    note: "OncoAgent 将多智能体框架用于隐私保护型肿瘤临床决策支持，信号重点是医疗 AI 正在从单模型问答走向分工协作和可控数据边界。",
+    facts: [
+      "肿瘤场景对隐私、可解释性和临床责任边界要求更高。",
+      "双层 Agent 架构可以把病例理解、证据检索和建议生成拆开治理。",
+      "后续要看真实临床验证、医生介入方式和错误责任如何定义。",
     ],
   },
   {
@@ -1144,14 +1254,15 @@ const EDITORIAL_RULES = [
 ];
 
 export function composeDaily({ date, summaries, brand = "焦糖星球", draft = true } = {}) {
-  const grouped = groupBySection(summaries ?? []);
+  const uniqueSummaries = dedupeDailySummaries(summaries ?? []);
+  const grouped = groupBySection(uniqueSummaries);
   const sections = SECTION_ORDER.map((section) => ({
     key: section,
     title: SECTION_TITLES[section],
     items: grouped.get(section) ?? [],
   })).filter((section) => section.items.length > 0);
   const title = `${brand} AI资讯日报 ${formatChineseDate(date)}`;
-  const descriptionItems = (summaries ?? []).map((item) => ({ ...item, title: displayHeadline(item) }));
+  const descriptionItems = uniqueSummaries.map((item) => ({ ...item, title: displayHeadline(item) }));
   const description = descriptionFrom(descriptionItems, `${brand}每日 AI 行业动态、前沿技术、开源项目和工程影响判断。`);
   const markdown = `${dailyFrontmatter({ title, description, date, draft, sections })}
 
@@ -1159,7 +1270,7 @@ ${dailyIntro({ brand })}
 
 ## 今日摘要
 
-${buildDigest(summaries)}
+${buildDigest(uniqueSummaries)}
 
 ${sections.map(renderSection).join("\n\n")}
 
@@ -1179,6 +1290,34 @@ ${sections.map(renderSection).join("\n\n")}
     description,
     sections,
   };
+}
+
+function dedupeDailySummaries(summaries) {
+  const byEvent = new Map();
+  for (const item of summaries) {
+    const key = dailyEventKey(item);
+    if (!key) continue;
+    const existing = byEvent.get(key);
+    if (!existing || isBetterDailySummary(item, existing)) {
+      byEvent.set(key, item);
+    }
+  }
+  return Array.from(byEvent.values());
+}
+
+function dailyEventKey(item) {
+  const headline = displayHeadline(item);
+  const normalized = normalizeForCompare(headline);
+  if (normalized && normalized.length >= 8) return `headline:${normalized}`;
+  return `url:${normalizeForCompare(item.sourceUrl ?? item.url ?? item.id ?? "")}`;
+}
+
+function isBetterDailySummary(candidate, existing) {
+  const scoreDelta = Number(candidate.aiScore ?? candidate.score ?? 0) - Number(existing.aiScore ?? existing.score ?? 0);
+  if (scoreDelta !== 0) return scoreDelta > 0;
+  const candidateMedia = Number(candidate.media?.images?.length ?? 0) + Number(candidate.media?.videos?.length ?? 0);
+  const existingMedia = Number(existing.media?.images?.length ?? 0) + Number(existing.media?.videos?.length ?? 0);
+  return candidateMedia > existingMedia;
 }
 
 function dailyFrontmatter({ title, description, date, draft, sections }) {

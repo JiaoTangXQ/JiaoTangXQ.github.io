@@ -115,6 +115,11 @@ export function selectCoreSignals(signals, options = {}) {
   const maxAgeHours = Number.isFinite(Number(options.maxAgeHours)) ? Number(options.maxAgeHours) : Infinity;
   const sourceTypeCounts = new Map();
   const sourceIdCounts = new Map();
+  const excludedUrls = new Set(
+    (options.excludeUrls ?? [])
+      .map((url) => normalizeUrl(url))
+      .filter(Boolean),
+  );
   const selected = [];
   const selectedIds = new Set();
   const sorted = [...(signals ?? [])].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
@@ -133,6 +138,7 @@ export function selectCoreSignals(signals, options = {}) {
 
   function selectSignal(signal) {
     if (!signal?.id || selectedIds.has(signal.id)) return false;
+    if (isExcludedUrl(signal, excludedUrls)) return false;
     if (isTooOld(signal.publishedAt, now, maxAgeHours)) return false;
     const sourceType = signal.sourceType ?? "rss";
     const sourceId = signal.sourceId ?? signal.sourceName ?? "unknown";
@@ -147,6 +153,12 @@ export function selectCoreSignals(signals, options = {}) {
     sourceIdCounts.set(sourceId, idCount + 1);
     return true;
   }
+}
+
+function isExcludedUrl(signal, excludedUrls) {
+  if (!excludedUrls.size) return false;
+  const urls = [signal.canonicalUrl, signal.url].map((url) => normalizeUrl(url)).filter(Boolean);
+  return urls.some((url) => excludedUrls.has(url));
 }
 
 function isCorePrioritySignal(signal) {

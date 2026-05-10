@@ -86,6 +86,93 @@ describe("content-agent composers", () => {
     assert.match(digest, /<p>OpenAI 将托管智能体推到开发者入口<\/p>/);
   });
 
+  it("deduplicates same-event summaries after editorial headline rewriting", () => {
+    const daily = composeDaily({
+      date: "2026-05-10",
+      brand: "焦糖星球",
+      draft: false,
+      summaries: [
+        {
+          id: "aibase-codex-chrome",
+          title: "Codex for Chrome 正式开放",
+          aiSummary: "AIbase 报道 Codex for Chrome 浏览器工作流。",
+          aiScore: 95,
+          reason: "高分。",
+          section: "product",
+          sourceName: "AIbase",
+          sourceUrl: "https://www.aibase.com/news/27809",
+          tags: ["Codex"],
+        },
+        {
+          id: "geekpark-codex-chrome",
+          title: "OpenAI 400 万周活 Codex 接入 Chrome",
+          aiSummary: "极客公园报道同一条 Codex Chrome 信号。",
+          aiScore: 90,
+          reason: "高分。",
+          section: "industry",
+          sourceName: "极客公园",
+          sourceUrl: "https://www.geekpark.net/news/363869",
+          tags: ["Codex"],
+        },
+      ],
+    });
+
+    assert.equal((daily.markdown.match(/sourceUrl:/g) ?? []).length, 1);
+    assert.match(daily.markdown, /https:\/\/www\.aibase\.com\/news\/27809/);
+    assert.doesNotMatch(daily.markdown, /https:\/\/www\.geekpark\.net\/news\/363869/);
+  });
+
+  it("rewrites May 10 fallback candidates into readable Chinese editorial copy", () => {
+    const daily = composeDaily({
+      date: "2026-05-10",
+      brand: "焦糖星球",
+      draft: false,
+      summaries: [
+        {
+          id: "draft-cli",
+          title: "Show HN: A Codex/Claude Code plugin for persistent product context thru sessions",
+          aiSummary:
+            "**Show HN: A Codex/Claude Code plug…。** some of the friction of using coding agents for product building。",
+          aiScore: 88,
+          reason: "高分。",
+          section: "social",
+          sourceName: "Hacker News AI Search",
+          sourceUrl: "https://github.com/idodekerobo/draft-cli-plugin",
+          tags: ["HN", "Agent", "开发者"],
+        },
+        {
+          id: "android-codex",
+          title:
+            "The ChatGPT Android app should soon allow users to remotely control Codex coding sessions on their PCs",
+          aiSummary: "submitted by /u/AssembleDebugRed [link] [comments]。",
+          aiScore: 86,
+          reason: "高分。",
+          section: "social",
+          sourceName: "Reddit OpenAI",
+          sourceUrl: "https://www.reddit.com/r/OpenAI/comments/example",
+          tags: ["Reddit", "OpenAI", "AI编程"],
+        },
+        {
+          id: "self-replication",
+          title: '"This is the first documented instance of AI self-replication via hacking."',
+          aiSummary: "Paper: https://palisaderesearch。",
+          aiScore: 92,
+          reason: "高分。",
+          section: "research",
+          sourceName: "Reddit OpenAI",
+          sourceUrl: "https://www.reddit.com/r/OpenAI/comments/self-replication",
+          tags: ["Reddit", "研究"],
+        },
+      ],
+    });
+
+    assert.match(daily.markdown, /Draft 插件为 Codex 与 Claude Code 保留产品上下文/);
+    assert.match(daily.markdown, /ChatGPT Android 可能支持远程控制 Codex 会话/);
+    assert.match(daily.markdown, /Palisade Research 测试 AI 通过入侵链式自我复制/);
+    assert.doesNotMatch(daily.markdown, /进入今日(?:社媒分享|前沿研究|开源TOP项目)?观察/);
+    assert.doesNotMatch(daily.markdown, /submitted by|some of the friction|Paper: https:\/\/palisaderesearch/);
+  });
+
   it("expands short noisy summaries so generated frontmatter satisfies the daily schema", () => {
     const daily = composeDaily({
       date: "2026-05-10",
