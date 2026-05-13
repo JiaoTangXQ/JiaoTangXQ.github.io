@@ -1,0 +1,7 @@
+title: "AI 时代，我怎样拆掉自己的数据孤岛"
+date: "2026-05-13"
+description: "这篇复盘记录我把 Get 笔记同步到 Obsidian，并让 agent 读取本地 Markdown 的过程：原始层、归档层和派生层如何分开。"
+tags: ["ai", "knowledge-management", "obsidian", "agents", "workflow"]
+draft: false
+ui: "case-study"
+lang: "zh-CN"
