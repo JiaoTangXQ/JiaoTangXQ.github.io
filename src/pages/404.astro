@@ -1,41 +1,24 @@
 ---
 import Base from "@/layouts/Base.astro";
-import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
 import { seoForPage } from "@/lib/seo";
 
 const seo = seoForPage({
   title: "404 — 焦糖星球",
-  description: "这一页找不到了。",
+  description: "这个页面不存在。",
   noIndex: true,
 });
 ---
 
 <Base seo={seo}>
   <SiteHeader />
-  <main class="page page--about">
-    <article class="prose">
-      <p class="article-eyebrow">404</p>
-      <h1>这一页找不到了。</h1>
-      <p class="lede">
-        可能是地址写错了，可能是链接迁移了，也可能是这篇文章还没动笔。
-      </p>
-
-      <h2>试试这些</h2>
-      <ul>
-        <li><a href="/">回到归档首页</a></li>
-        <li><a href="/docs/">打开 AI 日报</a></li>
-        <li><a href="/weekly/">查看 AI 周报</a></li>
-        <li><a href="/about/">了解这个站在做什么</a></li>
-        <li>
-          订阅：<a href="/rss.xml">RSS</a> · 关注 X
-          <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>
-        </li>
-      </ul>
-
-      <p>
-        或者直接 <button type="button" data-search-trigger style="background:none;border:0;padding:0;color:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">搜一下</button>。
-      </p>
+  <main class="site-main page-shell">
+    <article class="empty-panel">
+      <p class="eyebrow">404</p>
+      <h1>页面不存在</h1>
+      <p>回到首页查看已发布文章和知识图谱。</p>
+      <a class="button" href="/">返回首页</a>
     </article>
   </main>
   <SiteFooter />

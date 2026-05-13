@@ -1,33 +1,27 @@
 ---
-import CyberPage from "@/layouts/CyberPage.astro";
+import Base from "@/layouts/Base.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
 import { seoForPage } from "@/lib/seo";
 
 const seo = seoForPage({
   title: "联系 — 焦糖星球",
-  description: "焦糖星球的联系入口：X、GitHub、RSS 和合作说明。",
+  description: "焦糖星球的公开联系入口。",
 });
 ---
 
-<CyberPage seo={seo} current="about">
-  <main class="legal-page cyber-container cyber-container--narrow">
-    <article class="legal-card cp-cut prose">
-      <p class="cyber-eyebrow">Contact</p>
+<Base seo={seo}>
+  <SiteHeader current="about" />
+  <main class="site-main page-shell">
+    <article class="prose">
+      <p class="eyebrow">Contact</p>
       <h1>联系</h1>
-      <p class="lede">
-        如果你想讨论 AI 工程实践、Agent 工作流、内容引用或合作，可以从这些入口连接到焦糖星球。
-      </p>
-
-      <h2>公开联系</h2>
       <ul>
-        <li>X / Twitter：<a href="https://x.com/leadbelief" rel="me">@leadbelief</a></li>
+        <li>X：<a href="https://x.com/leadbelief" rel="me">@leadbelief</a></li>
         <li>GitHub：<a href="https://github.com/JiaoTangXQ" rel="me">JiaoTangXQ</a></li>
         <li>RSS：<a href="/rss.xml">/rss.xml</a></li>
       </ul>
-
-      <h2>适合联系的事情</h2>
-      <p>
-        适合发来的是工程实践交流、文章事实纠错、引用授权、项目合作和工具链反馈。不适合的是批量投稿、广告软文和无来源的信息搬运。
-      </p>
     </article>
   </main>
-</CyberPage>
+  <SiteFooter />
+</Base>

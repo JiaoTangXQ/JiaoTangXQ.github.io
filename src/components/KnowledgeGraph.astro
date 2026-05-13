@@ -1,0 +1,74 @@
+---
+type GraphNode = {
+  id: string;
+  type: "post" | "tag" | "concept";
+  label: string;
+  url?: string;
+};
+type GraphEdge = {
+  source: string;
+  target: string;
+  type: string;
+};
+type Props = {
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] };
+  title?: string;
+};
+
+const { graph, title = "知识图谱" } = Astro.props;
+const nodes = graph.nodes.slice(0, 36);
+const index = new Map(nodes.map((node, i) => [node.id, i]));
+const width = 720;
+const height = 420;
+const centerX = width / 2;
+const centerY = height / 2;
+const radius = Math.min(width, height) * 0.34;
+const points = nodes.map((node, i) => {
+  const angle = nodes.length <= 1 ? 0 : (Math.PI * 2 * i) / nodes.length - Math.PI / 2;
+  const typeOffset = node.type === "post" ? -18 : node.type === "tag" ? 10 : 26;
+  return {
+    node,
+    x: centerX + Math.cos(angle) * (radius + typeOffset),
+    y: centerY + Math.sin(angle) * (radius + typeOffset),
+  };
+});
+const pointById = new Map(points.map((point) => [point.node.id, point]));
+const visibleEdges = graph.edges
+  .filter((edge) => index.has(edge.source) && index.has(edge.target))
+  .slice(0, 80);
+
+const nodeClass = (type: GraphNode["type"]) => `graph-node graph-node--${type}`;
+---
+
+<section class="knowledge-graph" aria-labelledby="knowledge-graph-title">
+  <div class="section-head">
+    <h2 id="knowledge-graph-title">{title}</h2>
+    <a href="/graph/">打开图谱</a>
+  </div>
+  {
+    nodes.length === 0 ? (
+      <div class="graph-empty">
+        <p>等待第一篇 HTML 文章。</p>
+        <code>src/content/html-posts/&lt;slug&gt;/</code>
+      </div>
+    ) : (
+      <svg class="graph-svg" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="文章、标签和概念的关系图">
+        <g class="graph-edges">
+          {visibleEdges.map((edge) => {
+            const source = pointById.get(edge.source)!;
+            const target = pointById.get(edge.target)!;
+            return <line x1={source.x} y1={source.y} x2={target.x} y2={target.y} />;
+          })}
+        </g>
+        <g class="graph-nodes">
+          {points.map(({ node, x, y }) => (
+            <a href={node.url ?? "/graph/"} aria-label={node.label}>
+              <circle class={nodeClass(node.type)} cx={x} cy={y} r={node.type === "post" ? 15 : 10} />
+              <text x={x} y={y - 18} text-anchor="middle">{node.label}</text>
+            </a>
+          ))}
+        </g>
+      </svg>
+    )
+  }
+</section>

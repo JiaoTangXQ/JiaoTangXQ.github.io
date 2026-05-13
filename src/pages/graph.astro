@@ -1,0 +1,43 @@
+---
+import Base from "@/layouts/Base.astro";
+import KnowledgeGraph from "@/components/KnowledgeGraph.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { buildGraph, getPublishedHtmlPosts } from "@/lib/html-posts.mjs";
+import { seoForPage } from "@/lib/seo";
+
+const posts = await getPublishedHtmlPosts();
+const graph = buildGraph(posts);
+const seo = seoForPage({
+  title: "知识图谱 — 焦糖星球",
+  description: "焦糖星球的文章、标签和双链概念关系图。",
+});
+---
+
+<Base seo={seo}>
+  <SiteHeader current="graph" />
+  <main class="site-main page-shell">
+    <header class="page-header">
+      <p class="eyebrow">Graph</p>
+      <h1>知识图谱</h1>
+      <p>节点来自已发布文章、标签和正文里的 <code>[[概念]]</code>。</p>
+    </header>
+    <KnowledgeGraph graph={graph} title="全部节点" />
+    <section class="graph-table" aria-labelledby="graph-data">
+      <h2 id="graph-data">节点列表</h2>
+      {graph.nodes.length === 0 ? (
+        <p class="muted">等待第一篇文章。</p>
+      ) : (
+        <ul>
+          {graph.nodes.map((node) => (
+            <li>
+              <span>{node.type}</span>
+              <a href={node.url ?? "/graph/"}>{node.label}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </main>
+  <SiteFooter />
+</Base>

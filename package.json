@@ -1,48 +1,25 @@
 {
   "name": "jiaotang-planet",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build && pagefind --site dist && node scripts/lint-seo.mjs",
-    "daily:generate": "node scripts/ai-daily/generate-daily.mjs",
-    "agent:ingest": "node scripts/content-agent/cli.mjs ingest",
-    "agent:summarize": "node scripts/content-agent/cli.mjs summarize",
-    "agent:daily": "node scripts/content-agent/cli.mjs daily",
-    "agent:weekly": "node scripts/content-agent/cli.mjs weekly",
-    "agent:publish": "node scripts/content-agent/cli.mjs publish",
-    "agent:review": "node scripts/content-agent/cli.mjs review",
-    "agent:run": "node scripts/content-agent/cli.mjs run",
-    "test:agent": "node --test tests/content-agent/*.test.mjs",
+    "test": "node --test tests/blog/*.test.mjs",
     "lint:seo": "node scripts/lint-seo.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.0",
-    "@astrojs/mdx": "^4.0.0",
-    "@astrojs/react": "^4.1.0",
     "@astrojs/rss": "^4.0.0",
     "@astrojs/sitemap": "^3.2.0",
-    "@tailwindcss/vite": "^4.0.0",
-    "astro": "^5.0.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "reading-time": "^1.5.0",
-    "rehype-autolink-headings": "^7.1.0",
-    "rehype-slug": "^6.0.0",
-    "tailwindcss": "^4.0.0"
+    "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@fontsource/fraunces": "^5.2.9",
-    "@fontsource/noto-serif-sc": "^5.2.9",
-    "@resvg/resvg-js": "^2.6.2",
-    "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.5",
     "pagefind": "^1.5.2",
-    "satori": "^0.26.0",
     "typescript": "^5.8.3"
   }
 }

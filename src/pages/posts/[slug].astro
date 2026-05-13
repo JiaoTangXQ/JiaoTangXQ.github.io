@@ -1,0 +1,58 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { formatDate } from "@/lib/format";
+import { getAllHtmlPosts, resolvePostAssetUrl } from "@/lib/html-posts.mjs";
+import { seoForPost } from "@/lib/seo";
+
+export async function getStaticPaths() {
+  const posts = await getAllHtmlPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const seo = seoForPost({
+  title: post.title,
+  description: post.description,
+  date: post.date,
+  updated: post.updated,
+  tags: post.tags,
+  canonical: post.canonical,
+  ogImage: resolvePostAssetUrl(post.slug, post.cover),
+  noIndex: post.draft,
+});
+---
+
+<Base seo={seo}>
+  <SiteHeader current="home" />
+  <main class="site-main article-shell">
+    <nav class="breadcrumb" aria-label="面包屑">
+      <a href="/">首页</a>
+      <span>/</span>
+      <span>{post.title}</span>
+    </nav>
+
+    <article class:list={["html-post-wrapper", `html-post-wrapper--${post.ui}`]} data-pagefind-body>
+      <header class="article-header">
+        <p class="eyebrow">{post.ui}</p>
+        <h1>{post.title}</h1>
+        <p>{post.description}</p>
+        <div class="article-meta">
+          <time datetime={post.date}>{formatDate(post.date)}</time>
+          <span>{post.readingMinutes} 分钟</span>
+          {post.draft && <span>草稿</span>}
+        </div>
+        <div class="tag-row">
+          {post.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}
+        </div>
+      </header>
+
+      <div class="html-post-content" set:html={post.renderedHtml} />
+    </article>
+  </main>
+  <SiteFooter />
+</Base>

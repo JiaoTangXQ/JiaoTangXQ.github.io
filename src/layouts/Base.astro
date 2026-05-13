@@ -1,5 +1,4 @@
 ---
-import { Font } from "astro:assets";
 import SearchModal from "@/components/SearchModal.astro";
 import { SITE_NAME, type SeoData } from "@/lib/seo";
 import "@/styles/global.css";
@@ -9,16 +8,14 @@ type Props = {
 };
 
 const { seo } = Astro.props;
-
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
-const fullCanonical = seo.canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
-const ogImageUrl = seo.ogImage
-  ? (seo.ogImage.startsWith("http") ? seo.ogImage : new URL(seo.ogImage, Astro.site).toString())
+const canonical = seo.canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = seo.ogImage
+  ? seo.ogImage.startsWith("http")
+    ? seo.ogImage
+    : new URL(seo.ogImage, Astro.site).toString()
   : undefined;
 const tags = seo.tags ?? [];
-
-// Cloudflare Web Analytics: 永久免费、隐私友好、无 cookie。
-// 在 GitHub repo Variables 设 PUBLIC_CF_BEACON_TOKEN 后自动注入生产构建。
 const cfBeaconToken = (import.meta.env.PUBLIC_CF_BEACON_TOKEN as string | undefined)?.trim();
 const analyticsEnabled = Boolean(import.meta.env.PROD && cfBeaconToken);
 ---
@@ -30,21 +27,17 @@ const analyticsEnabled = Boolean(import.meta.env.PROD && cfBeaconToken);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <script is:inline>
-      // 主题预加载：在 paint 前把 data-theme 设上，避免 FOUC。
       (function () {
         try {
           var saved = localStorage.getItem("theme");
-          var prefers = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          var theme = saved || (prefers ? "dark" : "light");
-          document.documentElement.setAttribute("data-theme", theme);
-        } catch (e) {
-          /* localStorage blocked — fall back to OS preference via CSS */
-        }
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = saved || (prefersDark ? "dark" : "light");
+        } catch (_) {}
       })();
     </script>
-    <link rel="canonical" href={fullCanonical} />
-    {seo.noIndex && <meta name="robots" content="noindex, nofollow" />}
 
+    <link rel="canonical" href={canonical} />
+    {seo.noIndex && <meta name="robots" content="noindex, nofollow" />}
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
 
@@ -52,36 +45,25 @@ const analyticsEnabled = Boolean(import.meta.env.PROD && cfBeaconToken);
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
-    <meta property="og:url" content={fullCanonical} />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="og:locale" content="zh_CN" />
 
-    <meta name="twitter:card" content={ogImageUrl ? "summary_large_image" : "summary"} />
+    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={seo.title} />
     <meta name="twitter:description" content={seo.description} />
-    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     {seo.publishedTime && <meta property="article:published_time" content={seo.publishedTime} />}
     {seo.modifiedTime && <meta property="article:modified_time" content={seo.modifiedTime} />}
     {tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
     <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href={`${siteUrl}/rss.xml`} />
-
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="mask-icon" href="/favicon.svg" color="#b16a1e" />
-    <meta name="theme-color" content="#fbf6ec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#15110d" media="(prefers-color-scheme: dark)" />
-
-    <!-- IndieAuth / 社交平台 author identity 关联 -->
+    <meta name="theme-color" content="#f7f3ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)" />
     <link rel="me" href="https://x.com/leadbelief" />
     <link rel="me" href="https://github.com/JiaoTangXQ" />
-
-    <Font cssVariable="--font-display" preload />
-    <Font cssVariable="--font-serif" preload />
-    <Font cssVariable="--font-sans" />
 
     {seo.jsonLd &&
       (Array.isArray(seo.jsonLd) ? seo.jsonLd : [seo.jsonLd]).map((block) => (

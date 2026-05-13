@@ -1,0 +1,31 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { collectTags, getPublishedHtmlPosts } from "@/lib/html-posts.mjs";
+import { seoForPage } from "@/lib/seo";
+
+const tags = collectTags(await getPublishedHtmlPosts());
+const seo = seoForPage({
+  title: "标签 — 焦糖星球",
+  description: "焦糖星球的全部文章标签。",
+});
+---
+
+<Base seo={seo}>
+  <SiteHeader current="home" />
+  <main class="site-main page-shell">
+    <header class="page-header">
+      <p class="eyebrow">Tags</p>
+      <h1>标签</h1>
+    </header>
+    <div class="tag-row tag-row--wrap">
+      {tags.map((item) => (
+        <a href={`/tags/${encodeURIComponent(item.tag)}/`}>
+          {item.tag}<span>{item.count}</span>
+        </a>
+      ))}
+    </div>
+  </main>
+  <SiteFooter />
+</Base>

@@ -1,32 +1,92 @@
 ---
-import CyberPage from "@/layouts/CyberPage.astro";
-import CyberHero from "@/components/CyberHero.astro";
-import DailyCard from "@/components/DailyCard.astro";
-import { getPublishedDailies, dailyUrl } from "@/lib/dailies";
+import Base from "@/layouts/Base.astro";
+import KnowledgeGraph from "@/components/KnowledgeGraph.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { formatDate } from "@/lib/format";
+import { buildGraph, collectTags, getPublishedHtmlPosts } from "@/lib/html-posts.mjs";
 import { seoForPage } from "@/lib/seo";
 
-const dailies = await getPublishedDailies();
+const posts = await getPublishedHtmlPosts();
+const graph = buildGraph(posts);
+const tags = collectTags(posts);
 
 const seo = seoForPage({
-  title: "焦糖星球 — 中文 AI 工程实践写作站",
-  description:
-    "焦糖星球是中文 AI 工程实践与 AI 信号降噪站。提供 AI 日报、信号归档和面向开发者的技术判断。",
+  title: "焦糖星球 — 个人博客与知识图谱",
+  description: "焦糖星球是焦糖的个人博客，用 HTML 文章、标签和双链组织日常写作、技术记录、阅读笔记和项目日志。",
 });
 ---
 
-<CyberPage seo={seo} current="home">
-  <div class="cyber-container home-page">
-    <CyberHero latestDailyUrl={dailies[0] ? dailyUrl(dailies[0]) : "/docs/"} />
-
-    <section class="cyber-section">
-      <div class="cyber-section__head">
-        <h2>今日头版</h2>
-        <span>Daily Edition</span>
+<Base seo={seo}>
+  <SiteHeader current="home" />
+  <main class="site-main">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Personal Blog</p>
+        <h1>焦糖星球</h1>
+        <p class="hero__deck">
+          一个用 HTML 文章、标签和 <code>[[双链]]</code> 连接起来的个人博客。
+        </p>
       </div>
-      <div class="daily-grid">
-        {dailies.slice(0, 6).map((daily) => <DailyCard daily={daily} />)}
+      <div class="hero__meta">
+        <span>{posts.length} 篇已发布文章</span>
+        <span>{tags.length} 个标签</span>
+        <span>{graph.nodes.length} 个图谱节点</span>
       </div>
     </section>
 
-  </div>
-</CyberPage>
+    <div class="home-grid">
+      <section class="post-list" aria-labelledby="latest-posts">
+        <div class="section-head">
+          <h2 id="latest-posts">最新文章</h2>
+          <a href="/rss.xml">RSS</a>
+        </div>
+        {
+          posts.length === 0 ? (
+            <div class="empty-panel">
+              <h3>还没有发布文章</h3>
+              <p>把文章文件夹放到 <code>src/content/html-posts/&lt;slug&gt;/</code> 后，首页会自动显示。</p>
+            </div>
+          ) : (
+            <div class="post-cards">
+              {posts.map((post) => (
+                <article class="post-card">
+                  <time datetime={post.date}>{formatDate(post.date)}</time>
+                  <h3><a href={post.url}>{post.title}</a></h3>
+                  <p>{post.description}</p>
+                  <div class="tag-row">
+                    {post.tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )
+        }
+      </section>
+
+      <aside class="side-panel">
+        <KnowledgeGraph graph={graph} />
+        <section class="tag-cloud" aria-labelledby="tags">
+          <div class="section-head">
+            <h2 id="tags">标签</h2>
+            <a href="/tags/">全部</a>
+          </div>
+          {
+            tags.length === 0 ? (
+              <p class="muted">等待文章标签。</p>
+            ) : (
+              <div class="tag-row tag-row--wrap">
+                {tags.map((item) => (
+                  <a href={`/tags/${encodeURIComponent(item.tag)}/`}>
+                    {item.tag}<span>{item.count}</span>
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </section>
+      </aside>
+    </div>
+  </main>
+  <SiteFooter />
+</Base>

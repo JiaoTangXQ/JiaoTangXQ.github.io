@@ -1,25 +1,21 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import { dailyUrl, getPublishedDailies } from "@/lib/dailies";
+import { getPublishedHtmlPosts } from "@/lib/html-posts.mjs";
 
 export async function GET(context: APIContext) {
-  const dailies = await getPublishedDailies();
-  const items = dailies
-    .map((daily) => ({
-      title: daily.data.title,
-      description: daily.data.description,
-      pubDate: daily.data.date,
-      link: dailyUrl(daily),
-      categories: ["AI日报", ...daily.data.sections.flatMap((section) => section.items.flatMap((item) => item.tags))],
-    }))
-    .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
-
+  const posts = await getPublishedHtmlPosts();
   return rss({
     title: "焦糖星球",
-    description: "焦糖星球的 AI 日报和情报归档。",
+    description: "焦糖的个人博客更新。",
     site: context.site!,
-    items,
-    customData: `<language>zh-CN</language><copyright>© 焦糖</copyright>`,
+    items: posts.map((post) => ({
+      title: post.title,
+      description: post.description,
+      pubDate: new Date(`${post.date}T00:00:00+08:00`),
+      link: post.url,
+      categories: post.tags,
+    })),
+    customData: `<language>zh-CN</language>`,
     stylesheet: false,
   });
 }

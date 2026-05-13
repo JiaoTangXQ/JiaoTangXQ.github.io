@@ -1,66 +1,40 @@
 ---
 import Base from "@/layouts/Base.astro";
-import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
-import SubscribeForm from "@/components/SubscribeForm.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
 import { seoForPage } from "@/lib/seo";
 
 const seo = seoForPage({
   title: "关于 — 焦糖星球",
-  description:
-    "焦糖星球是面向 AI 时代决策者和工程师的中文情报站。作者焦糖，关注 AI 产品、研究、开源、资本和工程信号。",
+  description: "焦糖星球是焦糖的个人博客，用 HTML 文章、标签和双链整理技术记录、阅读笔记、项目日志和日常思考。",
 });
 ---
 
 <Base seo={seo}>
   <SiteHeader current="about" />
-  <main class="page page--about">
+  <main class="site-main page-shell">
     <article class="prose">
+      <p class="eyebrow">About</p>
       <h1>关于</h1>
-      <p class="lede">
-        焦糖星球是面向 AI 时代决策者和工程师的中文情报与实践站。
-      </p>
-
-      <h2>这个站在写什么</h2>
       <p>
-        这里专注每日 AI 情报：从公开信源、产品更新、研究论文、开源项目和行业动态里筛出值得普通读者与工程团队关注的信号。
+        这里是焦糖的个人博客。内容不再按日报或固定栏目组织，而是通过文章、标签和 <code>[[双链]]</code> 形成知识图谱。
       </p>
+      <h2>会写什么</h2>
       <ul>
-        <li><a href="/docs/"><strong>AI 日报</strong></a> — 每日整理产品、研究、开源和商业化信号。</li>
-        <li><a href="/weekly/"><strong>AI 周报</strong></a> — 从一周日报里提炼更高层的趋势判断。</li>
-        <li><strong>来源链路</strong> — 关键条目尽量保留原始来源，方便继续追踪。</li>
+        <li>技术和工具使用记录。</li>
+        <li>阅读笔记和概念整理。</li>
+        <li>项目过程、问题复盘和实验。</li>
+        <li>可以公开的个人观察。</li>
       </ul>
-
-      <h2>关于作者</h2>
+      <h2>不会放什么</h2>
       <p>
-        焦糖，工程师。长期关注 AI 工程实践、Agent 工作流、模型应用架构和信息降噪。
+        不放私人地址、联系方式、证件、密钥、内部链接、非公开人物信息、未脱敏截图和私密聊天记录。
       </p>
-
-      <h2>不写什么</h2>
-      <ul>
-        <li>不转载外部文章。</li>
-        <li>不搬运别人已经整理好的结论。</li>
-        <li>不写没有来源链路的快讯。</li>
-        <li>不把低价值发布包装成重大新闻。</li>
-      </ul>
-
-      <h2>怎么读到更新</h2>
+      <h2>订阅</h2>
       <p>
-        三种方式，任选其一即可：
+        RSS 地址是 <a href="/rss.xml">/rss.xml</a>。公开联系入口保留在 X 和 GitHub。
       </p>
-      <ul>
-        <li><strong>邮件订阅</strong> — 站内任意页面底部的订阅框，重要更新直接送到信箱（推荐）。</li>
-        <li><strong>RSS</strong> — <a href="/rss.xml">/rss.xml</a>，把链接放进你的阅读器。</li>
-        <li><strong>X / Twitter</strong> — 关注 <a href="https://x.com/leadbelief" rel="me">@leadbelief</a>。</li>
-      </ul>
-
-      <h2>联系</h2>
-      <ul>
-        <li>X · <a href="https://x.com/leadbelief" rel="me">@leadbelief</a></li>
-        <li>GitHub · <a href="https://github.com/JiaoTangXQ" rel="me">JiaoTangXQ</a></li>
-      </ul>
     </article>
-    <SubscribeForm />
   </main>
   <SiteFooter />
 </Base>

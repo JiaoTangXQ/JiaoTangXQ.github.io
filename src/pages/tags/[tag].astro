@@ -1,0 +1,42 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { formatDate } from "@/lib/format";
+import { collectTags, getPublishedHtmlPosts } from "@/lib/html-posts.mjs";
+import { seoForPage } from "@/lib/seo";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedHtmlPosts();
+  return collectTags(posts).map(({ tag }) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((post) => post.tags.includes(tag)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const seo = seoForPage({
+  title: `${tag} — 焦糖星球`,
+  description: `焦糖星球中标记为 ${tag} 的文章。`,
+});
+---
+
+<Base seo={seo}>
+  <SiteHeader current="home" />
+  <main class="site-main page-shell">
+    <header class="page-header">
+      <p class="eyebrow">Tag</p>
+      <h1>{tag}</h1>
+    </header>
+    <div class="post-cards">
+      {posts.map((post) => (
+        <article class="post-card">
+          <time datetime={post.date}>{formatDate(post.date)}</time>
+          <h2><a href={post.url}>{post.title}</a></h2>
+          <p>{post.description}</p>
+        </article>
+      ))}
+    </div>
+  </main>
+  <SiteFooter />
+</Base>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write HTML Blog Post"
+  short_description: "Generate privacy-safe HTML blog posts for JiaoTangXQ.github.io."
+  default_prompt: "Generate a new blog article as a structured HTML post with metadata, privacy checks, tags, wiki-links, and a suitable UI variant."
