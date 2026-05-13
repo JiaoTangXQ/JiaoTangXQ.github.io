@@ -135,6 +135,48 @@ Metadata rules:
 
 Change the modifier class to match the selected `ui`, for example `html-post--case-study` or `html-post--code-lab`.
 
+## Voice Rules
+
+Write like a person explaining something they actually went through. Do not write like a product blog, newsletter, tutorial template, or assistant-generated summary.
+
+Default voice:
+
+- First person is allowed when the source is personal experience.
+- Keep the author's uncertainty, corrections, reversals, and specific decisions.
+- Prefer concrete scenes, constraints, examples, commands, names of tools, and consequences.
+- Let paragraphs carry one thought each.
+- Use plain Chinese. Use English terms only when they are names, UI labels, commands, or common technical terms.
+
+Sentence test:
+
+- Keep a sentence only if it answers, changes judgment, gives a condition, names a risk, gives an action, states an exception, or provides a necessary example.
+- If deleting a sentence does not change what the reader understands or does, delete it.
+- Replace praise with behavior. Do not write that something is "powerful", "efficient", "seamless", "important", or "core" unless it is part of a quoted term.
+
+Avoid:
+
+- Article-template openings: "在当今时代", "随着技术发展", "本文将介绍", "这篇文章将带你了解".
+- Generic wrap-ups: "总之", "通过这次经历我深刻认识到", "希望对你有所帮助".
+- Corporate or AI tone: "赋能", "闭环", "抓手", "沉淀", "链路", "兜底", "对齐", "痛点", "优化体验".
+- Fake balance: do not make weak evidence sound equal to strong evidence.
+- Over-structured endings: do not force "背景 / 问题 / 方案 / 总结" if the source is a lived process.
+- Advice that was not earned by the source material.
+
+Good article shape:
+
+- Start from the concrete trigger: what happened, what broke, what changed, or what question forced the post.
+- Show the decisions in the order they became clear.
+- Keep failed attempts when they explain why the final rule exists.
+- End when the useful conclusion is reached. Do not add a motivational paragraph.
+
+Rewrite pass:
+
+1. Remove generic intro and outro.
+2. Remove adjectives that do not point to observable behavior.
+3. Replace abstract claims with examples from the source.
+4. Cut repeated explanations.
+5. Check that headings sound like claims or turns in the story, not category labels.
+
 ## Privacy Gate
 
 Before writing the final article, remove or generalize private material:
@@ -153,13 +195,15 @@ If a source contains credentials or keys, stop and tell the user they should rot
 1. Identify the source type: rough idea, notes, existing HTML, Markdown, transcript, or images.
 2. Extract the publishable argument, examples, and evidence. Do not invent personal facts.
 3. Choose a UI variant from [UI variants](references/ui-variants.md). Do not ask the user unless the UI affects meaning.
-4. Choose a slug in lowercase kebab-case. Prefer meaning over date-only names.
-5. Create `src/content/html-posts/<slug>/`.
-6. Write `meta.yaml` and `index.html` in that folder.
-7. Put local media under `assets/` and reference it with `./assets/...`.
-8. Run a privacy self-audit against the gate above.
-9. If working inside a repo, run the cheapest relevant validation command available. If no renderer exists yet, validate file paths and YAML syntax only.
-10. Report the exact folder path, chosen UI variant, tags, wiki-links, redactions, and assumptions.
+4. Draft the article in the voice rules above before writing final HTML.
+5. Choose a slug in lowercase kebab-case. Prefer meaning over date-only names.
+6. Create `src/content/html-posts/<slug>/`.
+7. Write `meta.yaml` and `index.html` in that folder.
+8. Put local media under `assets/` and reference it with `./assets/...`.
+9. Run a voice self-audit: remove template phrases, generic endings, filler, and unsupported advice.
+10. Run a privacy self-audit against the gate above.
+11. If working inside a repo, run the cheapest relevant validation command available. If no renderer exists yet, validate file paths and YAML syntax only.
+12. Report the exact folder path, chosen UI variant, tags, wiki-links, redactions, and assumptions.
 
 ## Handoff Checklist
 
@@ -171,6 +215,7 @@ Before finishing, ensure:
 - Every local image/video path resolves inside the post folder.
 - No private material remains in text, filenames, alt text, comments, or metadata.
 - The post has 2-8 tags and only natural `[[concept]]` links.
+- The article passes the voice rules: no generic intro, no generic conclusion, no corporate jargon, no filler sentence.
 - The final response lists files created and whether `draft` is `true` or `false`.
 
 ## Quality Bar
@@ -180,3 +225,4 @@ Before finishing, ensure:
 - Keep structure scannable: short sections, concrete headings, no decorative filler.
 - Prefer specific examples over broad claims.
 - Preserve the user's voice when rewriting, but remove private or identifying details.
+- Preserve rough edges that explain the thinking. Do not polish the article into a neutral "best practices" post unless the source asks for that format.
