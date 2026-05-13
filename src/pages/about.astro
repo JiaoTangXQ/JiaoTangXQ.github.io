@@ -1,40 +1,24 @@
 ---
-import Base from "@/layouts/Base.astro";
-import SiteFooter from "@/components/SiteFooter.astro";
-import SiteHeader from "@/components/SiteHeader.astro";
-import { seoForPage } from "@/lib/seo";
-
-const seo = seoForPage({
-  title: "关于 — 焦糖星球",
-  description: "焦糖星球是焦糖的个人博客，用 HTML 文章、标签和双链整理技术记录、阅读笔记、项目日志和日常思考。",
-});
+const githubProfileUrl = "https://github.com/JiaoTangXQ";
 ---
 
-<Base seo={seo}>
-  <SiteHeader current="about" />
-  <main class="site-main page-shell">
-    <article class="prose">
-      <p class="eyebrow">About</p>
-      <h1>关于</h1>
-      <p>
-        这里是焦糖的个人博客。内容不再按日报或固定栏目组织，而是通过文章、标签和 <code>[[双链]]</code> 形成知识图谱。
-      </p>
-      <h2>会写什么</h2>
-      <ul>
-        <li>技术和工具使用记录。</li>
-        <li>阅读笔记和概念整理。</li>
-        <li>项目过程、问题复盘和实验。</li>
-        <li>可以公开的个人观察。</li>
-      </ul>
-      <h2>不会放什么</h2>
-      <p>
-        不放私人地址、联系方式、证件、密钥、内部链接、非公开人物信息、未脱敏截图和私密聊天记录。
-      </p>
-      <h2>订阅</h2>
-      <p>
-        RSS 地址是 <a href="/rss.xml">/rss.xml</a>。公开联系入口保留在 X 和 GitHub。
-      </p>
-    </article>
-  </main>
-  <SiteFooter />
-</Base>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="跳转到焦糖的 GitHub 个人主页。" />
+    <meta http-equiv="refresh" content={`0;url=${githubProfileUrl}`} />
+    <link rel="canonical" href={githubProfileUrl} />
+    <title>跳转到 GitHub</title>
+    <script define:vars={{ githubProfileUrl }} is:inline>
+      window.location.replace(githubProfileUrl);
+    </script>
+  </head>
+  <body>
+    <p>
+      正在跳转到 <a href={githubProfileUrl} rel="me">GitHub 个人主页</a>。
+    </p>
+  </body>
+</html>

@@ -1,14 +1,14 @@
 ---
-type Current = "home" | "graph" | "about";
+type Current = "home" | "graph";
 type Props = {
   current?: Current;
 };
 
-const { current = "home" } = Astro.props;
-const links: Array<{ href: string; label: string; current: Current }> = [
+const { current } = Astro.props;
+const links: Array<{ href: string; label: string; current?: Current }> = [
   { href: "/", label: "文章", current: "home" },
   { href: "/graph/", label: "图谱", current: "graph" },
-  { href: "/about/", label: "关于", current: "about" },
+  { href: "https://github.com/JiaoTangXQ", label: "关于" },
 ];
 ---
 
@@ -21,8 +21,8 @@ const links: Array<{ href: string; label: string; current: Current }> = [
     {links.map((link) => (
       <a
         href={link.href}
-        class:list={{ "is-current": current === link.current }}
-        aria-current={current === link.current ? "page" : undefined}
+        class:list={{ "is-current": link.current === current }}
+        aria-current={link.current === current ? "page" : undefined}
       >
         {link.label}
       </a>
