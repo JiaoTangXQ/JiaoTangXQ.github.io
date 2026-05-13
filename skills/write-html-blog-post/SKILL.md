@@ -11,7 +11,7 @@ Generate a structured blog post, not a standalone web page. Default output is an
 
 ## Repository Contract
 
-When working in `JiaoTangXQ.github.io`, create the finished draft directly in this exact location:
+When working in `JiaoTangXQ.github.io`, create the finished article directly in this exact location:
 
 ```text
 src/content/html-posts/<slug>/
@@ -92,7 +92,13 @@ coverAlt: "Specific, non-private image description"
 lang: "zh-CN"
 ```
 
-Keep `draft: true` unless the user explicitly asks to publish.
+## Draft Policy
+
+Use `draft: false` when the user asks for a blog post to be generated into this repository, committed, submitted, published, made visible, or handed off for deployment.
+
+Use `draft: true` only when the user explicitly says it is a draft, work in progress, private review copy, unpublished note, or not ready to appear on the site.
+
+If the user's intent is unclear, stop and ask. Do not guess.
 
 Metadata rules:
 
@@ -102,6 +108,7 @@ Metadata rules:
 - `tags`: 2-8 tags. Use tags for retrieval, not decoration.
 - `ui`: must be one value from [UI variants](references/ui-variants.md).
 - `cover` must point to a local asset path inside the same post folder.
+- `draft: false` appears on the homepage, RSS, tag pages, search, and graph. `draft: true` only gets a direct article URL with `noindex`.
 
 ## HTML Rules
 

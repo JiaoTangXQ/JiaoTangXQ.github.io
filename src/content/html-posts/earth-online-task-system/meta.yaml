@@ -2,6 +2,6 @@ title: "把提醒事项改造成地球 Online 任务系统"
 date: "2026-05-13"
 description: "这篇复盘记录我如何和 AI 助手把 Apple Reminders 从待办清单改造成游戏化任务系统，包括命名、拆解、每日生成、结算和多轮纠偏。"
 tags: ["ai", "productivity", "apple-reminders", "workflow", "personal-ops"]
-draft: true
+draft: false
 ui: "case-study"
 lang: "zh-CN"
