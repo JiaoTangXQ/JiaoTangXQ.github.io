@@ -1,0 +1,7 @@
+title: "我怎样和 AI 一起改 EasyPaper"
+date: "2026-05-14"
+description: "这篇记录我开发 EasyPaper 时遇到的几个问题，以及我怎样用 AI 做代码审查、方案对照、产品判断、测试验证和隐私检查。"
+tags: ["ai", "easypaper", "product-engineering", "obsidian", "workflow"]
+draft: false
+ui: "case-study"
+lang: "zh-CN"
