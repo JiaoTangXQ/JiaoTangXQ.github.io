@@ -1,0 +1,7 @@
+title: "重构 AI 助手，实践中的一些思考"
+date: "2026-05-19"
+description: "这篇记录我把一个长期使用的 AI 助手迁移到新版架构时，对功能合并、服务切换、记忆系统、模型接入和隐私边界的一些实际判断。"
+tags: ["ai", "agents", "workflow", "memory", "product-engineering"]
+draft: false
+ui: "case-study"
+lang: "zh-CN"
