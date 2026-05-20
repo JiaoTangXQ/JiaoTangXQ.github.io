@@ -387,6 +387,18 @@ video {
   padding: clamp(22px, 4vw, 46px);
 }
 
+.comments {
+  max-width: var(--measure);
+  margin: 36px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.comments h2 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+}
+
 .html-post-content,
 .prose {
   max-width: var(--measure);

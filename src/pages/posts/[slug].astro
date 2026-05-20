@@ -1,5 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
+import GiscusComments from "@/components/GiscusComments.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { formatDate } from "@/lib/format";
@@ -53,6 +54,8 @@ const seo = seoForPost({
 
       <div class="html-post-content" set:html={post.renderedHtml} />
     </article>
+
+    <GiscusComments />
   </main>
   <SiteFooter />
 </Base>
