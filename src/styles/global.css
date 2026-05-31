@@ -247,7 +247,8 @@ video {
 .knowledge-graph,
 .tag-cloud,
 .graph-table,
-.html-post-wrapper {
+.html-post-wrapper,
+.comments-section {
   border: 1px solid var(--rule);
   border-radius: 8px;
   background: color-mix(in srgb, var(--surface) 92%, transparent);
@@ -385,6 +386,15 @@ video {
 
 .html-post-wrapper {
   padding: clamp(22px, 4vw, 46px);
+}
+
+.comments-section {
+  margin-top: 22px;
+  padding: clamp(22px, 4vw, 36px);
+}
+
+.giscus-frame {
+  min-height: 160px;
 }
 
 .html-post-content,
