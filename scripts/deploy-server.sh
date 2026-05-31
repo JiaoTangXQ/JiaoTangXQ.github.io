@@ -6,6 +6,7 @@ BRANCH="${BRANCH:-server}"
 APP_DIR="${APP_DIR:-/opt/jiaotang-planet}"
 WEB_ROOT="${WEB_ROOT:-/var/www/jiaotang-planet}"
 SITE_URL="${SITE_URL:-http://121.40.108.230}"
+NPM_REGISTRY="${NPM_REGISTRY:-https://registry.npmmirror.com}"
 NGINX_CONF="/etc/nginx/sites-available/jiaotang-planet.conf"
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -32,6 +33,25 @@ install_node_if_needed() {
 
   curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
   DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
+}
+
+configure_npm() {
+  npm config set registry "$NPM_REGISTRY"
+  npm config set fetch-retries 5
+  npm config set fetch-retry-mintimeout 20000
+  npm config set fetch-retry-maxtimeout 120000
+  npm config set fetch-timeout 600000
+}
+
+upgrade_npm_if_needed() {
+  current="$(npm -v)"
+  major="${current%%.*}"
+  if [ "$major" -ge 10 ]; then
+    return
+  fi
+
+  npm install -g npm@10
+  hash -r
 }
 
 checkout_repo() {
@@ -70,6 +90,9 @@ configure_nginx() {
 
 install_base_packages
 install_node_if_needed
+configure_npm
+upgrade_npm_if_needed
+configure_npm
 checkout_repo
 build_site
 publish_site
