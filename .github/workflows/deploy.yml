@@ -1,17 +1,15 @@
-name: Deploy to GitHub Pages
+name: Build server branch
 
 on:
   push:
-    branches: [master]
+    branches: [server]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: server-build
   cancel-in-progress: true
 
 jobs:
@@ -28,25 +26,11 @@ jobs:
       - run: npm ci
       - name: Build
         env:
-          # 把 GitHub repo Variables 里同名变量注入构建期。
-          # Settings → Secrets and variables → Actions → Variables 里设置。
-          # 留空则相关功能（分析、订阅）不启用。
-          PUBLIC_PLAUSIBLE_DOMAIN: ${{ vars.PUBLIC_PLAUSIBLE_DOMAIN }}
-          PUBLIC_PLAUSIBLE_HOST: ${{ vars.PUBLIC_PLAUSIBLE_HOST }}
-          PUBLIC_BUTTONDOWN_USERNAME: ${{ vars.PUBLIC_BUTTONDOWN_USERNAME }}
-        run: npm run build
-      - run: touch dist/.nojekyll
+          SITE_URL: ${{ vars.SITE_URL || 'http://121.40.108.230' }}
+          PUBLIC_CF_BEACON_TOKEN: ${{ vars.PUBLIC_CF_BEACON_TOKEN }}
+        run: npm run build:server
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: jiaotang-planet-dist
           path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4

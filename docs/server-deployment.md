@@ -1,0 +1,19 @@
+# Server Deployment
+
+This branch is the server-hosted version of 焦糖星球.
+
+Production defaults:
+
+- Site URL: `http://121.40.108.230`
+- App checkout: `/opt/jiaotang-planet`
+- Web root: `/var/www/jiaotang-planet`
+- Nginx config: `/etc/nginx/sites-available/jiaotang-planet.conf`
+
+Deploy on the server as root:
+
+```bash
+SITE_URL=http://121.40.108.230 bash scripts/deploy-server.sh
+```
+
+Use a domain later by setting `SITE_URL=https://example.com` and updating
+`deploy/nginx/jiaotang-planet.conf` `server_name`.

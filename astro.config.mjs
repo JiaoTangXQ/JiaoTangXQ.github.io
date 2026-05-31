@@ -2,7 +2,8 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
-const SITE = "https://jiaotangxq.github.io";
+const DEFAULT_SITE = "http://121.40.108.230";
+const SITE = (process.env.SITE_URL || DEFAULT_SITE).replace(/\/$/, "");
 
 export default defineConfig({
   site: SITE,

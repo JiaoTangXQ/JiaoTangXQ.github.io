@@ -66,6 +66,7 @@ src/
 npm run dev
 npm run test
 npm run build
+npm run build:server
 npm run preview
 ```
 
@@ -76,6 +77,12 @@ astro check
 astro build
 pagefind --site dist
 node scripts/lint-seo.mjs
+```
+
+`server` 分支用于自有服务器部署，默认生产地址是 `http://121.40.108.230`。服务器上使用：
+
+```bash
+SITE_URL=http://121.40.108.230 bash scripts/deploy-server.sh
 ```
 
 ## 协作规则

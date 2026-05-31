@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build && pagefind --site dist && node scripts/lint-seo.mjs",
+    "build:server": "SITE_URL=${SITE_URL:-http://121.40.108.230} npm run build",
     "test": "node --test tests/blog/*.test.mjs",
     "lint:seo": "node scripts/lint-seo.mjs",
     "preview": "astro preview",
