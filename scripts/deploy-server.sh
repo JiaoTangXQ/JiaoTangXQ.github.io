@@ -7,6 +7,8 @@ APP_DIR="${APP_DIR:-/opt/jiaotang-planet}"
 WEB_ROOT="${WEB_ROOT:-/var/www/jiaotang-planet}"
 SITE_URL="${SITE_URL:-http://121.40.108.230}"
 NPM_REGISTRY="${NPM_REGISTRY:-https://registry.npmmirror.com}"
+UPGRADE_NPM="${UPGRADE_NPM:-0}"
+SKIP_GIT_FETCH="${SKIP_GIT_FETCH:-0}"
 NGINX_CONF="/etc/nginx/sites-available/jiaotang-planet.conf"
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -41,9 +43,15 @@ configure_npm() {
   npm config set fetch-retry-mintimeout 20000
   npm config set fetch-retry-maxtimeout 120000
   npm config set fetch-timeout 600000
+  npm config set audit false
+  npm config set fund false
 }
 
 upgrade_npm_if_needed() {
+  if [ "$UPGRADE_NPM" != "1" ]; then
+    return
+  fi
+
   current="$(npm -v)"
   major="${current%%.*}"
   if [ "$major" -ge 10 ]; then
@@ -55,6 +63,15 @@ upgrade_npm_if_needed() {
 }
 
 checkout_repo() {
+  if [ "$SKIP_GIT_FETCH" = "1" ]; then
+    if [ ! -d "$APP_DIR/.git" ]; then
+      echo "SKIP_GIT_FETCH=1 requires an existing git checkout at $APP_DIR." >&2
+      exit 1
+    fi
+    git -C "$APP_DIR" checkout "$BRANCH"
+    return
+  fi
+
   if [ -d "$APP_DIR/.git" ]; then
     git -C "$APP_DIR" fetch origin "$BRANCH"
   else

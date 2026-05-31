@@ -24,3 +24,10 @@ Override the npm registry if needed:
 ```bash
 NPM_REGISTRY=https://registry.npmjs.org SITE_URL=http://121.40.108.230 bash scripts/deploy-server.sh
 ```
+
+If the checkout has already been updated by another transport, skip the GitHub
+fetch step:
+
+```bash
+SKIP_GIT_FETCH=1 SITE_URL=http://121.40.108.230 bash scripts/deploy-server.sh
+```
