@@ -16,7 +16,24 @@ type Props = {
 };
 
 const { graph, title = "知识图谱" } = Astro.props;
-const nodes = graph.nodes.slice(0, 36);
+const MAX_NODES = 36;
+// 优先保留全部文章节点，再用剩余名额填标签/概念，最后把文章均匀分布到圆环上。
+const postNodes = graph.nodes.filter((node) => node.type === "post");
+const otherNodes = graph.nodes
+  .filter((node) => node.type !== "post")
+  .slice(0, Math.max(0, MAX_NODES - postNodes.length));
+const total = postNodes.length + otherNodes.length;
+const step = postNodes.length > 0 ? total / postNodes.length : Infinity;
+const nodes: GraphNode[] = [];
+let postCursor = 0;
+let otherCursor = 0;
+for (let i = 0; i < total; i++) {
+  if (postCursor < postNodes.length && i >= Math.floor(postCursor * step)) {
+    nodes.push(postNodes[postCursor++]);
+  } else {
+    nodes.push(otherNodes[otherCursor++]);
+  }
+}
 const index = new Map(nodes.map((node, i) => [node.id, i]));
 const width = 720;
 const height = 420;
