@@ -1,0 +1,7 @@
+title: "我怎么让 AI 写完一整本长篇小说"
+date: "2026-06-03"
+description: "我想让 AI 自己写完一本几十章的长篇，发现关键不在模型多强，而在于给它搭一套外部控制结构：决策、记忆、断点恢复、顺序约束和带证据的自我评审分别交给代码。这篇记录我设的几条控制和优化思路，以及它们对用 AI 做长任务的启示。"
+tags: ["ai", "ai-writing", "context-engineering", "agents", "llm", "workflow"]
+draft: false
+ui: "case-study"
+lang: "zh-CN"
