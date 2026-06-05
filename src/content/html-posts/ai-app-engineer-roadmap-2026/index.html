@@ -1,0 +1,870 @@
+<article class="html-post html-post--index-map ai-roadmap">
+  <style>
+    .html-post-content:has(.ai-roadmap) {
+      max-width: min(1120px, calc(100vw - 32px));
+    }
+
+    .ai-roadmap {
+      --roadmap-ink: #162033;
+      --roadmap-muted: #576176;
+      --roadmap-blue: #2563eb;
+      --roadmap-blue-soft: #dbeafe;
+      --roadmap-green: #17805d;
+      --roadmap-green-soft: #dff7ec;
+      --roadmap-amber: #ad6900;
+      --roadmap-amber-soft: #fff1cc;
+      --roadmap-rose: #b33a54;
+      --roadmap-rose-soft: #ffe4ea;
+      --roadmap-purple: #6b4bc4;
+      --roadmap-purple-soft: #ece7ff;
+      --roadmap-surface: #f7fbff;
+      --roadmap-card: #ffffff;
+      --roadmap-line: #8bb5ff;
+      color: var(--roadmap-ink);
+    }
+
+    .ai-roadmap * {
+      box-sizing: border-box;
+    }
+
+    .ai-roadmap p,
+    .ai-roadmap li {
+      color: var(--roadmap-muted);
+    }
+
+    .ai-roadmap__hero {
+      padding: clamp(22px, 4vw, 38px);
+      border: 1px solid #c7d8f5;
+      border-radius: 8px;
+      background: #eef6ff;
+    }
+
+    .ai-roadmap__eyebrow {
+      margin: 0 0 10px;
+      color: var(--roadmap-blue);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .ai-roadmap__hero h2 {
+      margin: 0;
+      max-width: 860px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.05;
+    }
+
+    .ai-roadmap__deck {
+      max-width: 860px;
+      margin: 18px 0 0;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      line-height: 1.75;
+    }
+
+    .ai-roadmap__stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .ai-roadmap__stat {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid #c9dbf4;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .ai-roadmap__stat strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--roadmap-ink);
+      font-size: 1.35rem;
+      line-height: 1.2;
+    }
+
+    .ai-roadmap__split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .ai-roadmap__box {
+      padding: 18px;
+      border: 1px solid #d9e3f1;
+      border-radius: 8px;
+      background: var(--roadmap-card);
+    }
+
+    .ai-roadmap__box h2,
+    .ai-roadmap__box h3 {
+      margin-top: 0;
+    }
+
+    .ai-roadmap__box ul {
+      margin-bottom: 0;
+      padding-left: 1.2rem;
+    }
+
+    .ai-roadmap__section-head {
+      max-width: 860px;
+      margin: 44px 0 18px;
+    }
+
+    .ai-roadmap__section-head h2 {
+      margin-bottom: 10px;
+    }
+
+    .ai-roadmap__mainline {
+      position: relative;
+      display: grid;
+      gap: 18px;
+      padding: 22px;
+      border: 1px dashed var(--roadmap-line);
+      border-radius: 8px;
+      background: var(--roadmap-surface);
+    }
+
+    .ai-roadmap__mainline::before {
+      content: "";
+      position: absolute;
+      top: 42px;
+      bottom: 42px;
+      left: 42px;
+      width: 3px;
+      border-radius: 999px;
+      background: var(--roadmap-line);
+    }
+
+    .ai-roadmap__stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .ai-roadmap__num {
+      z-index: 1;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 2px solid #111827;
+      border-radius: 999px;
+      background: #111827;
+      color: white;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .ai-roadmap__stage-card {
+      padding: 18px;
+      border: 1px solid #c9d7ea;
+      border-radius: 8px;
+      background: var(--roadmap-card);
+      box-shadow: 0 8px 0 rgba(17, 24, 39, 0.08);
+    }
+
+    .ai-roadmap__stage-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .ai-roadmap__stage h3 {
+      margin: 0;
+      font-size: 1.18rem;
+    }
+
+    .ai-roadmap__hours {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--roadmap-blue-soft);
+      color: var(--roadmap-blue);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .ai-roadmap__stage p {
+      margin: 0 0 12px;
+    }
+
+    .ai-roadmap__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ai-roadmap__chips li {
+      padding: 6px 9px;
+      border: 1px solid #d6dfeb;
+      border-radius: 999px;
+      background: #f8fafc;
+      color: var(--roadmap-ink);
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .ai-roadmap__prompt,
+    .ai-roadmap__output {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      line-height: 1.65;
+    }
+
+    .ai-roadmap__prompt {
+      border: 1px solid #b7d5c6;
+      background: var(--roadmap-green-soft);
+    }
+
+    .ai-roadmap__output {
+      border: 1px solid #f2d180;
+      background: var(--roadmap-amber-soft);
+    }
+
+    .ai-roadmap__label {
+      display: inline-block;
+      margin-bottom: 4px;
+      color: var(--roadmap-ink);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .ai-roadmap__branches {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .ai-roadmap__branch {
+      padding: 16px;
+      border: 1px solid #d8dfec;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .ai-roadmap__branch h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .ai-roadmap__branch p {
+      margin: 0 0 10px;
+      line-height: 1.65;
+    }
+
+    .ai-roadmap__branch ul {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .ai-roadmap__branch--green {
+      border-top: 5px solid var(--roadmap-green);
+    }
+
+    .ai-roadmap__branch--rose {
+      border-top: 5px solid var(--roadmap-rose);
+    }
+
+    .ai-roadmap__branch--amber {
+      border-top: 5px solid var(--roadmap-amber);
+    }
+
+    .ai-roadmap__branch--purple {
+      border-top: 5px solid var(--roadmap-purple);
+    }
+
+    .ai-roadmap__branch--blue {
+      border-top: 5px solid var(--roadmap-blue);
+    }
+
+    .ai-roadmap__branch--slate {
+      border-top: 5px solid #475569;
+    }
+
+    .ai-roadmap__loop {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #d9e3f1;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .ai-roadmap__loop-step {
+      min-height: 120px;
+      padding: 12px;
+      border: 1px solid #dbe5f3;
+      border-radius: 8px;
+      background: #f8fbff;
+    }
+
+    .ai-roadmap__loop-step strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--roadmap-ink);
+    }
+
+    .ai-roadmap__plan {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .ai-roadmap__week {
+      padding: 16px;
+      border: 1px solid #d8dfec;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .ai-roadmap__week h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .ai-roadmap__week p {
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .ai-roadmap__source-list {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 920px) {
+      .ai-roadmap__stats,
+      .ai-roadmap__branches,
+      .ai-roadmap__loop,
+      .ai-roadmap__plan {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .html-post-content:has(.ai-roadmap) {
+        max-width: calc(100vw - 24px);
+      }
+
+      .ai-roadmap__hero,
+      .ai-roadmap__mainline {
+        padding: 16px;
+      }
+
+      .ai-roadmap__stats,
+      .ai-roadmap__split,
+      .ai-roadmap__branches,
+      .ai-roadmap__loop,
+      .ai-roadmap__plan {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-roadmap__mainline::before {
+        left: 30px;
+      }
+
+      .ai-roadmap__stage {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .ai-roadmap__num {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+
+      .ai-roadmap__stage-head {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-roadmap__hours {
+        width: max-content;
+      }
+    }
+  </style>
+
+  <header class="html-post__header ai-roadmap__hero">
+    <p class="ai-roadmap__eyebrow">Roadmap / 2026</p>
+    <h2>主线必修，支线选修</h2>
+    <p class="ai-roadmap__deck">这条路线面向想从编程基础走到 [[LLM]]、[[RAG]]、[[Agent]]、评测和部署的人。主线是必学项，支线按岗位和项目需要选择。不要把 80 个节点当成打卡清单，要把每个阶段变成一个能运行、能被检查、能继续修改的作品。</p>
+    <div class="ai-roadmap__stats" aria-label="路线图摘要">
+      <div class="ai-roadmap__stat">
+        <strong>约 1200 小时</strong>
+        <span>每周 10 小时约 2 年多，每周 20 小时约 15 个月。</span>
+      </div>
+      <div class="ai-roadmap__stat">
+        <strong>8 段主线</strong>
+        <span>从 Python、API 和数据开始，走到 RAG、工具调用、Agent、评测和部署。</span>
+      </div>
+      <div class="ai-roadmap__stat">
+        <strong>按作品验收</strong>
+        <span>每段都有交付物。学会的证据是能做出来，并能解释失败原因。</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="ai-roadmap__split" aria-label="适合人群">
+    <div class="ai-roadmap__box">
+      <h2>适合谁</h2>
+      <ul>
+        <li>想做 AI 应用开发，而不是只会和模型聊天的人。</li>
+        <li>愿意补编程、数据、工程和部署基础的人。</li>
+        <li>目标是做 RAG 问答、工作流 Agent、业务自动化、AI 产品原型或企业内部工具的人。</li>
+      </ul>
+    </div>
+    <div class="ai-roadmap__box">
+      <h2>不适合谁</h2>
+      <ul>
+        <li>只想学 prompt，提高日常办公效率的人。</li>
+        <li>只想做算法研究、读论文、训练大模型的人。</li>
+        <li>希望一两个月内掌握所有 AI 技术的人。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>主线：AI 应用开发工程师必学项</h2>
+      <p>主线的判断标准很直接：少了这一段，你就很难独立做出可上线的 AI 应用。CV、Diffusion、模型训练、并行加速和推理优化有价值，但它们不是每个 AI 应用开发者的第一条路。</p>
+    </div>
+
+    <div class="ai-roadmap__mainline">
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">1</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>编程与工程基础</h3>
+            <span class="ai-roadmap__hours">180-220 小时</span>
+          </div>
+          <p>目标是能写脚本、调 API、处理文件、管理代码，并能定位常见错误。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Python</li>
+            <li>Git</li>
+            <li>VS Code</li>
+            <li>Jupyter</li>
+            <li>HTTP / JSON</li>
+            <li>基础云服务</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“我会一点 Python。请用一个文件批处理任务检查我缺哪些基础，并给我 3 个递增练习。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个命令行小工具：读取 CSV，清洗数据，调用一个 API，输出结果文件，并写清楚运行方式。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">2</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>数据与机器学习基础</h3>
+            <span class="ai-roadmap__hours">180-220 小时</span>
+          </div>
+          <p>目标是理解数据怎样影响模型结果，能训练传统 ML 模型，并能判断评估结果是否可信。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Pandas / NumPy</li>
+            <li>数据清洗</li>
+            <li>特征工程</li>
+            <li>sklearn</li>
+            <li>XGBoost</li>
+            <li>交叉验证</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“这是我的数据字段。请先判断任务类型、可能的数据泄漏、适合的指标，再给建模步骤。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个预测或分类项目：包含数据说明、训练脚本、指标解释、错误样本分析。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">3</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>深度学习最小必需知识</h3>
+            <span class="ai-roadmap__hours">120-160 小时</span>
+          </div>
+          <p>目标是读懂神经网络、Transformer、embedding 和训练过程的基本含义，能解释 LLM 应用为什么会出错。</p>
+          <ul class="ai-roadmap__chips">
+            <li>神经网络</li>
+            <li>PyTorch 基础</li>
+            <li>Transformer</li>
+            <li>embedding</li>
+            <li>token</li>
+            <li>上下文窗口</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“请用一个客服知识库问答例子解释 token、embedding、attention 和上下文窗口分别影响什么。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一份概念说明：能解释向量检索为什么会找错、上下文为什么会丢信息、模型为什么会编答案。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">4</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>LLM API 与 Prompt 工程</h3>
+            <span class="ai-roadmap__hours">160-220 小时</span>
+          </div>
+          <p>目标是把聊天模型接进真实程序，控制输入、输出、格式、成本和错误。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Messages</li>
+            <li>Structured Output</li>
+            <li>Streaming</li>
+            <li>Few-shot</li>
+            <li>反问机制</li>
+            <li>成本估算</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“请把这个模糊需求改写成一个 API 调用任务，列出输入字段、输出 JSON、失败情况和测试样例。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个文本处理服务：输入原始材料，输出结构化 JSON，并在格式错误时自动重试或报错。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">5</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>RAG 与知识库问答</h3>
+            <span class="ai-roadmap__hours">160-220 小时</span>
+          </div>
+          <p>目标是让模型基于指定资料回答，并能给出来源、拒答和错误记录。</p>
+          <ul class="ai-roadmap__chips">
+            <li>文档解析</li>
+            <li>切片策略</li>
+            <li>向量库</li>
+            <li>Hybrid Search</li>
+            <li>引用来源</li>
+            <li>召回评估</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“请帮我设计一个 RAG 测试集：20 个问题、期望答案、应引用的文档片段、找不到答案时的处理。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个文档问答系统：上传 5-20 篇资料，回答带来源，未知问题明确拒答，保留错误样本。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">6</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>Tool Calling 与 Agent Workflow</h3>
+            <span class="ai-roadmap__hours">140-200 小时</span>
+          </div>
+          <p>目标是让模型调用搜索、数据库、代码、文件和业务 API，并把多步任务拆成可观察的执行过程。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Function Calling</li>
+            <li>工具权限</li>
+            <li>Agent Loop</li>
+            <li>状态管理</li>
+            <li>人工确认</li>
+            <li>失败重试</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“这个任务有哪些步骤必须由程序执行，哪些步骤可以让模型判断，哪些动作需要人工确认？”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个可追踪的 Agent：能查资料、调用工具、生成结果，并记录每次工具调用的输入、输出和失败原因。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">7</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>评测、观测与安全边界</h3>
+            <span class="ai-roadmap__hours">120-180 小时</span>
+          </div>
+          <p>目标是判断应用质量，而不是凭感觉说效果不错。每次改 prompt、模型、检索策略或工具权限，都要能回归测试。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Eval Dataset</li>
+            <li>自动评分</li>
+            <li>人工复核</li>
+            <li>Trace</li>
+            <li>日志</li>
+            <li>Prompt Injection</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“请把这些历史失败案例改成回归测试，并给每条测试的评分规则和人工复核条件。”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个评测面板或报告：至少 50 条测试样本，能比较不同版本的正确率、拒答率、延迟和成本。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ai-roadmap__stage">
+        <div class="ai-roadmap__num">8</div>
+        <div class="ai-roadmap__stage-card">
+          <div class="ai-roadmap__stage-head">
+            <h3>部署、监控与产品化</h3>
+            <span class="ai-roadmap__hours">140-200 小时</span>
+          </div>
+          <p>目标是把 demo 变成别人能使用的服务，并能处理权限、费用、延迟、限流和线上错误。</p>
+          <ul class="ai-roadmap__chips">
+            <li>Docker</li>
+            <li>云部署</li>
+            <li>队列</li>
+            <li>缓存</li>
+            <li>限流</li>
+            <li>成本监控</li>
+          </ul>
+          <div class="ai-roadmap__prompt">
+            <span class="ai-roadmap__label">问 AI</span>
+            <p>“请把我的 AI 应用按线上服务检查：密钥、权限、日志、成本、错误处理、用户数据和回滚方案分别缺什么？”</p>
+          </div>
+          <div class="ai-roadmap__output">
+            <span class="ai-roadmap__label">交付物</span>
+            <p>一个可访问的 AI 应用：有登录或访问限制，有日志，有成本记录，有错误处理，有一份部署说明。</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>支线：按工种和项目需求选择</h2>
+      <p>支线不建议一开始全学。先完成主线里的一个可上线项目，再根据你要做的产品或岗位补支线。</p>
+    </div>
+
+    <div class="ai-roadmap__branches">
+      <section class="ai-roadmap__branch ai-roadmap__branch--green">
+        <h3>纯语言与搜索 / RAG</h3>
+        <p>适合知识库、客服、研究助手、企业内搜。</p>
+        <ul>
+          <li>Query rewriting</li>
+          <li>Rerank</li>
+          <li>Graph RAG</li>
+          <li>长文档问答</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--rose">
+        <h3>多模态、图片与视频</h3>
+        <p>适合电商、教育、设计、内容审核、视觉检索。</p>
+        <ul>
+          <li>VLM</li>
+          <li>OCR</li>
+          <li>图像理解</li>
+          <li>视频理解</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--amber">
+        <h3>语音与实时交互</h3>
+        <p>适合电话客服、语音助手、会议纪要、陪练系统。</p>
+        <ul>
+          <li>ASR</li>
+          <li>TTS</li>
+          <li>Realtime API</li>
+          <li>打断与延迟控制</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--purple">
+        <h3>Memory 与个性化</h3>
+        <p>适合个人助手、学习助手、长期客户跟进。</p>
+        <ul>
+          <li>短期状态</li>
+          <li>长期记忆</li>
+          <li>用户画像</li>
+          <li>隐私与删除机制</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--blue">
+        <h3>Agent 架构</h3>
+        <p>适合复杂任务自动化、代码助手、运营助手。</p>
+        <ul>
+          <li>Planner / Executor</li>
+          <li>多 Agent 协作</li>
+          <li>Sandbox</li>
+          <li>Human-in-the-loop</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--slate">
+        <h3>模型训练与微调</h3>
+        <p>适合模型团队、垂直任务、私有数据场景。</p>
+        <ul>
+          <li>SFT</li>
+          <li>LoRA</li>
+          <li>偏好数据</li>
+          <li>函数调用微调</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--green">
+        <h3>推理优化</h3>
+        <p>适合高并发、低延迟、私有化部署。</p>
+        <ul>
+          <li>Quantization</li>
+          <li>KV Cache</li>
+          <li>Batching</li>
+          <li>vLLM / TensorRT-LLM</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--amber">
+        <h3>并行加速与训练系统</h3>
+        <p>适合训练平台、GPU 集群、模型基础设施。</p>
+        <ul>
+          <li>数据并行</li>
+          <li>张量并行</li>
+          <li>流水线并行</li>
+          <li>分布式训练</li>
+        </ul>
+      </section>
+
+      <section class="ai-roadmap__branch ai-roadmap__branch--rose">
+        <h3>治理、隐私与合规</h3>
+        <p>适合企业落地、教育、金融、医疗、政企项目。</p>
+        <ul>
+          <li>权限隔离</li>
+          <li>敏感信息处理</li>
+          <li>审计日志</li>
+          <li>模型行为规范</li>
+        </ul>
+      </section>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>学习方式：每个节点都按作品推进</h2>
+      <p>小白通常已经能找到资料，真正卡住的是下一句该问什么。每个节点都用同一个学习回路，AI 才能从聊天对象变成训练伙伴。</p>
+    </div>
+
+    <div class="ai-roadmap__loop" aria-label="学习回路">
+      <div class="ai-roadmap__loop-step">
+        <strong>1. 定义任务</strong>
+        <span>先说目标、人群、输入、输出、限制，不让 AI 直接开讲。</span>
+      </div>
+      <div class="ai-roadmap__loop-step">
+        <strong>2. 让 AI 反问</strong>
+        <span>要求它指出缺失信息、假设和风险。</span>
+      </div>
+      <div class="ai-roadmap__loop-step">
+        <strong>3. 做最小练习</strong>
+        <span>每次练习限制在 30-90 分钟，产出一个文件、接口、报告或测试集。</span>
+      </div>
+      <div class="ai-roadmap__loop-step">
+        <strong>4. 用标准验收</strong>
+        <span>要求 AI 按事先写好的标准批改，不接受泛泛评价。</span>
+      </div>
+      <div class="ai-roadmap__loop-step">
+        <strong>5. 记录错误</strong>
+        <span>把错因写成下一次 prompt、测试样例或检查清单。</span>
+      </div>
+    </div>
+
+    <div class="ai-roadmap__box">
+      <h3>通用提问模板</h3>
+      <pre><code>我的目标是：做出 X。
+我的基础是：Y。
+我现在卡在：Z。
+请你先判断我缺的是概念、方法、代码能力还是练习量。
+然后给我：
+1. 一个最小学习步骤
+2. 一个 60 分钟内能完成的练习
+3. 交付物格式
+4. 验收标准
+5. 常见错误和检查方式</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>30 天起步计划</h2>
+      <p>如果从零开始，不要第一天就研究 Agent 框架。前 30 天只做一件事：让自己能写代码、调 API、交付一个可运行小工具。</p>
+    </div>
+
+    <div class="ai-roadmap__plan">
+      <section class="ai-roadmap__week">
+        <h3>第 1 周</h3>
+        <p>Python 基础、文件读写、JSON、命令行。交付一个文件整理脚本。</p>
+      </section>
+      <section class="ai-roadmap__week">
+        <h3>第 2 周</h3>
+        <p>HTTP、API 调用、错误处理。交付一个调用 LLM API 的文本处理脚本。</p>
+      </section>
+      <section class="ai-roadmap__week">
+        <h3>第 3 周</h3>
+        <p>Prompt 结构、输出格式、重试。交付一个把原始文本转成结构化 JSON 的工具。</p>
+      </section>
+      <section class="ai-roadmap__week">
+        <h3>第 4 周</h3>
+        <p>小型 Web 接口、日志、测试样例。交付一个可本地访问的 AI 小服务。</p>
+      </section>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>阶段验收标准</h2>
+      <p>学完一个阶段时，用下面 5 条检查。过不了，就不要急着进入下一个阶段。</p>
+    </div>
+
+    <div class="ai-roadmap__box">
+      <ol>
+        <li>能用自己的话解释这个阶段解决什么问题。</li>
+        <li>能做出一个可运行作品，而不是只保存教程代码。</li>
+        <li>能列出 3 个常见失败原因。</li>
+        <li>能让 AI 生成测试样例，并能判断测试样例是否覆盖主要情况。</li>
+        <li>能把错误记录改成下一版的约束、代码或评测用例。</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="ai-roadmap__section-head">
+      <h2>参考资料</h2>
+      <p>这份路线图的应用侧判断，主要参考了 2026 年 AI 应用开发里已经形成共识的几个方向：工具调用、Agent 运行过程、评测、可观测性和动手项目。</p>
+    </div>
+    <ul class="ai-roadmap__source-list">
+      <li><a href="https://developers.openai.com/api/docs/guides/agents">OpenAI Agents SDK 文档</a>：把 agent 应用拆成模型、工具、状态、编排、人工确认和观测。</li>
+      <li><a href="https://developers.openai.com/api/docs/guides/agent-evals">OpenAI Agent Evals 文档</a>：用 traces、graders、datasets 和 eval runs 改进 agent 质量。</li>
+      <li><a href="https://huggingface.co/learn/agents-course/en/unit0/introduction">Hugging Face AI Agents Course</a>：用工具、动作、观察、框架、作业和评测组织 agent 学习。</li>
+    </ul>
+  </section>
+</article>
