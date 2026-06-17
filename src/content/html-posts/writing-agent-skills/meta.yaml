@@ -1,0 +1,7 @@
+title: "写 Agent Skill：几条和直觉相反的规则"
+date: "2026-06-17"
+description: "读 superpowers 的 skill 源码，几条写法和我原来的想当然相反：description 只写何时触发、不写做什么；写 skill 前先看 agent 在没有它时怎么失败；同一条规则，写成禁止还是正面规定，效果会反过来；放进目录的文件不指路，就不会被读。"
+tags: ["agent-skills", "ai-agents", "claude-code", "prompt-engineering", "writing"]
+draft: false
+ui: "minimal-essay"
+lang: "zh-CN"

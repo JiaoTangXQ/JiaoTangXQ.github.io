@@ -1,0 +1,114 @@
+<article class="html-post html-post--minimal-essay">
+  <header class="html-post__header">
+    <p class="html-post__eyebrow">Note</p>
+    <h1>写 Agent Skill：几条和直觉相反的规则</h1>
+    <p class="html-post__deck">下面这几条来自 superpowers 这套 skill 的源码。它们大多和“把文档写清楚”的常识相反，其中一条我原来一直写反。把它们记下来，是因为每一条背后都有一次能复现的失败，不是谁的风格偏好。</p>
+  </header>
+
+  <section>
+    <h2>我把 description 写反了</h2>
+    <p>常见的说法是：<code>description</code> 要同时写清“做什么”和“何时用”。我一直这么写。superpowers 反过来，只让 description 写“何时触发”。这么改是因为踩过坑。</p>
+    <p>它有个执行计划的 skill，<code>description</code> 里塞了工作流摘要——“每个任务派一个 subagent，任务之间做 code review”。结果 agent 照着这句话做了<strong>一次</strong> code review 就停了，而 skill 正文的流程图要求<strong>两次</strong>：先查是否符合规格，再查代码质量。把 <code>description</code> 改成只写触发条件“在当前会话执行含独立任务的实现计划时使用”，不再剧透流程，agent 转头去读正文，才把两阶段都做对。</p>
+    <p>机制是这样：<code>description</code> 一旦摘要了工作流，就等于给 agent 开了一条捷径。它会照 <code>description</code> 做，把正文当成可以跳过的文档。所以分工应该是——<code>description</code> 只回答“什么时候该读这个 skill”，正文才回答“读了之后怎么做”。</p>
+    <p>对照一下就清楚了。差的写法：</p>
+    <pre><code>执行计划时用 —— 每个任务派一个 subagent，任务之间做 code review
+用于 TDD —— 先写测试，看它失败，写最小代码，重构
+异步测试不稳定时我可以帮你
+用于异步测试</code></pre>
+    <p>好的写法：</p>
+    <pre><code>在当前会话执行含独立任务的实现计划时使用
+实现任何功能或修 bug 时、写实现代码之前使用
+测试有竞态、时序依赖，或者时而通过、时而失败时使用
+遇到任何 bug、测试失败或意外行为时、提出修复方案之前使用</code></pre>
+    <p>好的那几条都停在“触发的那一刻”——“写实现代码之前”“提出修法之前”，描述的是问题和时机，不是步骤。写问题（竞态、不稳定），不写语言细节（<code>setTimeout</code>、<code>sleep</code>）。用第三人称，因为它会被注入系统提示。</p>
+  </section>
+
+  <section>
+    <h2>写 skill 前，先看 agent 在没有它时怎么失败</h2>
+    <p>这条把写 skill 变成了对“流程文档”做 [[TDD]]。规则就一句：</p>
+    <blockquote>
+      <p>没有先写失败的测试，就不写 skill。</p>
+    </blockquote>
+    <p>顺序是 RED → GREEN → REFACTOR。RED：在<strong>没有</strong>这个 skill 的情况下，让一个 subagent 去做任务，看它怎么失败、用什么话给自己找理由，把原话逐字记下来。没看过它在没 skill 时怎么失败，你就不知道 skill 该教什么。GREEN：只针对这些具体理由写 skill，不为假想情况加内容，再跑同样的场景。REFACTOR：agent 找到新借口就加一条反制，重测到堵死。</p>
+    <p>同一条铁律换个领域会重复出现。调试那套 skill 的版本是“没查清根本原因，就不动手修”。全大写、单行、装在框里——这是一个反复用的写法：把不能让步的规则做成一眼能认出来的样子，而不是埋在段落里。</p>
+  </section>
+
+  <section>
+    <h2>同一条规则，写成禁止还是正面规定，结果会反过来</h2>
+    <p>这点我以前没意识到。一个规则，写成“禁止做 X”还是写成“正面规定该输出什么”，效果不是差一点，是能反过来。superpowers 拿对照测试量过：在一组措辞实验里，“禁止 X”那组产出的不良内容明显多于“正面规定”那组，两组分布完全分开，甚至比不给任何指导的对照组还差。原因在于，“别做 X”给 agent 留了讨价还价的余地，它一想省事就钻空子；正面规定不一样，它把成品该长什么样直接写出来，结果要么对得上要么对不上，没有中间地带可谈。</p>
+    <p>所以先把失败归类，再选形式：</p>
+    <ul>
+      <li>知道规则、可真做起来就抄近路（纪律问题）——用禁止 + 理由对照表 + red flags，别用“尽量”“考虑”这种软建议。</li>
+      <li>照做了、但输出形状错（prompt 臃肿、结论被埋、复述需求）——正面写清输出该有哪几部分、什么顺序，别用“别复述”“别叙述”这种禁止清单。</li>
+      <li>漏了某个必填元素——在模板里放一个 REQUIRED 槽位让它填，别在旁边写一段提醒。</li>
+      <li>行为该随条件变——就写成一条看得见、能直接判断的条件（“如果 brief 存在，就引用它”），别写死规则再挂一堆例外。</li>
+    </ul>
+    <p>还有一个坑：一条已经管用的正面规定，别给它加“除非……”。加上这句“除非”，等于重新打开讨价还价的口子，把刚稳住的结果又搞得飘忽不定。真有例外，就单独写成一条看得见、能判断的条件。</p>
+  </section>
+
+  <section>
+    <h2>光写规则不够，agent 会找借口绕过去</h2>
+    <p>纪律型的 skill（[[TDD]]、调试流程、完成前验证）要扛住 agent 找借口。不要只写“写代码前先写测试”，要把具体的绕法一起堵掉。差的写法是一句“写了就删”；好的写法把漏洞列全：</p>
+    <pre><code>测试之前写了代码？删掉，重来。
+没有例外：
+- 不许留着当“参考”
+- 不许一边写测试一边“借鉴”它
+- 不许看它
+- 删就是删</code></pre>
+    <p>再补一句，把“我守的是规则本意，不必拘泥字面”这类借口也一起堵掉——不按字面做，就是违背本意。</p>
+    <p>另外两样东西值得照搬。一个是理由对照表，把基线测试里抓到的借口逐条记下，左边借口右边现实：“问题简单，不用走流程”——简单问题也有根本原因，流程对简单 bug 也快；“紧急，没时间走流程”——系统化调试比瞎试快；“确认修好了再补测试”——没测过的修复留不住。另一个是 red flags，把“你正要犯规”的念头列出来让 agent 自查：“先快修，之后再查”“就改个 X 看看行不行”“再试一次”——看到这些念头，停，回到第一步。</p>
+    <p>调试那套 skill 里还有一招我觉得特别实在：它把<strong>用户纠正你时常说的原话</strong>直接当成了信号。“别猜了”=你还没搞懂就想着怎么修；“那个真发生了吗？”=你没验证就假设；“我们卡住了？”（带情绪）=你的路子不对。看到这些话，回第一步。</p>
+  </section>
+
+  <section>
+    <h2>放进目录的文件，不指路就不会被读</h2>
+    <p>[[渐进披露]]的意思是：启动时只加载每个 skill 的 <code>name</code> 和 <code>description</code> 当索引；匹配上了才读 <code>SKILL.md</code> 正文；正文里点到的 reference、脚本，要用到时才读。</p>
+    <p>这里有个我亲自踩过的误解：把文档放进 skill 目录，不等于它会被读。模型只在 <code>SKILL.md</code> 正文<strong>显式指路</strong>时才去读它。没指路的 reference 就是死文件。篇幅大的 reference 要拆成独立文件，正文里点名引用，比如一个做 pptx 的 skill 这样分：</p>
+    <pre><code>pptx/
+  SKILL.md       # 概览 + 工作流
+  pptxgenjs.md   # 600 行 API 参考
+  ooxml.md       # 500 行 XML 结构
+  scripts/       # 可执行工具</code></pre>
+    <p>原则是：原理、概念、50 行以内的代码留在正文；100 行以上的 API 文档、可复用脚本，拆出去，正文里点名。还有一个反直觉的细节：在文档里引另一个 skill，用 skill 名加显式标记，<strong>不要用 <code>@</code> 语法</strong>。<code>@</code> 会立刻强加载那个文件，在你还没用到时就先烧掉两百多 K 上下文。</p>
+  </section>
+
+  <section>
+    <h2>description 每次对话都在花钱</h2>
+    <p><code>description</code> 每次对话都加载进系统提示。常驻和高频的 skill，每个词都在花 token。superpowers 给的目标字数是：getting-started 类的工作流每个少于 150 词，高频加载的 skill 全文少于 200 词，其他少于 500 词。</p>
+    <p>压缩手段也具体：把参数细节挪到 <code>--help</code>，正文只写“支持多种模式，跑 --help 看详情”；交叉引用别复述别的 skill 的流程；同一个模式别给五个例子。</p>
+  </section>
+
+  <section>
+    <h2>命名用动词，流程图只留给真正的岔路口</h2>
+    <p>名字用你<em>做的动作</em>来取，别用一串名词硬凑。几个对照：</p>
+    <ul>
+      <li><code>async-test-helpers</code> → <code>condition-based-waiting</code></li>
+      <li><code>skill-creation</code> → <code>creating-skills</code></li>
+      <li><code>debugging-techniques</code> → <code>root-cause-tracing</code></li>
+    </ul>
+    <p>过程类用进行式（-ing）。流程图只用在“非显而易见、容易走错的决策点”，其余一律别用：参考资料用表格列表，线性步骤用编号列表（调试那套 skill 的四个阶段就是编号，不是流程图），代码用代码块——流程图里塞代码没法复制，也难读。</p>
+  </section>
+
+  <section>
+    <h2>几个一看就知道写错了的写法</h2>
+    <ul>
+      <li><strong>叙事式。</strong>“某月某号那次会话，我们发现 projectDir 为空导致……”——skill 是给未来 agent 用的参考，不是你某次怎么解决问题的故事。太具体，不可复用。</li>
+      <li><strong>多语言稀释。</strong><code>example-js.js</code> / <code>example-py.py</code> / <code>example-go.go</code> 一起塞——每个都平庸，维护负担大。一个好例子胜过五个平庸的。</li>
+      <li><strong>流程图里塞代码。</strong><code>step1 [label="import fs"]</code> 这种。</li>
+      <li><strong>通用标签。</strong><code>helper1</code>、<code>step3</code>——标签要有语义。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>一个最小的 skill 长什么样</h2>
+    <p>一个 [[Agent Skill]] 最小就是一个 <code>SKILL.md</code>，含 YAML frontmatter 和正文。<code>name</code> 只能用字母、数字、连字符，动词开头；<code>description</code> 第三人称、只写何时触发、尽量短；整个 frontmatter 上限 1024 字符。</p>
+    <p>需要拆资源时，按职责分四类：</p>
+    <pre><code>my-skill/
+  SKILL.md        # 必需：触发元数据 + 主流程 + 短模板
+  references/     # 可选：长文档、API、schema，正文指路才读
+  scripts/        # 可选：可直接运行的重复动作
+  assets/         # 可选：模板、样例，作为产物复用</code></pre>
+    <p>正文的结构大致是：一两句讲清这是什么和基本原则，然后是何时用、何时不用，再放一组 before/after 对比、一张速查表、实现、常见错误。</p>
+    <p>一条信息要不要写进正文，标准只有一个：它会不会改变 agent 下一步怎么做。不会，就挪到 reference 或脚本里去。这条标准其实把前面所有规则串了起来——<code>description</code> 决定它会不会被读，正文决定读了怎么做，剩下的全是按需加载。</p>
+  </section>
+</article>
