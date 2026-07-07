@@ -1,0 +1,106 @@
+<article class="html-post html-post--reading-note">
+  <section>
+    <h2>先把类别摆正</h2>
+    <p>HRM 的全称是 <a href="https://arxiv.org/abs/2506.21734">Hierarchical Reasoning Model</a>。它不是 verl 那类训练系统，也不是 GRPO 那类 loss。更准确的分类是：HRM 和 Transformer、RNN、Universal Transformer、DEQ、TRM 属于同一层，讨论的是模型怎么计算。</p>
+    <p>verl 回答的是“怎样把采样、reward、梯度更新和分布式训练跑起来”。GRPO 回答的是“怎样用组内相对 reward 更新策略”。HRM 回答的是另一件事：如果模型不把推理写成文字链，而是在 [[latent reasoning]] 里反复更新状态，会不会更适合某些推理任务。</p>
+    <p>所以“能不能把 HRM 套到 Qwen 或 Llama 上”这个问题，要先改写。不能像换 SFT 数据那样直接套。更准确的说法是：把一个 decoder-only LLM 改造成带 recurrent depth 的结构，再用 HRM 类训练 recipe 去训练。这已经是改架构，不是普通二次训练。</p>
+  </section>
+
+  <section>
+    <h2>原始 HRM 做的事很窄，但击中了一个点</h2>
+    <p>原始 HRM 用 H-module 和 L-module 两个递归模块。L 低层模块更新频率高，H 高层模块更新频率低。每个 segment 结束后，模型都用同一个最终答案算 loss。这个训练方式叫 deep supervision。</p>
+    <p>在 Sudoku、Maze、ARC 这类任务里，HRM 不需要人类写 CoT。输入是题目，输出是最终 grid。模型的中间状态不写出来，只在 hidden state 里变。论文报告 27M 参数、约 1000 个样本，在这些结构化任务上超过了不少当时的 CoT LLM。</p>
+    <p>这个结果容易被误读成“HRM 比大模型更会推理”。我现在不会这样说。证据只支持更窄的结论：在固定格式、答案可验证、输出空间受限的任务上，小递归模型可以吃到与任务结构匹配的归纳偏置。它不自动迁移到聊天、代码工程、工具调用和多模态 agent。</p>
+  </section>
+
+  <section>
+    <h2>deep supervision 不是把句子前缀拆开算 loss</h2>
+    <p>我一开始也容易把它和 SFT 的 token-level loss 混在一起。普通 SFT 训练一句回复时，本质是预测下一个 token：</p>
+    <pre><code>prompt -> 预测第 1 个 response token
+prompt + 第 1 个 token -> 预测第 2 个 token
+prompt + 前 2 个 token -> 预测第 3 个 token</code></pre>
+    <p>HRM 原始版本不是这样。它不是把“根据我的计算 1+1=2”拆成“根据 / 根据我 / 根据我的”这些前缀做多条样本。它的 deep supervision 是：</p>
+    <pre><code>latent state 更新一段 -> 输出完整答案 -> 和最终答案算 loss
+latent state 再更新一段 -> 再输出完整答案 -> 再算 loss
+latent state 继续更新 -> 仍然用同一个最终答案监督</code></pre>
+    <p>所以同样是“只给最终答案”，普通 SFT 和 HRM 的训练信号不一样。普通 SFT 监督的是 token 位置；HRM 监督的是多个内部 reasoning segment。这个差别解释了为什么 final-answer SFT 在复杂搜索任务上容易学偏，而 HRM 可以在某些 grid 任务上学到反复修正。</p>
+  </section>
+
+  <section>
+    <h2>后续论文基本都在拆 HRM 的归因</h2>
+    <p><a href="https://arxiv.org/abs/2510.00355">Perspectives and Misconceptions</a> 先质疑了 HRM 的解释。它发现去掉 H-module、只放大 L-module，也能接近原始 HRM 的效果。这个结果把问题从“高低层结构像不像大脑”拉回到“递归和 [[Deep Supervision]] 到底贡献多少”。</p>
+    <p><a href="https://arxiv.org/abs/2510.04871">TRM</a> 走得更直接：去掉双模块层级，只保留一个 tiny network，反复更新当前答案和 latent state。前面几步 no-grad 推进，最后一步反传。它的意思很明确：如果递归和深监督才是主因，就不必保留复杂的脑启发叙事。</p>
+    <p>这一步对我很有启发。很多论文第一次出现时会带一个完整解释，后续工作真正有价值的地方，是把解释拆成可验证的部件。HRM 的 H/L 结构可能不是关键部件；递归、工作记忆、训练截断、测试时搜索，才是后续反复出现的部件。</p>
+  </section>
+
+  <section>
+    <h2>HRM 不保证 loss 平滑下降</h2>
+    <p>我后来专门查了一个问题：HRM 是否能保证每次递归后 loss 都下降。答案是否定的。它没有显式约束：</p>
+    <pre><code>loss(step n + 1) <= loss(step n)</code></pre>
+    <p>HRM 只是通过 deep supervision、detach、one-step gradient 和任务结构，让训练更不容易炸。它没有数学保证每一步都更接近答案。</p>
+    <p><a href="https://arxiv.org/abs/2601.10679">Are Your Reasoning Models Reasoning or Guessing?</a> 这篇机制分析更狠。它发现 HRM 有时不是一步步推理，而是在 latent space 里突然撞进一个 attractor。有些 attractor 对应正确答案，有些对应错误答案。甚至有样本已经对了，继续递归后又被改错。</p>
+    <p>这解释了后续为什么要做 data mixing、input relabel、model bootstrapping、随机 rollout。它们都在补同一个洞：递归模型不会天然收敛到正确答案。只让它多想几步，不一定更好；有时只是让它更深地掉进错误 basin。</p>
+  </section>
+
+  <section>
+    <h2>工作记忆是另一条线</h2>
+    <p><a href="https://arxiv.org/abs/2604.21999">Universal Transformers Need Memory</a> 把问题拆得更细。它用 Universal Transformer 解 Sudoku-Extreme，发现没有 memory tokens 基本不工作，8 个 memory tokens 是一个明显阈值。</p>
+    <p>这个结论让我重新看 HRM 和 TRM。递归深度只是计算时间，模型还需要能保存中间状态的容器。HRM 用 per-position latent state，TRM 维护 answer state 和 latent state，Universal Transformer 用 memory tokens。名字不同，问题相同：[[递归推理]] 需要工作记忆。</p>
+  </section>
+
+  <section>
+    <h2>HRM-Text 是扩展，不是胜利宣言</h2>
+    <p><a href="https://arxiv.org/abs/2605.20613">HRM-Text</a> 是 Sapient 后来把 HRM 做到语言模型上的尝试。它从零训练 0.6B/1B，不是拿 Qwen 或 Llama 改权重。训练上加了 MagicNorm、warmup deep credit assignment、PrefixLM、response-only NLL。</p>
+    <p>这篇说明 HRM 结构可以进入语言任务，但公开证据还不到“能替代通用大模型”的程度。1B 模型能接近部分 2-7B 开源模型，是一个值得看的信号；但它没有证明 10B、70B 或几百 B 规模下，同等 FLOPs 会优于 decoder-only Transformer。</p>
+    <p>我对 HRM-Text 的判断是：它值得研究，不该神化。它打开了一个问题，而不是关闭了一个问题。</p>
+  </section>
+
+  <section>
+    <h2>最新方向开始从“多想几步”变成“多走几条路”</h2>
+    <p>原始 HRM 和 TRM 多数是确定性轨迹。同一个输入，模型走同一条 latent path。这会带来一个问题：一旦进了错误 basin，再多跑几步也可能只是持续错。</p>
+    <p><a href="https://arxiv.org/abs/2605.19943">PTRM</a> 的做法很实用：不重训 TRM，只在推理时给 latent state 加 Gaussian noise，跑多条 rollout，再用 Q-head 选候选答案。它把 Q-head 从 early stopping 头，变成了一个小型 [[Verifier]]。</p>
+    <p><a href="https://arxiv.org/abs/2605.19376">GRAM</a> 更进一步，把递归过程建模成随机 latent trajectory，用 variational inference 训练。它的方向不是“一个输入只有一个确定推理路径”，而是允许多条路径、多种可能解。</p>
+    <p>这条线和大模型里的 best-of-N、self-consistency 很像，只是搜索空间从文字 token 换成了 latent state。未来我会更关注这个方向，因为 [[测试时计算]] 的宽度扩展更适合并行硬件，也更像真实搜索。</p>
+  </section>
+
+  <section>
+    <h2>我现在会怎样概括这条路线</h2>
+    <p>HRM 不是训练框架。它更像一个早期代表：用小模型、递归 hidden state、deep supervision 和测试时计算，去解决固定格式的推理任务。</p>
+    <p>后续发展大概是这条线：</p>
+    <ul>
+      <li>HRM 提出 H/L 递归架构，把推理放进 latent state。</li>
+      <li>批评论文拆掉 H/L 的神秘感，追问到底是谁在贡献效果。</li>
+      <li>TRM 把结构压小，证明递归和深监督可能比层级解释贡献更大。</li>
+      <li>机制分析指出 fixed point 不稳，错误吸引子会让模型“想得更错”。</li>
+      <li>memory 论文提醒：递归需要工作记忆，不只是重复同一个 block。</li>
+      <li>HRM-Text 试图把这条线推到语言模型，但规模化证据还不够。</li>
+      <li>GRAM 和 PTRM 把重点从单轨迹深递归，推向多轨迹 latent search。</li>
+      <li>shortcut recursion 开始处理另一个问题：递归步数太多时，怎样少算几步。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>未来我会看三个问题</h2>
+    <p>第一个问题是 verifier。多轨迹推理会产生多个候选答案，如果 Q-head 或外部验证器选不出来，rollout 只是增加成本。</p>
+    <p>第二个问题是 scaling。HRM-Text 到 1B 还不够。要进入通用 LLM 主战场，至少要看到 10B、70B 级别在同等训练 FLOPs 和同等推理成本下的对照。</p>
+    <p>第三个问题是落地位置。我现在更相信它会先作为专用推理器出现：ARC、约束满足、规划、程序搜索、agent 里的 verifier-guided 子模块。直接替代 Qwen、GLM、GPT、Claude 这种通用模型，目前证据不够。</p>
+    <blockquote>
+      <p>我对 HRM 的最终判断是：它不是万能替代路线，但它提醒我一件事。推理能力不只能靠更长的文字链，也可以靠更好的内部状态更新、工作记忆和测试时搜索。</p>
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>我会继续追的论文</h2>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2506.21734">Hierarchical Reasoning Model</a></li>
+      <li><a href="https://arxiv.org/abs/2510.00355">Hierarchical Reasoning Models: Perspectives and Misconceptions</a></li>
+      <li><a href="https://arxiv.org/abs/2510.04871">Less is More: Recursive Reasoning with Tiny Networks</a></li>
+      <li><a href="https://arxiv.org/abs/2601.10679">Are Your Reasoning Models Reasoning or Guessing?</a></li>
+      <li><a href="https://arxiv.org/abs/2604.21999">Universal Transformers Need Memory</a></li>
+      <li><a href="https://arxiv.org/abs/2605.20613">HRM-Text: Efficient Pretraining Beyond Scaling</a></li>
+      <li><a href="https://arxiv.org/abs/2605.19376">Generative Recursive Reasoning</a></li>
+      <li><a href="https://arxiv.org/abs/2605.19943">Probabilistic Tiny Recursive Model</a></li>
+      <li><a href="https://aclanthology.org/2026.acl-srw.120/">Learning Shortcut Models for Efficient Recursive Reasoning</a></li>
+    </ul>
+  </section>
+</article>
