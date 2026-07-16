@@ -1,0 +1,218 @@
+<article class="html-post html-post--field-report">
+  <section>
+    <h2>我现在的结论：轻流程、强边界、短闭环</h2>
+    <p>GPT-5.6 发布以后，论坛里的使用反馈很散：有人在比较 Sol、Terra、Luna，有人研究 Skills 和子代理，有人拿它跑大型代码库、做代码审查和前端开发，也有人抱怨一个实现任务跑了几个小时。把这些讨论和我自己的使用经历放在一起，我得到的结论是：</p>
+    <blockquote>
+      <p>GPT-5.6 更适合轻流程、强边界、短闭环。</p>
+    </blockquote>
+    <p>这里说的是 Codex 里的工程任务，尤其是已经有一定规模的代码库和 Rust 项目。它不是 GPT-5.6 的通用能力排名。论坛样本也不能证明模型必然更慢，只能说明不少人遇到了相似现象：Skill 触发过频、规划和复核层数增加、子代理带入过多上下文，最后把一次本来明确的修改做成了长流程。</p>
+  </section>
+
+  <section>
+    <h2>它最容易浪费时间的地方，是把所有“正确动作”都做一遍</h2>
+    <p>我遇到的问题往往不是它不听话。它会认真执行要求，遇到模糊处也倾向于多想一层。提示词如果同时规定需求澄清、方案规划、任务拆分、子代理实现、代码审查、验收测试和最终验证，它通常会把每一项都做完。</p>
+    <p>单看每一步都合理，合在一起就可能过量。小任务被反复规划，实现过程中不断审计，几行修改后又跑编译、测试、lint 和全量检查。在链接代价较高的 Rust 项目里，等待工具结果会占掉大量时间。</p>
+    <p>这也是我没有继续把 Superpowers 一类流程框架设为默认工作流的原因。这类框架能给缺少规划和执行纪律的模型补上一套外部程序；GPT-5.6 本身已经有较强的规划、自查和延伸执行倾向，完整叠加以后，重复劳动会增加。论坛里关于 <a href="https://www.reddit.com/r/codex/comments/1utg8yn/has_superpowers_made_codex_gpt56_slower_for_you/">Superpowers 是否拖慢 GPT-5.6 的讨论</a>，以及 <a href="https://www.reddit.com/r/codex/comments/1uw2i2l/practical_tips_after_using_gpt56_for_a_day/">GPT-5.6 过于频繁触发 Skills 的反馈</a>，和我的体验接近。</p>
+  </section>
+
+  <section>
+    <h2>Skill 留下方法和边界，流程按需组装</h2>
+    <p>我现在主要保留两类 [[Agent Skill]]。</p>
+    <ul>
+      <li><strong>提供方法的 Skill。</strong>它负责发现问题、梳理需求或检查盲区，例如 <code>grill-me</code>、<code>diagnose</code> 和 <code>zoom-out</code>。这类 Skill 给模型一个思考角度，不接管整个开发过程。</li>
+      <li><strong>边界明确的项目 Skill。</strong>它只处理一个可识别的问题，例如项目特有的数据迁移规则、文档格式或发布检查。触发条件应该窄，交付物应该能验收。</li>
+    </ul>
+    <p><code>grill-me</code> 适合在项目开始前找 unknown unknowns，也就是我连“需要确认什么”都还不知道的问题。我目前会用 <a href="https://github.com/mattpocock/skills">Matt Pocock 的 Skills</a>、Karpathy 风格的编码规则，再按项目补少量特化 Skill。</p>
+    <p>子代理也遵循同一个限制。只有任务可以独立完成、输入边界明确、结果能够单独验收时，我才让主代理拆出去。代码探索、实现和审查互相依赖时，强行拆成多个代理只会复制上下文和增加交接。</p>
+    <p>Skill 对我来说是一组按需调用的工具。一个任务缺哪种方法，就调用哪一个；需求和实现路径已经明确时，模型直接工作。</p>
+    <p>项目里的 [[代码审查]] Skill 也尽量写成固定检查表。下面是我现在使用的一组结构异味：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>异味</th>
+          <th>表现</th>
+          <th>处理方向</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Rigidity</td>
+          <td>一次状态变化要修改多个无关模块</td>
+          <td>把事实或命令移到真正拥有它的模块</td>
+        </tr>
+        <tr>
+          <td>Redundancy</td>
+          <td>多个消费者各自解析同一种事件或 wire shape</td>
+          <td>集中到规范类型或 reducer</td>
+        </tr>
+        <tr>
+          <td>Circularity</td>
+          <td>两个模块互相导入内部路径</td>
+          <td>改用 owner facade、ID 或已提交事件</td>
+        </tr>
+        <tr>
+          <td>Fragility</td>
+          <td>用进程内存判断持久任务是否完成</td>
+          <td>持久化状态、版本或 fencing 证据</td>
+        </tr>
+        <tr>
+          <td>Obscurity</td>
+          <td>通用 service/repository 隐藏产品意图</td>
+          <td>明确命令名称和责任归属</td>
+        </tr>
+        <tr>
+          <td>Data clump</td>
+          <td>ID、版本和 plan hash 总是分开传递</td>
+          <td>定义带类型的命令或契约</td>
+        </tr>
+        <tr>
+          <td>Needless complexity</td>
+          <td>为了“以后可能需要”增加数据库、插件 ABI 或 trait</td>
+          <td>删除没有当前需求的泛化</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>这张表只问七类问题，每一项都有可观察的表现和处理方向。它不会邀请模型重新审计整个系统，也不会让一次 review 自动扩张成架构改造。</p>
+  </section>
+
+  <section>
+    <h2>Sol Max 应该把算力花在开荒阶段</h2>
+    <p>我目前对模型档位的分配大致如下：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>任务阶段</th>
+          <th>我常用的档位</th>
+          <th>让它负责什么</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>项目开荒、[[架构设计]]、指导文档</td>
+          <td>Sol Max</td>
+          <td>确定边界、目录、风险和禁止项</td>
+        </tr>
+        <tr>
+          <td>复杂实现和疑难问题</td>
+          <td>Sol xhigh</td>
+          <td>处理高不确定性部分</td>
+        </tr>
+        <tr>
+          <td>日常开发</td>
+          <td>Terra xhigh/max 或 Sol medium/high</td>
+          <td>按已有约束完成修改</td>
+        </tr>
+        <tr>
+          <td>文档和结构已经成熟的执行任务</td>
+          <td>Sol low/medium、Terra，或 Luna Max</td>
+          <td>完成边界清楚、能够直接验收的工作</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>官方把 Sol、Terra、Luna 分别放在旗舰、较低成本和最快最低成本三个档位，并允许在 Codex 中设置不同 reasoning effort。我的表格是个人用法，不代表同档位在所有代码库里都会得到相同结果。</p>
+    <p>开荒阶段的文档会直接决定后续低档位模型能不能守住边界。我通常要求 Sol Max 提前回答：</p>
+    <ul>
+      <li>项目最容易在哪些地方踩坑；</li>
+      <li>哪些设计会在后期形成 [[技术债]]；</li>
+      <li>哪些接口、数据和模块边界需要提前固定；</li>
+      <li>后续实现必须遵循哪些原则；</li>
+      <li>哪些看似方便的方案应该禁止。</li>
+    </ul>
+    <p>目录结构也要在这里确定。至少要写清模块归属、依赖方向、公开入口，以及什么内容不能继续塞进同一个文件。否则模型在开荒时很容易不断往现有文件里加职责，最后做出几个上帝文件。目录和模块责任形成以后，它通常会沿着现有结构拆分，不需要每轮提醒。</p>
+  </section>
+
+  <section>
+    <h2>设计通过以后，要冻结实现代理的改动权限</h2>
+    <p>我用 Codex 的 Max 档做实现时遇到过另一种失控：总体设计已经定了，它在实现中发现问题后，自己改了设计，再沿着新设计继续做。新方案未必错，但它隐式扩大了任务范围，也让运行时间变得不可预测。</p>
+    <p>处理方式是把“实现时允许决定什么”写成边界。局部、可回退、不改变外部行为的选择由实现代理自行决定；下面这些变化必须先停下来报告：</p>
+    <ul>
+      <li>改变公开 API、用户可见行为或验收标准；</li>
+      <li>改变持久化数据、迁移方式或兼容策略；</li>
+      <li>改变模块归属、依赖方向或已批准的目录结构；</li>
+      <li>新增数据库、运行时服务、第三方依赖或插件机制；</li>
+      <li>预计会让原计划增加一天以上返工。</li>
+    </ul>
+    <p>我会把下面这段放进项目指导文档：</p>
+    <pre><code>## Design Authority
+
+- Treat approved architecture documents and plans as implementation constraints.
+- During implementation, make only local and reversible decisions autonomously.
+- Before changing a public contract, persisted data, module ownership,
+  dependency direction, infrastructure, or delivery scope, stop and report:
+  evidence, impact, the smallest viable change, and alternatives.
+- Wait for approval before applying that design change.
+- A failed implementation attempt is evidence to report, not permission to redesign.
+- Prefer the smallest implementation that conforms to the approved design.</code></pre>
+    <p>这条边界不会阻止它修正错误设计。它改变的是权限：模型先给出证据和影响，我再决定是否接受。只有事实证明原设计走不通，或者修改仍处于局部可回退范围，我才让实现继续。</p>
+  </section>
+
+  <section>
+    <h2>让 Sol Max 审方案时，先给它停止条件</h2>
+    <p>“审阅一下，还有哪些默认由你决策、但我忽略了权衡的设计点”是一个没有上限的问题。Sol Max 会继续寻找可能的分支，于是列出大量与主要开发目的关系很弱的事项：命名细节、测试布局、现有基础设施、低概率扩展方向。GPT-5.5 xhigh 以前没有暴露这个问题，很可能只是因为它没有把搜索空间展开得这么深。</p>
+    <p>我的建议是不要让它列全。只保留选错后难回退或返工量大的决策，并设置数量上限：</p>
+    <pre><code>审阅这份设计，只报告“现在必须由我决定”的遗漏项。
+
+入选项至少满足一个条件：
+1. 一旦选错，很难回退或预计返工超过一天；
+2. 会改变公开接口、用户可见行为或持久化数据；
+3. 会改变模块边界或跨越多个子系统；
+4. 会新增依赖、服务、数据库、部署或安全假设；
+5. 两个方案之间存在无法同时满足的产品取舍。
+
+最多列 3 项，按选错后的返工成本排序。每项只写：
+- 当前隐含假设
+- 两个可选方案及各自后果
+- 你的建议
+
+忽略命名、代码风格、测试文件布局、低概率扩展，以及不妨碍当前目标的基础设施细节。
+低于阈值的事项由实现阶段自行决定，不要列出。
+如果符合条件的事项超过 3 项，自行丢弃其余事项，不要建立附录。
+如果没有符合条件的遗漏项，直接回答“没有”。</code></pre>
+    <p>这里需要控制的是决策数量：模型负责筛选和丢弃低影响问题，不能把筛选工作重新交给人。</p>
+    <p>acceptance test 也用同一个阈值。验收测试只覆盖用户可见行为、持久化状态、外部契约和发生过回归的路径；命名、内部调用顺序和每个中间步骤，不逐项写成 acceptance test。否则审查清单会比功能本身还长。</p>
+  </section>
+
+  <section>
+    <h2>测试次数要与任务规模和反馈成本匹配</h2>
+    <p>我减少 GPT-5.6 耗时最明显的一项调整，是停止在每次小修改后运行完整检查。这里省掉的是重复的全量验证，不是把测试取消。</p>
+    <ul>
+      <li><strong>小任务：</strong>完成一组连贯修改后，统一运行相关测试；在结束前跑一次格式化和较宽的质量检查。</li>
+      <li><strong>大任务：</strong>按能够独立验收的行为阶段拆分。每个阶段结束时跑一个聚焦测试，最后再跑完整检查。</li>
+      <li><strong>高风险不确定点：</strong>先写最小测试或原型验证假设，确认路线可行后再批量实现。</li>
+      <li><strong>最终提交前：</strong>运行项目要求的完整测试、lint、构建和其他质量门槛。</li>
+    </ul>
+    <p>我在 Rust 项目里常用的规则只有下面这些：</p>
+    <pre><code>## Local Development Discipline
+
+- Batch coherent edits before validation. Do not repeatedly run `cargo fmt`,
+  `cargo check`, Clippy, builds, or broad test suites after small edits;
+  Rust linking is expensive in this workspace.
+- During implementation, prefer one focused test at a planned behavioral seam.
+  Run formatting and broader quality gates once at the end of a coherent batch,
+  then run the full required gates only for final verification.</code></pre>
+    <p>使用 [[TDD]] 时也可以保留 red-green-refactor，只把反馈范围缩到当前行为接缝。没有必要在每个 red-green 小循环里重新链接整个 workspace、跑完整 lint 和全部集成测试。</p>
+  </section>
+
+  <section>
+    <h2>我现在实际采用的工作方式</h2>
+    <ol>
+      <li>开荒时用 Sol Max 确定目录、模块责任、接口、风险和禁止项。</li>
+      <li>让它只审阅难回退、返工量大的遗漏决策，最多三项。</li>
+      <li>设计通过后冻结权限，实现代理只能自主处理局部可回退选择。</li>
+      <li>按任务需要调用方法型或项目特化 Skill，不加载整套流程。</li>
+      <li>把实现拆成少数可验收阶段，在行为接缝集中测试，最终再做完整验证。</li>
+      <li>文档和结构成型后，把日常工作交给 Terra、Sol medium/high 或其他够用的档位。</li>
+    </ol>
+    <p>这套方法没有让 GPT-5.6 在我的大型项目和 Rust 项目里变得比 GPT-5.5 更快，但它减少了几个小时耗在重复规划、隐式改设计和反复全量验证上的情况。GPT-5.6 的推理能力越强，我越需要提前规定它何时停、哪些事不归它决定，以及什么结果才值得再开一轮。</p>
+  </section>
+
+  <section>
+    <h2>相关资料</h2>
+    <ul>
+      <li><a href="https://openai.com/index/gpt-5-6/">OpenAI：GPT-5.6 发布说明</a>——模型档位、reasoning effort 与 Codex 可用范围。</li>
+      <li><a href="https://github.com/mattpocock/skills">Matt Pocock / skills</a>——以小型、可组合 Skill 代替接管整个过程的框架。</li>
+      <li><a href="https://www.reddit.com/r/codex/comments/1utg8yn/has_superpowers_made_codex_gpt56_slower_for_you/">r/codex：Superpowers 是否拖慢 GPT-5.6</a>——论坛使用样本，不是受控评测。</li>
+      <li><a href="https://www.reddit.com/r/codex/comments/1uw2i2l/practical_tips_after_using_gpt56_for_a_day/">r/codex：GPT-5.6 的 reasoning effort 与 Skill 触发建议</a>——论坛使用样本，不是官方结论。</li>
+    </ul>
+  </section>
+</article>
