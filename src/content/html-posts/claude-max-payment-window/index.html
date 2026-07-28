@@ -6,12 +6,12 @@
     <p>我不会在这里贴脚本、接口路径和 IBAN 生成器。理解这件事不需要复现欺诈，真正值得讨论的是两个[[信任边界]]为什么会同时失守。</p>
 
     <figure>
-      <img src="./assets/modified-checkout-sepa.png/" alt="修改后的 Claude Max 结账页出现 SEPA Debit，IBAN 已模糊处理" width="1380" height="746" loading="lazy" decoding="async">
+      <img src="./assets/modified-checkout-sepa.png" alt="修改后的 Claude Max 结账页出现 SEPA Debit，IBAN 已模糊处理" width="1380" height="746" loading="lazy" decoding="async">
       <figcaption>脚本运行后，备用结账页面出现了 SEPA Debit。截图只能证明浏览器显示了入口，不能单独证明服务端已经授权。</figcaption>
     </figure>
 
     <figure>
-      <img src="./assets/max-overdue-invoice.png/" alt="Claude 账单页同时显示 Max 20x 订阅、未知付款方式和逾期账单" width="1380" height="656" loading="lazy" decoding="async">
+      <img src="./assets/max-overdue-invoice.png" alt="Claude 账单页同时显示 Max 20x 订阅、未知付款方式和逾期账单" width="1380" height="656" loading="lazy" decoding="async">
       <figcaption>更有证明力的是结果页：Max 20x 已经显示在账号上，但付款方式未知，账单状态为 Overdue。</figcaption>
     </figure>
   </section>
@@ -27,14 +27,14 @@
     </ul>
 
     <figure>
-      <img src="./assets/max-usage-limit.png/" alt="Claude Max 20x 当前会话额度已使用百分之百" width="1299" height="242" loading="lazy" decoding="async">
+      <img src="./assets/max-usage-limit.png" alt="Claude Max 20x 当前会话额度已使用百分之百" width="1299" height="242" loading="lazy" decoding="async">
       <figcaption>额度页显示当前会话 100% used。它证明权益可以消耗，但不能据此换算 Anthropic 的实际损失。</figcaption>
     </figure>
 
     <p>二手平台截图只能证明有人在卖，不能证明商品全部可用、成交量有多大或卖家都用了同一种方法。“损失上亿美元”也没有数据支撑：账号数量、实际 Token 消耗和 Anthropic 的边际推理成本都不知道，用 API 零售价直接乘用量会高估损失。</p>
 
     <figure>
-      <img src="./assets/resale-listings.png/" alt="二手平台出现多个 Claude Max 20x 账号商品，卖家信息已模糊" width="526" height="998" loading="lazy" decoding="async">
+      <img src="./assets/resale-listings.png" alt="二手平台出现多个 Claude Max 20x 账号商品，卖家信息已模糊" width="526" height="998" loading="lazy" decoding="async">
       <figcaption>脚本扩散后出现的商品列表。标价和发布时间是可见事实，成交量与账号来源仍然未知。</figcaption>
     </figure>
   </section>
@@ -46,7 +46,7 @@
     <p>但这里必须加一个条件：只把 SEPA 按钮显示出来，还称不上漏洞。如果创建订单时，服务端重新计算账号地区、套餐允许的付款方式和用户是否有资格进入 Cassia，这次请求应该被拒绝。</p>
 
     <figure>
-      <img src="./assets/checkout-server-validation.png/" alt="客户端打开备用结账入口后，服务端重新校验与不重新校验的分支图" width="1380" height="906" loading="lazy" decoding="async">
+      <img src="./assets/checkout-server-validation.png" alt="客户端打开备用结账入口后，服务端重新校验与不重新校验的分支图" width="1380" height="906" loading="lazy" decoding="async">
       <figcaption>真正跨越安全边界的是创建订单请求。服务端是否重新校验，决定了前端改写只能骗过页面，还是能继续进入支付流程。</figcaption>
     </figure>
 
@@ -64,7 +64,7 @@
     <p>这里还有一个容易错怪支付平台的地方。Stripe 的<a href="https://docs.stripe.com/billing/subscriptions/overview">订阅状态文档</a>明确写到：使用异步支付方式时，订阅可能在创建后直接进入 <code>active</code>，而付款仍处于 <code>processing</code>。因此，出现时间窗口本身未必是 Stripe 的漏洞；商户需要根据商品成本和欺诈风险决定何时发放权益。</p>
 
     <figure>
-      <img src="./assets/sepa-entitlement-state-machine.png/" alt="错误状态机在扣款处理中开放权益，较安全的状态机等待可信付款结果后开放权益" width="1380" height="872" loading="lazy" decoding="async">
+      <img src="./assets/sepa-entitlement-state-machine.png" alt="错误状态机在扣款处理中开放权益，较安全的状态机等待可信付款结果后开放权益" width="1380" height="872" loading="lazy" decoding="async">
       <figcaption>这张图描述的是高成本订阅权益的控制策略，不是 SEPA 协议规定的唯一状态机。风险在于业务系统把“正在扣款”直接解释成“可以无限制消费”。</figcaption>
     </figure>
   </section>
@@ -87,7 +87,7 @@
     <p>晚上出现账号 hold 后，我手里一个只做过登录的旧账号也受到了影响。这说明风控可能在关联账号，但无法仅凭结果判断它使用了设备标识、IP、浏览器指纹、付款资料、Cookie，还是其他关系。</p>
 
     <figure>
-      <img src="./assets/account-on-hold.png/" alt="Claude 提示账号因异常活动被置于 hold，并提供账号复核入口" width="694" height="1000" loading="lazy" decoding="async">
+      <img src="./assets/account-on-hold.png" alt="Claude 提示账号因异常活动被置于 hold，并提供账号复核入口" width="694" height="1000" loading="lazy" decoding="async">
       <figcaption>账号因 unusual activity 被置于 hold。截图证明处置结果，不公开风控命中规则。</figcaption>
     </figure>
 
