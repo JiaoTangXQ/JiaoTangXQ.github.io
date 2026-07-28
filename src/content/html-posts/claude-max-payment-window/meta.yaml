@@ -1,0 +1,9 @@
+title: "Claude Max 20x 泄露真正的问题"
+date: "2026-07-27"
+description: "从结账截图、逾期账单和公开支付文档出发，拆解客户端改写、SEPA 异步扣款与订阅权益提前发放可能组成的漏洞链。"
+tags: ["claude", "anthropic", "web-security", "payments", "sepa", "incident-analysis"]
+draft: false
+ui: "case-study"
+cover: "./assets/sepa-entitlement-state-machine.png/"
+coverAlt: "异步扣款与订阅权益发放的两种状态机对比图"
+lang: "zh-CN"
