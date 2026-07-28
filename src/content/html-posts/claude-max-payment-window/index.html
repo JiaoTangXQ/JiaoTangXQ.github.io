@@ -1,0 +1,123 @@
+<article class="html-post html-post--case-study">
+  <section>
+    <h2>7 月 26 日，一条群消息把 Max 20x 变成了“羊毛”</h2>
+    <p>那天下午，我还在想下一篇文章写什么。群里突然有人贴出一段油猴脚本：在 Claude 网页端运行它，原本没有的 SEPA Debit 会出现在 Max 20x 结账页。再填入一个格式正确的 IBAN，页面就可能显示订阅成功。</p>
+    <p>消息很快扩散。有人消耗完一轮 Max 20x 额度，二手平台也出现了标价数百到上千元的账号。到了晚上，脚本已经失效，一批账号开始显示账单逾期或被置于 hold。</p>
+    <p>我不会在这里贴脚本、接口路径和 IBAN 生成器。理解这件事不需要复现欺诈，真正值得讨论的是两个[[信任边界]]为什么会同时失守。</p>
+
+    <figure>
+      <img src="./assets/modified-checkout-sepa.png/" alt="修改后的 Claude Max 结账页出现 SEPA Debit，IBAN 已模糊处理" width="1380" height="746" loading="lazy" decoding="async">
+      <figcaption>脚本运行后，备用结账页面出现了 SEPA Debit。截图只能证明浏览器显示了入口，不能单独证明服务端已经授权。</figcaption>
+    </figure>
+
+    <figure>
+      <img src="./assets/max-overdue-invoice.png/" alt="Claude 账单页同时显示 Max 20x 订阅、未知付款方式和逾期账单" width="1380" height="656" loading="lazy" decoding="async">
+      <figcaption>更有证明力的是结果页：Max 20x 已经显示在账号上，但付款方式未知，账单状态为 Overdue。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>先把证据分级，否则技术分析会变成故事</h2>
+    <p>这些截图能够直接支持四个判断：</p>
+    <ul>
+      <li>油猴脚本的目标是改写浏览器拿到的结账能力响应；</li>
+      <li>改写后，页面会出现官方正常入口没有展示的 SEPA Debit；</li>
+      <li>至少有账号同时出现 Max 20x 权益和未支付账单；</li>
+      <li>这份权益不只是一个标签，账号可以实际消耗 Max 20x 的会话额度。</li>
+    </ul>
+
+    <figure>
+      <img src="./assets/max-usage-limit.png/" alt="Claude Max 20x 当前会话额度已使用百分之百" width="1299" height="242" loading="lazy" decoding="async">
+      <figcaption>额度页显示当前会话 100% used。它证明权益可以消耗，但不能据此换算 Anthropic 的实际损失。</figcaption>
+    </figure>
+
+    <p>二手平台截图只能证明有人在卖，不能证明商品全部可用、成交量有多大或卖家都用了同一种方法。“损失上亿美元”也没有数据支撑：账号数量、实际 Token 消耗和 Anthropic 的边际推理成本都不知道，用 API 零售价直接乘用量会高估损失。</p>
+
+    <figure>
+      <img src="./assets/resale-listings.png/" alt="二手平台出现多个 Claude Max 20x 账号商品，卖家信息已模糊" width="526" height="998" loading="lazy" decoding="async">
+      <figcaption>脚本扩散后出现的商品列表。标价和发布时间是可见事实，成交量与账号来源仍然未知。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>油猴脚本没有黑进服务器，它改了浏览器看到的答案</h2>
+    <p>从公开截图看，Claude 打开订阅页时会先请求一份 <code>checkout_capabilities</code>。正常响应里的 <code>checkout_flow</code> 是 <code>legacy</code>；脚本接管浏览器的 <code>fetch</code> 和 <code>XMLHttpRequest</code> 后，把浏览器收到的结果改成 <code>cassia</code>，于是备用结账页面被打开。</p>
+    <p>这属于典型的客户端可修改环境。按钮、变量和响应正文都在用户控制的浏览器里。MITRE 把“服务端依赖客户端执行安全控制”归入 <a href="https://cwe.mitre.org/data/definitions/602.html">[[CWE-602]]</a>，对应的处理方式是在服务端重复执行资格和权限检查。</p>
+    <p>但这里必须加一个条件：只把 SEPA 按钮显示出来，还称不上漏洞。如果创建订单时，服务端重新计算账号地区、套餐允许的付款方式和用户是否有资格进入 Cassia，这次请求应该被拒绝。</p>
+
+    <figure>
+      <img src="./assets/checkout-server-validation.png/" alt="客户端打开备用结账入口后，服务端重新校验与不重新校验的分支图" width="1380" height="906" loading="lazy" decoding="async">
+      <figcaption>真正跨越安全边界的是创建订单请求。服务端是否重新校验，决定了前端改写只能骗过页面，还是能继续进入支付流程。</figcaption>
+    </figure>
+
+    <p>现有截图显示部分请求继续走到了订单和订阅阶段，因此可以提出一个较强推断：这条备用结账路径至少曾经缺少某项服务端复核。但没有 Anthropic 的后端代码、订单记录和日志，无法确认它具体漏查了地区、付款方式、流程资格，还是多个系统之间的状态同步。</p>
+    <blockquote>
+      <p><code>checkout_capabilities</code> 可以决定页面怎么展示，不能充当购买资格凭证。后者必须由服务端根据当前账号和商品重新计算。</p>
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>随机 IBAN 是触发器，异步扣款才制造了时间差</h2>
+    <p>IBAN 是国际银行账户号码，不是“德国银行卡号”。它的校验位可以判断字符串在数学上是否符合格式，却不能证明银行账户真实存在、属于提交者或有足够余额。</p>
+    <p>[[SEPA Direct Debit]] 也不是刷卡。用户授权商户发起扣款，银行结果稍后返回。Stripe 的 <a href="https://docs.stripe.com/payments/sepa-debit/accept-a-payment?locale=en-GB&amp;payments-ui-type=elements&amp;web-or-mobile=web">SEPA Debit 文档</a>把它列为 delayed notification payment method，并说明资金通常需要约五个工作日到达。欧洲支付委员会的 <a href="https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions">R-transactions 指南</a>也把 reject、return、refund、refusal 和 reversal 当作这套支付方式的正常异常流程。</p>
+    <p>所以“支付请求创建成功”与“钱已经不可逆地到账”是两个状态。格式正确的 IBAN 可能让请求进入 <code>processing</code>，真实扣款结果却要在后面才知道。</p>
+    <p>这里还有一个容易错怪支付平台的地方。Stripe 的<a href="https://docs.stripe.com/billing/subscriptions/overview">订阅状态文档</a>明确写到：使用异步支付方式时，订阅可能在创建后直接进入 <code>active</code>，而付款仍处于 <code>processing</code>。因此，出现时间窗口本身未必是 Stripe 的漏洞；商户需要根据商品成本和欺诈风险决定何时发放权益。</p>
+
+    <figure>
+      <img src="./assets/sepa-entitlement-state-machine.png/" alt="错误状态机在扣款处理中开放权益，较安全的状态机等待可信付款结果后开放权益" width="1380" height="872" loading="lazy" decoding="async">
+      <figcaption>这张图描述的是高成本订阅权益的控制策略，不是 SEPA 协议规定的唯一状态机。风险在于业务系统把“正在扣款”直接解释成“可以无限制消费”。</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>这条漏洞链需要两处判断同时失守</h2>
+    <ol>
+      <li>脚本把浏览器看到的结账能力改成 Cassia，页面出现 SEPA Debit。</li>
+      <li>创建订单时，服务端疑似没有完整重算当前账号的购买资格。</li>
+      <li>格式正确的 IBAN 让异步扣款请求进入处理中间态。</li>
+      <li>订阅系统把中间态对应的订阅当成可用，提前发放 Max 20x。</li>
+      <li>银行的拒绝或退回消息晚到，用户已经开始消耗高成本额度。</li>
+    </ol>
+    <p>第一处是客户端[[信任边界]]问题，第二处是[[支付状态机]]与权益系统的关系问题。任何一处守住，整条路径都会断：服务端拒绝不合资格的 SEPA 订单，或者权益系统在付款未确认时只给极低的临时额度，都不会出现截图里的结果。</p>
+    <p>Stripe 建议订阅集成使用 [[Webhook]] 处理异步状态变化，并根据发票和订阅状态更新访问权限。对 Max 20x 这种可以迅速产生推理成本的商品，只监听“订阅已创建”不够；至少还要处理付款失败、账单逾期、重复事件和消息延迟，并定期核对“有权益但没有已付账单”的账号。</p>
+  </section>
+
+  <section>
+    <h2>封号发生了，但“电脑被标记”仍然只是猜测</h2>
+    <p>晚上出现账号 hold 后，我手里一个只做过登录的旧账号也受到了影响。这说明风控可能在关联账号，但无法仅凭结果判断它使用了设备标识、IP、浏览器指纹、付款资料、Cookie，还是其他关系。</p>
+
+    <figure>
+      <img src="./assets/account-on-hold.png/" alt="Claude 提示账号因异常活动被置于 hold，并提供账号复核入口" width="694" height="1000" loading="lazy" decoding="async">
+      <figcaption>账号因 unusual activity 被置于 hold。截图证明处置结果，不公开风控命中规则。</figcaption>
+    </figure>
+
+    <p>“所有新用户都被禁了”也超出了现有证据。注册页在某个时间和地区显示暂不开放，只能证明当时的可用性变化，不能证明覆盖全部新用户，更不能单凭时间先后确认它由这次事件触发。</p>
+  </section>
+
+  <section>
+    <h2>最终结论：问题不在一个按钮，也不在一个随机字符串</h2>
+    <p>最稳妥的结论是：公开脚本能够欺骗浏览器选择 Cassia；部分账号随后出现了 Max 20x 权益、逾期账单和实际额度消耗。由此可以合理怀疑，备用结账流程缺少服务端资格复核，同时订阅权益在异步扣款最终确认前被提前放出。</p>
+    <p>还不能确认的是 Anthropic 内部使用了哪套订单状态、哪个 [[Webhook]] 延迟、权益在什么事件上发放，以及事件造成了多少损失。把这些推断写成已查明的后端事实，会让文章比现有证据走得更远。</p>
+    <p>这次事件留给订阅系统的检查项很具体：</p>
+    <ul>
+      <li>前端返回的 capabilities 只用于展示，不携带授权含义；</li>
+      <li>创建订单时重新计算账号、商品、地区和付款方式资格；</li>
+      <li>把“请求已创建”“付款处理中”“付款确认”和“权益开放”拆成不同状态；</li>
+      <li>高成本权益在异步付款期间使用临时限额，而不是完整额度；</li>
+      <li>失败事件到达后立即撤销权益，并用定时核对处理漏掉或乱序的消息。</li>
+    </ul>
+    <p>油猴脚本只是把门画了出来。真正让人走进去的，是服务端和权益系统先后把两个尚未确认的状态，当成了可以相信的事实。</p>
+  </section>
+
+  <section>
+    <h2>参考资料</h2>
+    <ul>
+      <li><a href="https://support.anthropic.com/en/articles/8325618-where-can-i-find-the-receipt-for-my-claude-subscription">Anthropic：Paid Plan Billing FAQs</a>——官方帮助页称 Pro 与 Max 正常只接受信用卡或借记卡。</li>
+      <li><a href="https://cwe.mitre.org/data/definitions/602.html">MITRE：CWE-602</a>——客户端执行服务端安全控制的风险与服务端复核原则。</li>
+      <li><a href="https://docs.stripe.com/payments/sepa-debit/accept-a-payment?locale=en-GB&amp;payments-ui-type=elements&amp;web-or-mobile=web">Stripe：Accept a SEPA Direct Debit payment</a>——SEPA 的异步通知和处理时间。</li>
+      <li><a href="https://docs.stripe.com/billing/subscriptions/overview">Stripe：How subscriptions work</a>——异步付款与订阅状态的关系。</li>
+      <li><a href="https://docs.stripe.com/billing/subscriptions/webhooks">Stripe：Using webhooks with subscriptions</a>——付款失败、订阅状态和访问权限处理。</li>
+      <li><a href="https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/guidance-reason-codes-sepa-direct-debit-r-transactions">European Payments Council：SDD R-transactions</a>——拒绝、退回、退款等异常流程。</li>
+    </ul>
+  </section>
+</article>
