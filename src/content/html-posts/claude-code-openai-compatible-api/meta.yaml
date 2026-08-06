@@ -1,0 +1,7 @@
+title: "在 claudecode 中接入其他模型的方法"
+date: "2026-08-06"
+description: "记录如何用本地网关把 Claude Code 的 Anthropic Messages 请求转换为 OpenAI 兼容请求，并完成模型映射、流式输出、工具调用、TLS 例外处理和端到端验收。"
+tags: ["claude-code", "llm-gateway", "openai-compatible-api", "api-security", "devtools"]
+draft: false
+ui: "code-lab"
+lang: "zh-CN"

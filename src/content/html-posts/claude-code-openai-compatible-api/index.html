@@ -1,0 +1,498 @@
+<article class="html-post html-post--code-lab">
+  <section>
+    <h2>先判断协议：只改 URL 会把请求送到错误的接口</h2>
+    <p>上游文档如果只列出 <code>/chat/completions</code>、<code>/completions</code>、<code>/embeddings</code> 等路径，它通常提供的是 [[OpenAI Compatible API]]。Claude Code 通过自定义网关工作时，网关需要接收 [[Anthropic Messages API]] 的 <code>/v1/messages</code> 请求。Anthropic 的 <a href="https://code.claude.com/docs/en/llm-gateway">LLM gateway 文档</a>也把这个前提写得很清楚：<code>ANTHROPIC_BASE_URL</code> 应该指向能暴露 Anthropic Messages 格式的网关。</p>
+    <p>因此，不能把 Claude Code 的 <code>ANTHROPIC_BASE_URL</code> 直接设成 OpenAI 兼容地址。这样做时，Claude Code 会请求 <code>【URL】/v1/messages</code>，而上游只认识 <code>【URL】/chat/completions</code>，常见结果是 404、405 或请求体校验失败。</p>
+    <pre><code>Claude Code
+  │  Anthropic Messages: POST /v1/messages
+  ▼
+本地 [[LLM Gateway]]
+  │  OpenAI Chat Completions: POST /chat/completions
+  ▼
+企业模型平台</code></pre>
+    <p>这次我复用了本机已有的 <a href="https://github.com/router-for-me/CLIProxyAPI">CLIProxyAPI</a>。它既能向 Claude Code 暴露 Anthropic 兼容接口，也能通过 <a href="https://github.com/router-for-me/CLIProxyAPI/blob/main/config.example.yaml"><code>openai-compatibility</code> 配置</a>调用 OpenAI 兼容上游。</p>
+  </section>
+
+  <section>
+    <h2>先定义占位符，避免把真实凭据写进教程和终端历史</h2>
+    <p>下面所有配置都使用占位符。复制命令前再在本机替换，不要把替换后的文件提交到 Git，也不要把包含凭据的终端截图发到聊天或工单。</p>
+    <table>
+      <thead>
+        <tr>
+          <th>占位符</th>
+          <th>含义</th>
+          <th>例外和边界</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>【URL】</code></td>
+          <td>上游 OpenAI 兼容 API 的完整基础地址，通常以 <code>/v1</code> 结尾。</td>
+          <td>它可能包含租户或服务路径，按内部信息处理。</td>
+        </tr>
+        <tr>
+          <td><code>【KEY】</code></td>
+          <td>上游平台发放的 Bearer API key。</td>
+          <td>只交给本地网关，不放进 Claude Code 项目配置。</td>
+        </tr>
+        <tr>
+          <td><code>【模型名】</code></td>
+          <td><code>GET /models</code> 返回的真实模型 ID。</td>
+          <td>不要用邮件标题、服务展示名或自己猜出的名字代替。</td>
+        </tr>
+        <tr>
+          <td><code>【模型别名】</code></td>
+          <td>本地网关暴露给 Claude Code 的短名称。</td>
+          <td>建议只用小写字母、数字和连字符。</td>
+        </tr>
+        <tr>
+          <td><code>【本地代理令牌】</code></td>
+          <td>Claude Code 访问本机网关时使用的令牌。</td>
+          <td>它和上游 <code>【KEY】</code> 是两套凭据。</td>
+        </tr>
+      </tbody>
+    </table>
+    <blockquote>
+      <p>如果真实 KEY 曾经出现在聊天、命令参数、录屏或日志里，应先吊销再生成。把字符串从文章里删掉，不能让已经暴露的凭据重新变安全。</p>
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>第一步：独立验证上游，不要一开始就让 Claude Code 背锅</h2>
+    <p>先确认上游本身能访问。下面用静默输入读取 KEY，避免它进入 shell history。这里故意不加 <code>-k</code>；证书验证失败应单独处理，不能被普通连通性测试掩盖。</p>
+    <pre><code>UPSTREAM_BASE_URL='【URL】'
+read -r -s UPSTREAM_API_KEY
+printf '\n'
+
+curl --fail --silent --show-error \
+  --connect-timeout 10 \
+  --max-time 30 \
+  -H "Authorization: Bearer ${UPSTREAM_API_KEY}" \
+  -H 'Accept: application/json' \
+  "${UPSTREAM_BASE_URL%/}/models" \
+  | jq -r '.data[]? | .id'</code></pre>
+    <p>把返回列表里的目标 ID 原样记录为 <code>【模型名】</code>。服务名称和模型 ID 经常不是同一个字符串；如果这里取错，后面通常会得到 <code>model not found</code> 或 <code>unknown provider for model</code>。</p>
+    <p>然后直接调用一次 <code>/chat/completions</code>。用 <code>jq -n</code> 生成 JSON，可以避免模型名里的引号或特殊字符破坏请求体。</p>
+    <pre><code>MODEL_NAME='【模型名】'
+
+curl --fail --silent --show-error \
+  --max-time 120 \
+  -H "Authorization: Bearer ${UPSTREAM_API_KEY}" \
+  -H 'Content-Type: application/json' \
+  "${UPSTREAM_BASE_URL%/}/chat/completions" \
+  --data "$(jq -n --arg model "$MODEL_NAME" '{
+    model: $model,
+    messages: [{role: "user", content: "只回复 UPSTREAM_OK"}],
+    temperature: 0,
+    max_tokens: 64,
+    stream: false
+  }')" \
+  | jq '{model, choices, error}'</code></pre>
+    <p>这一步只证明普通对话可用。Claude Code 还依赖流式输出、长上下文和 [[Tool Calling]]。至少要确认上游接受 <code>stream: true</code> 和 <code>tools</code> 字段；否则它可能能聊天，却不能可靠地读文件、执行命令或连续完成任务。</p>
+  </section>
+
+  <section>
+    <h2>第二步：把 OpenAI 兼容上游加入 CLIProxyAPI</h2>
+    <p>先备份已有配置。备份同样可能包含旧 KEY，因此权限也要设为仅当前用户可读。</p>
+    <pre><code>mkdir -p "$HOME/.cli-proxy-api"
+cp -p "$HOME/.cli-proxy-api/config.yaml" \
+  "$HOME/.cli-proxy-api/config.yaml.bak-before-openai-upstream"
+chmod 600 "$HOME/.cli-proxy-api/config.yaml" \
+  "$HOME/.cli-proxy-api/config.yaml.bak-before-openai-upstream"</code></pre>
+    <p>如果这是新安装，可以从 CLIProxyAPI 的官方 release 获取与系统架构匹配的二进制。不要从第三方网盘下载，也不要在没读脚本的情况下执行网络上的 <code>curl | sh</code>。已有配置时只合并下面的字段，不要覆盖原来的端口、OAuth 账号、路由和日志设置。</p>
+    <pre><code>host: "127.0.0.1"
+port: 8317
+
+# 这是访问本地网关的令牌，不是上游 KEY。
+api-keys:
+  - "【本地代理令牌】"
+
+openai-compatibility:
+  - name: "private-openai-compatible"
+    base-url: "【URL】"
+    api-key-entries:
+      - api-key: "【KEY】"
+    models:
+      - name: "【模型名】"
+        alias: "【模型别名】"
+        display-name: "Private Code Model"</code></pre>
+    <p><code>name</code> 是上游真实模型 ID，<code>alias</code> 是 Claude Code 使用的本地名字。两者分开后，上游改模型版本时只需调整网关映射，不必同时修改所有 Claude Code 配置。</p>
+    <p>先在前台启动，确保 YAML 能解析、端口没有被占用、错误能直接看到：</p>
+    <pre><code>"【CLIProxyAPI 可执行文件绝对路径】" \
+  --config "$HOME/.cli-proxy-api/config.yaml"</code></pre>
+    <p>确认可用后再交给 launchd、systemd 或其他进程管理器。macOS 的 launchd 不展开 <code>~</code>，所以 plist 的 <code>ProgramArguments</code> 必须使用绝对路径。已有 LaunchAgent 时可以这样重载：</p>
+    <pre><code>launchctl kickstart -k \
+  "gui/$(id -u)/【CLIProxyAPI LaunchAgent 标签】"
+
+lsof -nP -iTCP:8317 -sTCP:LISTEN</code></pre>
+    <p>监听地址必须是 <code>127.0.0.1</code>，除非你确实要把网关提供给局域网，并且已经增加防火墙、访问控制和密钥轮换。把带上游 KEY 的代理直接监听在 <code>0.0.0.0</code> 会扩大泄露范围。</p>
+  </section>
+
+  <section>
+    <h2>第三步：让 Claude Code 只连接本地 Anthropic 兼容入口</h2>
+    <p>编辑 <code>~/.claude/settings.json</code> 时只合并相关字段，不要覆盖权限、MCP、插件或状态栏。<a href="https://code.claude.com/docs/en/env-vars">Claude Code 环境变量文档</a>说明，<code>ANTHROPIC_BASE_URL</code> 用来把请求转到网关，<code>ANTHROPIC_AUTH_TOKEN</code> 会作为 Bearer token 发送。</p>
+    <pre><code>{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "【本地代理令牌】",
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8317",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "【模型别名】",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "【模型别名】",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "【模型别名】",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "【模型别名】"
+  },
+  "model": "【模型别名】"
+}</code></pre>
+    <p>顶部的 <code>model</code> 决定新会话的初始模型；三个 <code>ANTHROPIC_DEFAULT_*_MODEL</code> 决定 <code>opus</code>、<code>sonnet</code>、<code>haiku</code> 别名最终映射到哪里；<code>CLAUDE_CODE_SUBAGENT_MODEL</code> 控制子代理。具体优先级可以对照 <a href="https://code.claude.com/docs/en/model-config">Claude Code 模型配置文档</a>。</p>
+    <p>如果网关支持 <code>/v1/models</code>，Claude Code 2.1.129 及以后还可以在 <code>env</code> 中加入下面一项，让模型出现在 <code>/model</code> 选择器中：</p>
+    <pre><code>"CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"</code></pre>
+    <p>不要把上游 <code>【KEY】</code> 填进 <code>ANTHROPIC_AUTH_TOKEN</code>。Claude Code 只需要知道本地代理令牌；上游 KEY 留在权限为 <code>600</code> 的网关配置里。若 shell 中还残留旧的 Anthropic 变量，先只检查变量是否存在，不要把值打印到终端或日志：</p>
+    <pre><code>for name in \
+  ANTHROPIC_API_KEY \
+  ANTHROPIC_AUTH_TOKEN \
+  ANTHROPIC_BASE_URL \
+  ANTHROPIC_MODEL
+do
+  if printenv "$name" &gt;/dev/null; then
+    printf '%s is set\n' "$name"
+  fi
+done</code></pre>
+  </section>
+
+  <section>
+    <h2>第四步：按协议层逐级验收，先网关再 Claude Code</h2>
+    <p>不要直接打开 Claude Code 看“能不能聊”。逐层测试能把上游错误、协议转换错误和 Claude Code 配置错误分开。</p>
+
+    <h3>1. 检查网关是否暴露模型别名</h3>
+    <pre><code>LOCAL_PROXY_TOKEN='【本地代理令牌】'
+
+curl --fail --silent --show-error \
+  -H "Authorization: Bearer ${LOCAL_PROXY_TOKEN}" \
+  http://127.0.0.1:8317/v1/models \
+  | jq -r '.data[]?.id'</code></pre>
+    <p>列表里应该出现 <code>【模型别名】</code>。如果只有上游原名，检查 <code>models.name</code> 和 <code>models.alias</code> 的缩进；如果完全没有目标模型，先看 CLIProxyAPI 的启动错误。</p>
+
+    <h3>2. 用 Anthropic Messages 格式测试普通响应</h3>
+    <pre><code>curl --fail --silent --show-error \
+  --max-time 120 \
+  -H "Authorization: Bearer ${LOCAL_PROXY_TOKEN}" \
+  -H 'anthropic-version: 2023-06-01' \
+  -H 'content-type: application/json' \
+  http://127.0.0.1:8317/v1/messages \
+  --data '{
+    "model": "【模型别名】",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "只回复 GATEWAY_OK"}
+    ]
+  }' \
+  | jq '{type, model, stop_reason, content, error}'</code></pre>
+    <p>HTTP 200 和一段文本只能证明基础转换成立。继续测流式输出：</p>
+    <pre><code>curl --no-buffer --fail --silent --show-error \
+  --max-time 120 \
+  -H "Authorization: Bearer ${LOCAL_PROXY_TOKEN}" \
+  -H 'anthropic-version: 2023-06-01' \
+  -H 'content-type: application/json' \
+  http://127.0.0.1:8317/v1/messages \
+  --data '{
+    "model": "【模型别名】",
+    "max_tokens": 64,
+    "stream": true,
+    "messages": [
+      {"role": "user", "content": "只回复 STREAM_OK"}
+    ]
+  }'</code></pre>
+    <p>完整事件序列至少应包含 <code>message_start</code>、文本 delta 和 <code>message_stop</code>。只看到开头后连接断开，通常是上游 SSE 格式或网关转换有问题。</p>
+
+    <h3>3. 强制模型调用一个简单工具</h3>
+    <pre><code>curl --fail --silent --show-error \
+  --max-time 120 \
+  -H "Authorization: Bearer ${LOCAL_PROXY_TOKEN}" \
+  -H 'anthropic-version: 2023-06-01' \
+  -H 'content-type: application/json' \
+  http://127.0.0.1:8317/v1/messages \
+  --data '{
+    "model": "【模型别名】",
+    "max_tokens": 128,
+    "tools": [{
+      "name": "return_number",
+      "description": "Return the requested integer",
+      "input_schema": {
+        "type": "object",
+        "properties": {"value": {"type": "integer"}},
+        "required": ["value"]
+      }
+    }],
+    "tool_choice": {"type": "tool", "name": "return_number"},
+    "messages": [
+      {"role": "user", "content": "Call return_number with 7."}
+    ]
+  }' \
+  | jq '{stop_reason, content, error}'</code></pre>
+    <p>结果的 <code>content</code> 中应该出现 <code>type: "tool_use"</code>、工具名和整数 <code>7</code>。如果模型只输出一段“我会调用工具”的文字，它不具备这条 Claude Code 工作流所需的结构化工具能力。</p>
+  </section>
+
+  <section>
+    <h2>第五步：跑一次真实 Claude Code 请求</h2>
+    <p>最后才运行 Claude Code。显式传模型别名，可以排除旧会话模型和默认设置的影响：</p>
+    <pre><code>claude -p \
+  '不要使用工具，只回复 CLAUDE_CODE_OK。' \
+  --output-format json \
+  --max-turns 1 \
+  --model '【模型别名】' \
+  | jq '{is_error, result, modelUsage, api_error_status}'</code></pre>
+    <p>验收条件是 <code>is_error: false</code>、<code>result</code> 符合要求，并且 <code>modelUsage</code> 记录的是目标别名。然后新开交互会话，用 <code>/status</code> 检查不带 <code>--model</code> 时的默认模型。恢复旧会话时，Claude Code 可能继续使用会话保存的模型；这时应新建会话或显式传 <code>--model</code>，不能据此判断全局配置没有生效。</p>
+    <p>即使只问一句话，Claude Code 也会附带系统提示、工具定义和项目上下文，输入 token 可能远多于普通聊天请求。上游模型的上下文窗口和单次输入限制必须能承受这部分开销。</p>
+  </section>
+
+  <section>
+    <h2>只有证书确实不合规时，才增加本地 TLS 转接</h2>
+    <p>有些企业平台的示例固定使用 <code>curl -k</code>，或者直接请求时返回 <code>x509</code>、<code>unable to get local issuer certificate</code>、<code>certificate is not standards compliant</code>。先判断是哪类问题：</p>
+    <ol>
+      <li>缺少企业根证书或中间证书：把正确 CA 安装到系统信任库，继续保留证书验证。</li>
+      <li>证书域名不匹配、结构不合规或平台明确要求 <code>-k</code>：让平台修复证书是优先方案。</li>
+      <li>在平台修复前必须使用，并且已经接受风险：增加一个只监听回环地址的本地 TLS 转接服务。</li>
+    </ol>
+    <p>CLIProxyAPI 的 OpenAI 兼容上游配置没有通用的“跳过证书验证”字段。我使用一个很小的 Node.js 反向代理承担 <code>-k</code> 的行为：本地接收 HTTP，把请求转成 HTTPS 发给固定上游，转发流式响应，但不记录请求头。</p>
+    <p>把下面脚本保存为 <code>~/.local/share/model-api-tls-relay.mjs</code>。<code>UPSTREAM_BASE_URL</code> 使用完整的 <code>【URL】</code>，脚本会把本地 <code>/v1/...</code> 映射到上游基础路径。</p>
+    <pre><code>import http from "node:http";
+import https from "node:https";
+
+const upstreamBase = new URL(process.env.UPSTREAM_BASE_URL ?? "【URL】");
+if (upstreamBase.protocol !== "https:") {
+  throw new Error("UPSTREAM_BASE_URL must use https");
+}
+
+const listenHost = "127.0.0.1";
+const listenPort = Number(process.env.LISTEN_PORT ?? 8318);
+const localBasePath = "/v1";
+const upstreamBasePath = upstreamBase.pathname.replace(/\/$/, "");
+
+const agent = new https.Agent({
+  keepAlive: true,
+  rejectUnauthorized: false,
+});
+
+const hopByHop = new Set([
+  "connection", "keep-alive", "proxy-authenticate",
+  "proxy-authorization", "te", "trailer",
+  "transfer-encoding", "upgrade",
+]);
+
+function copyHeaders(headers) {
+  const copied = {};
+  for (const [name, value] of Object.entries(headers)) {
+    if (!hopByHop.has(name.toLowerCase()) &amp;&amp; value !== undefined) {
+      copied[name] = value;
+    }
+  }
+  return copied;
+}
+
+const server = http.createServer((request, response) =&gt; {
+  const localUrl = new URL(
+    request.url ?? "/",
+    `http://${request.headers.host ?? "127.0.0.1"}`,
+  );
+
+  const isBase = localUrl.pathname === localBasePath;
+  const isChild = localUrl.pathname.startsWith(`${localBasePath}/`);
+  if (!isBase &amp;&amp; !isChild) {
+    response.writeHead(404).end();
+    return;
+  }
+
+  const suffix = localUrl.pathname.slice(localBasePath.length);
+  const upstreamPath = `${upstreamBasePath}${suffix}${localUrl.search}`;
+  const headers = copyHeaders(request.headers);
+  headers.host = upstreamBase.host;
+
+  const upstream = https.request({
+    hostname: upstreamBase.hostname,
+    port: upstreamBase.port || 443,
+    servername: upstreamBase.hostname,
+    method: request.method,
+    path: upstreamPath,
+    headers,
+    agent,
+    rejectUnauthorized: false,
+  }, (upstreamResponse) =&gt; {
+    response.writeHead(
+      upstreamResponse.statusCode ?? 502,
+      copyHeaders(upstreamResponse.headers),
+    );
+    upstreamResponse.pipe(response);
+  });
+
+  upstream.setTimeout(600_000, () =&gt; {
+    upstream.destroy(new Error("upstream timeout"));
+  });
+
+  upstream.on("error", (error) =&gt; {
+    if (!response.headersSent) {
+      response.writeHead(502, {"content-type": "application/json"});
+    }
+    response.end(JSON.stringify({error: {message: error.message}}));
+  });
+
+  request.on("aborted", () =&gt; upstream.destroy());
+  request.pipe(upstream);
+});
+
+server.headersTimeout = 610_000;
+server.requestTimeout = 610_000;
+server.listen(listenPort, listenHost);</code></pre>
+    <p>先在前台测试：</p>
+    <pre><code>UPSTREAM_BASE_URL='【URL】' \
+  node "$HOME/.local/share/model-api-tls-relay.mjs"
+
+lsof -nP -iTCP:8318 -sTCP:LISTEN</code></pre>
+    <p>然后把 CLIProxyAPI 的上游地址改为本地转接入口，其他字段不变：</p>
+    <pre><code>openai-compatibility:
+  - name: "private-openai-compatible"
+    base-url: "http://127.0.0.1:8318/v1"
+    api-key-entries:
+      - api-key: "【KEY】"
+    models:
+      - name: "【模型名】"
+        alias: "【模型别名】"</code></pre>
+    <p>macOS 上需要长期运行时，可以用 LaunchAgent 保存进程配置。URL、脚本路径和 Node 路径继续使用占位符；launchd 不展开 <code>$HOME</code> 或 <code>~</code>。</p>
+    <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+  &lt;key&gt;Label&lt;/key&gt;
+  &lt;string&gt;com.local.model-api-tls-relay&lt;/string&gt;
+  &lt;key&gt;ProgramArguments&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;【Node 可执行文件绝对路径】&lt;/string&gt;
+    &lt;string&gt;【转接脚本绝对路径】&lt;/string&gt;
+  &lt;/array&gt;
+  &lt;key&gt;EnvironmentVariables&lt;/key&gt;
+  &lt;dict&gt;
+    &lt;key&gt;UPSTREAM_BASE_URL&lt;/key&gt;
+    &lt;string&gt;【URL】&lt;/string&gt;
+  &lt;/dict&gt;
+  &lt;key&gt;RunAtLoad&lt;/key&gt;
+  &lt;true/&gt;
+  &lt;key&gt;KeepAlive&lt;/key&gt;
+  &lt;true/&gt;
+  &lt;key&gt;ProcessType&lt;/key&gt;
+  &lt;string&gt;Background&lt;/string&gt;
+  &lt;key&gt;Umask&lt;/key&gt;
+  &lt;integer&gt;63&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</code></pre>
+    <pre><code>plutil -lint \
+  "$HOME/Library/LaunchAgents/com.local.model-api-tls-relay.plist"
+
+launchctl bootstrap "gui/$(id -u)" \
+  "$HOME/Library/LaunchAgents/com.local.model-api-tls-relay.plist"
+
+launchctl kickstart -k \
+  "gui/$(id -u)/com.local.model-api-tls-relay"</code></pre>
+    <blockquote>
+      <p>这个转接仍然加密传输，但关闭了上游身份验证。触发条件是网络中有人能劫持连接；后果是请求内容和 KEY 可能被窃取。平台证书修复后，应把 CLIProxyAPI 改回直接 HTTPS 地址并停掉转接服务。</p>
+    </blockquote>
+  </section>
+
+  <section>
+    <h2>故障现象可以直接定位到对应层</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>现象</th>
+          <th>最可能的原因</th>
+          <th>处理方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/v1/messages</code> 返回 404 或 405</td>
+          <td>Claude Code 直接连到了 OpenAI 兼容上游。</td>
+          <td>把 <code>ANTHROPIC_BASE_URL</code> 改为本地 Anthropic 兼容网关。</td>
+        </tr>
+        <tr>
+          <td><code>model not found</code> 或 <code>unknown provider</code></td>
+          <td>把服务展示名当成模型 ID，或 YAML 别名缩进错误。</td>
+          <td>重新读取 <code>/models</code>，核对 <code>name</code> 与 <code>alias</code>。</td>
+        </tr>
+        <tr>
+          <td>401 或 403</td>
+          <td>本地代理令牌和上游 KEY 混用，或 KEY 已失效。</td>
+          <td>分别测试本地网关和上游，确认两层 Authorization。</td>
+        </tr>
+        <tr>
+          <td>普通聊天成功，Claude Code 不调用工具</td>
+          <td>模型或上游不支持结构化 tools，或转换后 schema 被拒绝。</td>
+          <td>先跑强制工具测试，再检查上游请求日志中的 <code>tools</code>。</td>
+        </tr>
+        <tr>
+          <td>流式请求只有开头，没有结束事件</td>
+          <td>上游 SSE 不兼容、连接被缓冲，或代理提前关闭。</td>
+          <td>直接测试上游 stream，再测试网关的 Messages stream。</td>
+        </tr>
+        <tr>
+          <td>短 curl 成功，Claude Code 报输入过长</td>
+          <td>模型上下文窗口不足以容纳系统提示和工具定义。</td>
+          <td>换用更大上下文模型，或减少项目上下文和可用工具。</td>
+        </tr>
+        <tr>
+          <td>TLS 校验失败</td>
+          <td>企业 CA 未安装、证书链缺失或证书本身不合规。</td>
+          <td>优先修 CA 和证书；只有接受风险后才使用本地转接。</td>
+        </tr>
+        <tr>
+          <td>设置已改，恢复的会话仍使用旧模型</td>
+          <td>会话记录保存了原模型。</td>
+          <td>新建会话，或启动时显式传 <code>--model</code>。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>安全检查不能留到发布配置之后</h2>
+    <ul>
+      <li>真实 KEY 只保存在本地网关配置或专用密钥系统中，文件权限设为 <code>600</code>。</li>
+      <li>本地网关和 TLS 转接都只监听 <code>127.0.0.1</code>。</li>
+      <li>日志不记录 Authorization、完整请求头、请求体或包含租户信息的 URL。</li>
+      <li>配置备份和当前配置采用相同权限；旧备份中的失效 KEY 也不能提交到 Git。</li>
+      <li>用 <code>git diff</code> 和定向搜索检查文章、文件名、注释、截图 alt 文本是否残留真实标识。</li>
+      <li>KEY 一旦进入聊天、shell history、CI 输出或公开提交，立即轮换，不等待到期。</li>
+      <li>CLIProxyAPI 和自写转接服务都属于本地第三方组件，升级前检查变更，部署后限制可访问范围。</li>
+    </ul>
+    <p>如果需要动态获取本地代理令牌，可以按 Claude Code 的 gateway 文档配置 <code>apiKeyHelper</code>，让脚本从系统钥匙串或企业密钥服务读取。它解决的是 Claude Code 到本地网关这一层；上游 KEY 如何保管，仍取决于网关是否支持外部密钥源。</p>
+  </section>
+
+  <section>
+    <h2>回滚要能在一分钟内完成</h2>
+    <p>修改前的备份不是装饰。出现工具调用循环、模型输出异常或上游限流时，先恢复两个配置并重载网关：</p>
+    <pre><code>cp -p \
+  "$HOME/.cli-proxy-api/config.yaml.bak-before-openai-upstream" \
+  "$HOME/.cli-proxy-api/config.yaml"
+
+cp -p \
+  "$HOME/.claude/settings.json.bak-before-openai-upstream" \
+  "$HOME/.claude/settings.json"
+
+launchctl kickstart -k \
+  "gui/$(id -u)/【CLIProxyAPI LaunchAgent 标签】"</code></pre>
+    <p>如果启用了 TLS 转接，再停掉对应 LaunchAgent：</p>
+    <pre><code>launchctl bootout "gui/$(id -u)" \
+  "$HOME/Library/LaunchAgents/com.local.model-api-tls-relay.plist"</code></pre>
+    <p>最终验收不是“能返回一句话”。需要同时满足六个条件：真实模型 ID 已确认、本地模型别名可见、Messages 普通请求成功、流式事件完整、工具调用返回结构化参数、<code>claude -p</code> 记录了目标模型。缺少其中一项，就还不能把这条接入用于真实编码任务。</p>
+  </section>
+
+  <section>
+    <h2>参考资料和版本边界</h2>
+    <ul>
+      <li><a href="https://code.claude.com/docs/en/llm-gateway">Claude Code：LLM gateway configuration</a></li>
+      <li><a href="https://code.claude.com/docs/en/env-vars">Claude Code：Environment variables</a></li>
+      <li><a href="https://code.claude.com/docs/en/model-config">Claude Code：Model configuration</a></li>
+      <li><a href="https://github.com/router-for-me/CLIProxyAPI">CLIProxyAPI 官方仓库</a></li>
+      <li><a href="https://github.com/router-for-me/CLIProxyAPI/blob/main/config.example.yaml">CLIProxyAPI 配置示例</a></li>
+    </ul>
+    <p>本文按 2026 年 8 月的 Claude Code 2.1 系列和当时的 CLIProxyAPI 配置格式记录。环境变量、模型发现和配置字段会随版本变化；执行前应重新核对官方文档和本机 <code>claude --version</code>、<code>cliproxyapi --help</code> 输出。</p>
+  </section>
+</article>
